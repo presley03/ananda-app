@@ -2,16 +2,20 @@ import 'package:flutter/material.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/dimensions.dart';
 import '../../utils/constants/text_styles.dart';
+import '../../utils/helpers/kpsp_data_loader.dart';
 import 'kpsp_questions_screen.dart';
-import '../../models/kpsp_question.dart';
-import '../../data/kpsp_questions_3months.dart';
 
 /// KPSP Age Selection Screen
 /// Screen untuk memilih umur anak sebelum mulai KPSP
 /// 16 pilihan umur: 3, 6, 9, 12, 15, 18, 21, 24, 30, 36, 42, 48, 54, 60, 66, 72 bulan
-class KpspAgeSelectionScreen extends StatelessWidget {
+class KpspAgeSelectionScreen extends StatefulWidget {
   const KpspAgeSelectionScreen({super.key});
 
+  @override
+  State<KpspAgeSelectionScreen> createState() => _KpspAgeSelectionScreenState();
+}
+
+class _KpspAgeSelectionScreenState extends State<KpspAgeSelectionScreen> {
   // List umur yang tersedia (dalam bulan)
   static const List<int> availableAges = [
     3,
@@ -32,6 +36,32 @@ class KpspAgeSelectionScreen extends StatelessWidget {
     72,
   ];
 
+  // Track which ages have data available
+  Map<int, bool> _dataAvailability = {};
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkDataAvailability();
+  }
+
+  // Check data availability for all ages
+  Future<void> _checkDataAvailability() async {
+    final Map<int, bool> availability = {};
+
+    for (int age in availableAges) {
+      availability[age] = await KpspDataLoader.isDataAvailable(age);
+    }
+
+    if (mounted) {
+      setState(() {
+        _dataAvailability = availability;
+        _isLoading = false;
+      });
+    }
+  }
+
   // Convert bulan ke display text
   String _getAgeDisplay(int months) {
     if (months < 12) {
@@ -49,29 +79,71 @@ class KpspAgeSelectionScreen extends StatelessWidget {
     }
   }
 
-  // Get questions for specific age
-  // NOTE: Saat ini hanya ada data untuk 3 bulan (contoh)
-  // Nanti tambahkan data untuk umur lain
-  List<KpspQuestion>? _getQuestionsForAge(int ageMonths) {
-    switch (ageMonths) {
-      case 3:
-        return KpspQuestions3Months.getQuestions();
-      // TODO: Tambahkan case untuk umur lain
-      // case 6:
-      //   return KpspQuestions6Months.getQuestions();
-      // case 9:
-      //   return KpspQuestions9Months.getQuestions();
-      // dst...
-      default:
-        return null; // Belum ada data
+  // Handle age selection
+  Future<void> _onAgeSelected(int ageMonths) async {
+    final hasData = _dataAvailability[ageMonths] ?? false;
+
+    if (!hasData) {
+      // Show message: data belum tersedia
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Data KPSP untuk ${_getAgeDisplay(ageMonths)} belum tersedia',
+          ),
+          backgroundColor: AppColors.warning,
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
     }
+
+    // Show loading
+    if (!mounted) return;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder:
+          (context) => Center(
+            child: CircularProgressIndicator(color: AppColors.primary),
+          ),
+    );
+
+    // Load questions from JSON
+    final questions = await KpspDataLoader.loadQuestions(ageMonths);
+
+    // Hide loading
+    if (!mounted) return;
+    Navigator.pop(context);
+
+    if (questions == null || questions.isEmpty) {
+      // Error loading
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Gagal memuat data KPSP'),
+          backgroundColor: AppColors.danger,
+        ),
+      );
+      return;
+    }
+
+    // Navigate to questions screen
+    if (!mounted) return;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder:
+            (context) =>
+                KpspQuestionsScreen(ageMonths: ageMonths, questions: questions),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        // Gradient background
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -87,14 +159,12 @@ class KpspAgeSelectionScreen extends StatelessWidget {
                 padding: EdgeInsets.all(AppDimensions.spacingM),
                 child: Row(
                   children: [
-                    // Back button
                     IconButton(
                       onPressed: () => Navigator.pop(context),
                       icon: Icon(Icons.arrow_back),
                       color: AppColors.textPrimary,
                     ),
                     SizedBox(width: AppDimensions.spacingS),
-                    // Title
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,55 +223,38 @@ class KpspAgeSelectionScreen extends StatelessWidget {
 
               // Grid umur
               Expanded(
-                child: GridView.builder(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppDimensions.spacingM,
-                  ),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // 2 kolom
-                    childAspectRatio: 2.5, // Lebar lebih panjang dari tinggi
-                    crossAxisSpacing: AppDimensions.spacingM,
-                    mainAxisSpacing: AppDimensions.spacingM,
-                  ),
-                  itemCount: availableAges.length,
-                  itemBuilder: (context, index) {
-                    final ageMonths = availableAges[index];
-                    final questions = _getQuestionsForAge(ageMonths);
-                    final hasData = questions != null;
-
-                    return _AgeCard(
-                      ageMonths: ageMonths,
-                      ageDisplay: _getAgeDisplay(ageMonths),
-                      hasData: hasData,
-                      onTap: () {
-                        if (hasData) {
-                          // Navigate to questions screen
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) => KpspQuestionsScreen(
-                                    ageMonths: ageMonths,
-                                    questions: questions,
-                                  ),
-                            ),
-                          );
-                        } else {
-                          // Show message: data belum tersedia
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'Data KPSP untuk ${_getAgeDisplay(ageMonths)} belum tersedia',
+                child:
+                    _isLoading
+                        ? Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.primary,
+                          ),
+                        )
+                        : GridView.builder(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppDimensions.spacingM,
+                          ),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 2.5,
+                                crossAxisSpacing: AppDimensions.spacingM,
+                                mainAxisSpacing: AppDimensions.spacingM,
                               ),
-                              backgroundColor: AppColors.warning,
-                              duration: Duration(seconds: 2),
-                            ),
-                          );
-                        }
-                      },
-                    );
-                  },
-                ),
+                          itemCount: availableAges.length,
+                          itemBuilder: (context, index) {
+                            final ageMonths = availableAges[index];
+                            final hasData =
+                                _dataAvailability[ageMonths] ?? false;
+
+                            return _AgeCard(
+                              ageMonths: ageMonths,
+                              ageDisplay: _getAgeDisplay(ageMonths),
+                              hasData: hasData,
+                              onTap: () => _onAgeSelected(ageMonths),
+                            );
+                          },
+                        ),
               ),
 
               SizedBox(height: AppDimensions.spacingM),
@@ -214,7 +267,6 @@ class KpspAgeSelectionScreen extends StatelessWidget {
 }
 
 /// Age Card Widget
-/// Card untuk satu pilihan umur
 class _AgeCard extends StatelessWidget {
   final int ageMonths;
   final String ageDisplay;
@@ -256,14 +308,12 @@ class _AgeCard extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Icon
                     Icon(
                       Icons.child_care,
                       color: hasData ? AppColors.primary : AppColors.textHint,
                       size: AppDimensions.iconM,
                     ),
                     SizedBox(height: AppDimensions.spacingS),
-                    // Age text
                     Text(
                       ageDisplay,
                       style: AppTextStyles.h4.copyWith(
@@ -277,7 +327,6 @@ class _AgeCard extends StatelessWidget {
                   ],
                 ),
               ),
-              // Badge "Belum Tersedia" jika belum ada data
               if (!hasData)
                 Positioned(
                   top: 4,

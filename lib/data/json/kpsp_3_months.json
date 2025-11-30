@@ -1,0 +1,72 @@
+[
+  {
+    "age_months": 3,
+    "question_number": 1,
+    "question_text": "Pada waktu bayi telentang, apakah masing-masing lengannya bergerak dengan mudah?",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 3,
+    "question_number": 2,
+    "question_text": "Pada waktu bayi telentang, apakah masing-masing tungkainya bergerak dengan mudah?",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 3,
+    "question_number": 3,
+    "question_text": "Ketika Anda mengajak bayi berbicara dan bermain, apakah ia tersenyum?",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  },
+  {
+    "age_months": 3,
+    "question_number": 4,
+    "question_text": "Apakah bayi dapat melihat anda dengan seksama?",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  },
+  {
+    "age_months": 3,
+    "question_number": 5,
+    "question_text": "Apakah bayi mengeluarkan suara-suara lain (ngoceh), disamping menangis?",
+    "aspect": "Bicara & Bahasa",
+    "image_path": null
+  },
+  {
+    "age_months": 3,
+    "question_number": 6,
+    "question_text": "Pada waktu anda memegang kedua tangannya, lalu diangkat perlahan-lahan ke posisi duduk, apakah bayi berusaha mengangkat kepalanya?",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 3,
+    "question_number": 7,
+    "question_text": "Dapatkah bayi mempertahankan kepala dalam posisi tegak dan stabil?",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 3,
+    "question_number": 8,
+    "question_text": "Apakah bayi dapat menahan kepalanya dengan mantap ketika ditegakkan?",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 3,
+    "question_number": 9,
+    "question_text": "Jika anda menggerakkan sesuatu didepan wajah bayi dari satu sisi ke sisi lain, dapatkah ia mengikuti gerakan benda tersebut?",
+    "aspect": "Motorik Halus",
+    "image_path": null
+  },
+  {
+    "age_months": 3,
+    "question_number": 10,
+    "question_text": "Apakah bayi menatap wajah anda ketika anda mengajaknya berbicara atau tersenyum kepadanya?",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  }
+]
