@@ -5,7 +5,6 @@ import '../widgets/top_bar.dart';
 import '../widgets/greeting_section.dart';
 import '../widgets/category_section.dart';
 import '../widgets/screening_tools_section.dart';
-import 'screening/kpsp_age_selection_screen.dart';
 
 /// Home Screen
 /// Main home screen dengan:
@@ -128,12 +127,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       ScreeningToolsSection(
                         title: 'Tools Skrining',
                         onKPSPTap: () {
-                          // Navigate to KPSP screening
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) => const KpspAgeSelectionScreen(),
+                          // TODO: Navigate to KPSP screening
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('KPSP Screening - Coming soon! 📋'),
+                              duration: Duration(seconds: 1),
                             ),
                           );
                         },
@@ -142,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text(
-                                'Kalkulator Gizi - Coming soon! 🎯',
+                                'Kalkulator Gizi - Coming soon! 🍎',
                               ),
                               duration: Duration(seconds: 1),
                             ),
