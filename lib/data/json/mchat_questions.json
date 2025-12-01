@@ -1,0 +1,122 @@
+[
+  {
+    "question_number": 1,
+    "question_text": "Jika Anda menunjuk sesuatu di sisi lain ruangan, apakah anak Anda melihatnya?",
+    "is_critical": false,
+    "image_path": null
+  },
+  {
+    "question_number": 2,
+    "question_text": "Pernahkah Anda bertanya-tanya apakah anak Anda tuli?",
+    "is_critical": true,
+    "image_path": null
+  },
+  {
+    "question_number": 3,
+    "question_text": "Apakah anak Anda bermain pura-pura atau khayalan? (misalnya: pura-pura minum dari cangkir kosong, pura-pura berbicara di telepon)",
+    "is_critical": false,
+    "image_path": null
+  },
+  {
+    "question_number": 4,
+    "question_text": "Apakah anak Anda suka memanjat benda-benda? (misalnya: furnitur, peralatan taman bermain)",
+    "is_critical": false,
+    "image_path": null
+  },
+  {
+    "question_number": 5,
+    "question_text": "Apakah anak Anda membuat gerakan yang tidak biasa dengan jarinya dekat matanya?",
+    "is_critical": true,
+    "image_path": null
+  },
+  {
+    "question_number": 6,
+    "question_text": "Apakah anak Anda menunjuk dengan satu jari untuk meminta sesuatu atau bantuan?",
+    "is_critical": false,
+    "image_path": null
+  },
+  {
+    "question_number": 7,
+    "question_text": "Apakah anak Anda menunjuk dengan satu jari untuk menunjukkan minat pada sesuatu?",
+    "is_critical": true,
+    "image_path": null
+  },
+  {
+    "question_number": 8,
+    "question_text": "Apakah anak Anda tertarik pada anak-anak lain?",
+    "is_critical": false,
+    "image_path": null
+  },
+  {
+    "question_number": 9,
+    "question_text": "Apakah anak Anda membawa benda kepada Anda (orang tua) untuk menunjukkan sesuatu kepada Anda?",
+    "is_critical": true,
+    "image_path": null
+  },
+  {
+    "question_number": 10,
+    "question_text": "Apakah anak Anda merespons ketika namanya dipanggil?",
+    "is_critical": false,
+    "image_path": null
+  },
+  {
+    "question_number": 11,
+    "question_text": "Ketika Anda tersenyum pada anak Anda, apakah dia tersenyum kembali pada Anda?",
+    "is_critical": false,
+    "image_path": null
+  },
+  {
+    "question_number": 12,
+    "question_text": "Apakah anak Anda terganggu oleh suara sehari-hari? (misalnya: reaksi berlebihan terhadap penyedot debu atau musik keras)",
+    "is_critical": false,
+    "image_path": null
+  },
+  {
+    "question_number": 13,
+    "question_text": "Apakah anak Anda berjalan?",
+    "is_critical": true,
+    "image_path": null
+  },
+  {
+    "question_number": 14,
+    "question_text": "Apakah anak Anda menatap mata Anda ketika Anda berbicara padanya, bermain dengannya, atau mendandaninya?",
+    "is_critical": false,
+    "image_path": null
+  },
+  {
+    "question_number": 15,
+    "question_text": "Apakah anak Anda mencoba meniru apa yang Anda lakukan? (misalnya: melambaikan tangan selamat tinggal, bertepuk tangan, membuat suara lucu)",
+    "is_critical": true,
+    "image_path": null
+  },
+  {
+    "question_number": 16,
+    "question_text": "Jika Anda menoleh untuk melihat sesuatu, apakah anak Anda melihat sekeliling untuk melihat apa yang Anda lihat?",
+    "is_critical": false,
+    "image_path": null
+  },
+  {
+    "question_number": 17,
+    "question_text": "Apakah anak Anda berusaha membuat Anda melihatnya?",
+    "is_critical": false,
+    "image_path": null
+  },
+  {
+    "question_number": 18,
+    "question_text": "Apakah anak Anda mengerti ketika Anda mengatakan kepadanya untuk melakukan sesuatu?",
+    "is_critical": false,
+    "image_path": null
+  },
+  {
+    "question_number": 19,
+    "question_text": "Jika sesuatu yang baru terjadi, apakah anak Anda melihat wajah Anda untuk melihat bagaimana perasaan Anda tentang hal itu?",
+    "is_critical": false,
+    "image_path": null
+  },
+  {
+    "question_number": 20,
+    "question_text": "Apakah anak Anda suka aktivitas gerakan? (misalnya: diayun, dipantulkan di lutut Anda)",
+    "is_critical": false,
+    "image_path": null
+  }
+]

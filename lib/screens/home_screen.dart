@@ -8,6 +8,7 @@ import '../widgets/screening_tools_section.dart';
 import 'screening/kpsp_age_selection_screen.dart';
 import 'screening/nutrition_input_screen.dart';
 import 'screening/tdd_age_selection_screen.dart';
+import 'screening/mchat_questions_screen.dart';
 
 /// Home Screen
 /// Main home screen dengan:
@@ -158,13 +159,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                         onMCHATTap: () {
-                          // TODO: Navigate to M-CHAT screening
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                'M-CHAT-R Screening - Coming soon! 🧩',
-                              ),
-                              duration: Duration(seconds: 1),
+                          // Navigate to M-CHAT-R screening
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => const MchatQuestionsScreen(),
                             ),
                           );
                         },
