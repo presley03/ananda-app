@@ -7,6 +7,7 @@ import '../widgets/category_section.dart';
 import '../widgets/screening_tools_section.dart';
 import 'screening/kpsp_age_selection_screen.dart';
 import 'screening/nutrition_input_screen.dart';
+import 'screening/tdd_age_selection_screen.dart';
 
 /// Home Screen
 /// Main home screen dengan:
@@ -148,11 +149,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                         onTDDTap: () {
-                          // TODO: Navigate to TDD screening
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('TDD Screening - Coming soon! 👂'),
-                              duration: Duration(seconds: 1),
+                          // Navigate to TDD screening
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TddAgeSelectionScreen(),
                             ),
                           );
                         },
