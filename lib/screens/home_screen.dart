@@ -6,6 +6,7 @@ import '../widgets/greeting_section.dart';
 import '../widgets/category_section.dart';
 import '../widgets/screening_tools_section.dart';
 import 'screening/kpsp_age_selection_screen.dart';
+import 'screening/nutrition_input_screen.dart';
 
 /// Home Screen
 /// Main home screen dengan:
@@ -138,13 +139,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                         onGiziTap: () {
-                          // TODO: Navigate to Gizi calculator
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                'Kalkulator Gizi - Coming soon! 🎯',
-                              ),
-                              duration: Duration(seconds: 1),
+                          // Navigate to Nutrition calculator
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => NutritionInputScreen(),
                             ),
                           );
                         },
