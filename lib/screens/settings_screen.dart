@@ -4,6 +4,13 @@ import '../utils/constants/text_styles.dart';
 import '../utils/constants/dimensions.dart';
 import '../utils/constants/app_info.dart';
 import '../widgets/glass_card.dart';
+import 'settings/about_screen.dart';
+import 'settings/disclaimer_screen.dart';
+import 'settings/privacy_screen.dart';
+import 'settings/terms_screen.dart';
+import 'settings/references_screen.dart';
+import 'settings/credits_screen.dart';
+import 'settings/help_screen.dart';
 
 /// Settings Screen
 /// Screen pengaturan dengan menu list untuk:
@@ -68,7 +75,12 @@ class SettingsScreen extends StatelessWidget {
                         title: 'Tentang Aplikasi',
                         subtitle: 'Informasi ${AppInfo.appName}',
                         onTap: () {
-                          _showComingSoon(context, 'Tentang Aplikasi');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AboutScreen(),
+                            ),
+                          );
                         },
                       ),
 
@@ -81,7 +93,12 @@ class SettingsScreen extends StatelessWidget {
                         title: 'Disclaimer',
                         subtitle: 'Ketentuan penggunaan aplikasi',
                         onTap: () {
-                          _showComingSoon(context, 'Disclaimer');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const DisclaimerScreen(),
+                            ),
+                          );
                         },
                       ),
 
@@ -94,7 +111,12 @@ class SettingsScreen extends StatelessWidget {
                         title: 'Kebijakan Privasi',
                         subtitle: 'Perlindungan data pengguna',
                         onTap: () {
-                          _showComingSoon(context, 'Kebijakan Privasi');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PrivacyScreen(),
+                            ),
+                          );
                         },
                       ),
 
@@ -107,7 +129,12 @@ class SettingsScreen extends StatelessWidget {
                         title: 'Syarat & Ketentuan',
                         subtitle: 'Ketentuan layanan aplikasi',
                         onTap: () {
-                          _showComingSoon(context, 'Syarat & Ketentuan');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const TermsScreen(),
+                            ),
+                          );
                         },
                       ),
 
@@ -120,7 +147,12 @@ class SettingsScreen extends StatelessWidget {
                         title: 'Sumber Referensi',
                         subtitle: 'IDAI, WHO, Permenkes',
                         onTap: () {
-                          _showComingSoon(context, 'Sumber Referensi');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ReferencesScreen(),
+                            ),
+                          );
                         },
                       ),
 
@@ -133,7 +165,12 @@ class SettingsScreen extends StatelessWidget {
                         title: 'Pembuat',
                         subtitle: AppInfo.developerName,
                         onTap: () {
-                          _showComingSoon(context, 'Pembuat');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const CreditsScreen(),
+                            ),
+                          );
                         },
                       ),
 
@@ -146,7 +183,12 @@ class SettingsScreen extends StatelessWidget {
                         title: 'Bantuan',
                         subtitle: 'Panduan penggunaan aplikasi',
                         onTap: () {
-                          _showComingSoon(context, 'Bantuan');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const HelpScreen(),
+                            ),
+                          );
                         },
                       ),
 
@@ -251,15 +293,6 @@ class SettingsScreen extends StatelessWidget {
             size: AppDimensions.iconS,
           ),
         ],
-      ),
-    );
-  }
-
-  void _showComingSoon(BuildContext context, String feature) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('$feature - Coming soon! 📝'),
-        duration: const Duration(seconds: 1),
       ),
     );
   }
