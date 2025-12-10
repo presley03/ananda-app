@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     
     <!-- Permissions -->
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- REMOVED: INTERNET permission (app is 100% offline) -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />

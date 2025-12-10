@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.ananda_app"
+    namespace = "com.ananda.tumbuhkembang"
     compileSdk = 36  // Updated: SDK 36 untuk latest plugins
     ndkVersion = "27.0.12077973"
 
@@ -21,7 +21,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.ananda_app"
+        applicationId = "com.ananda.tumbuhkembang"
         minSdk = flutter.minSdkVersion
         targetSdk = 34  // Keep at 34 for stability
         versionCode = flutter.versionCode

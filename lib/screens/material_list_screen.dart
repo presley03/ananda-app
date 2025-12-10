@@ -22,7 +22,9 @@ import '../utils/helpers/populate_materials.dart';
 import 'material_detail_screen.dart';
 
 class MaterialListScreen extends StatefulWidget {
-  const MaterialListScreen({super.key});
+  final String? initialCategory; // Parameter untuk set filter awal
+
+  const MaterialListScreen({super.key, this.initialCategory});
 
   @override
   State<MaterialListScreen> createState() => _MaterialListScreenState();
@@ -46,6 +48,10 @@ class _MaterialListScreenState extends State<MaterialListScreen> {
   @override
   void initState() {
     super.initState();
+    // Set initial category dari parameter jika ada
+    if (widget.initialCategory != null) {
+      _selectedCategory = widget.initialCategory!;
+    }
     _initializeData();
   }
 
@@ -64,8 +70,8 @@ class _MaterialListScreenState extends State<MaterialListScreen> {
     try {
       print('🔄 Initializing MaterialListScreen...');
 
-      // 1. Populate database on first run
-      await _populator.populateAll();
+      // 1. Populate database (force clear & reload for update)
+      await _populator.clearAndRepopulate();
 
       // 2. Load all materials from database
       await _loadMaterials();
@@ -214,14 +220,28 @@ class _MaterialListScreenState extends State<MaterialListScreen> {
       padding: const EdgeInsets.all(AppDimensions.spacingM),
       child: Row(
         children: [
+          // Back button (only show when opened from Home)
+          if (widget.initialCategory != null)
+            IconButton(
+              icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+
           // Title
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Materi Edukatif', style: AppTextStyles.h2),
-                SizedBox(height: AppDimensions.spacingXS),
                 Text(
+                  widget.initialCategory != null
+                      ? 'Materi ${widget.initialCategory} Tahun'
+                      : 'Materi Edukatif',
+                  style: AppTextStyles.h2,
+                ),
+                const SizedBox(height: AppDimensions.spacingXS),
+                const Text(
                   'Informasi tumbuh kembang anak',
                   style: AppTextStyles.body2,
                 ),

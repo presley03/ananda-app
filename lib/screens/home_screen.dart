@@ -9,6 +9,7 @@ import 'screening/kpsp_age_selection_screen.dart';
 import 'screening/nutrition_input_screen.dart';
 import 'screening/tdd_age_selection_screen.dart';
 import 'screening/mchat_questions_screen.dart';
+import 'material_list_screen.dart';
 
 /// Home Screen
 /// Main home screen dengan:
@@ -91,35 +92,38 @@ class _HomeScreenState extends State<HomeScreen> {
                       CategorySection(
                         title: 'Materi Edukatif',
                         onCategory01Tap: () {
-                          // TODO: Navigate to Materi 0-1 Tahun
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                'Materi 0-1 Tahun - Coming soon! 👶',
-                              ),
-                              duration: Duration(seconds: 1),
+                          // Navigate to Material List with 0-1 filter
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => const MaterialListScreen(
+                                    initialCategory: '0-1',
+                                  ),
                             ),
                           );
                         },
                         onCategory12Tap: () {
-                          // TODO: Navigate to Materi 1-2 Tahun
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                'Materi 1-2 Tahun - Coming soon! 🧒',
-                              ),
-                              duration: Duration(seconds: 1),
+                          // Navigate to Material List with 1-2 filter
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => const MaterialListScreen(
+                                    initialCategory: '1-2',
+                                  ),
                             ),
                           );
                         },
                         onCategory25Tap: () {
-                          // TODO: Navigate to Materi 2-5 Tahun
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                'Materi 2-5 Tahun - Coming soon! 👦',
-                              ),
-                              duration: Duration(seconds: 1),
+                          // Navigate to Material List with 2-5 filter
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => const MaterialListScreen(
+                                    initialCategory: '2-5',
+                                  ),
                             ),
                           );
                         },
