@@ -1,0 +1,72 @@
+[
+  {
+    "age_months": 72,
+    "question_number": 1,
+    "question_text": "Jangan menunjuk, membantu atau memberitahukan, katakan pada anak: Tunjukkan segi empat merah, Tunjukkan segi empat kuning, Tunjukkan segi empat biru, Tunjukkan segi empat hijau. Dapatkah anak menunjuk keempat warna itu dengan benar?",
+    "aspect": "Bicara & Bahasa",
+    "image_path": "assets/images/screening/kpsp/72_months/baby-boy.png"
+  },
+  {
+    "age_months": 72,
+    "question_number": 2,
+    "question_text": "Suruh anak melompat dengan satu kaki beberapa kali tanpa berpegangan (lompatan dengan dua kaki tidak ikut dinilai). Apakah ia dapat melompat 2-3 kali dengan satu kaki?",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 72,
+    "question_number": 3,
+    "question_text": "Dapatkah anak sepenuhnya berpakaian sendiri tanpa bantuan?",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  },
+  {
+    "age_months": 72,
+    "question_number": 4,
+    "question_text": "Suruh anak menggambar di tempat kosong yang tersedia. Katakan padanya: Buatlah gambar orang!. Jangan memberi perintah lebih dari itu. Jangan bertanya pada anak, biarkan ia menggambar anak bila ada bagian yang belum tergambar. Dalam gambar ini, hitunglah berapa bagian tubuh yang tergambar. Untuk bagian tubuh yang berpasangan seperti mata, telinga, lengan dan kaki, setiap pasang dinilai satu bagian. Dapatkah anak menggambarkan sedikitnya 3 bagian tubuh?",
+    "aspect": "Motorik Halus",
+    "image_path": null
+  },
+  {
+    "age_months": 72,
+    "question_number": 5,
+    "question_text": "Pada gambar orang yang dibuat pada nomor 4, dapatkah anak menggambar sedikitnya 6 bagian tubuh?",
+    "aspect": "Motorik Halus",
+    "image_path": null
+  },
+  {
+    "age_months": 72,
+    "question_number": 6,
+    "question_text": "Tulis apa yang dilakukan anak pada kalimat-kalimat yang belum selesai ini, jangan membantu kecuali mengulangi pertanyaannya: Jika kuda menarik kereta maka disebut..., Jika api panas maka es..., Jika ibu seorang wanita maka ayah seorang..., Apakah anak dapat menjawab benar (kudu kecil, es dingin, ayah seorang pria)?",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  },
+  {
+    "age_months": 72,
+    "question_number": 7,
+    "question_text": "Apakah anak dapat menangkap bola kecil sebesar bola tenis/bola kasti hanya dengan menggunakan kedua tangannya? (Bola besar tidak ikut dinilai)",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 72,
+    "question_number": 8,
+    "question_text": "Suruh anak berdiri satu kaki tanpa berpegangan. Jika perlu tunjukkan caranya dan beri anak anda kesempatan melakukannya 3 kali. Dapatkah ia mempertahankan keseimbangan dalam waktu 11 detik atau lebih?",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 72,
+    "question_number": 9,
+    "question_text": "Jangan membantu, ajarkan dan jangan memberitahu nama gambar ini, suruh anak menggambarkan seperti contoh ini di kertas kosong yang tersedia. Berikan 3 kali kesempatan. Apakah anak dapat menggambar seperti contoh ini?",
+    "aspect": "Motorik Halus",
+    "image_path": "assets/images/screening/kpsp/72_months/baby-boy.png"
+  },
+  {
+    "age_months": 72,
+    "question_number": 10,
+    "question_text": "Isi titik-titik di bawah ini dengan jawaban anak. Jangan membantu kecuali mengulangi pertanyaannya: Sepatu dibuat dari apa?, Pintu dibuat dari apa?, Sendok dibuat dari apa? Apakah anak dapat menjawab ke 3 pertanyaan di atas dengan benar? Sepatu dibuat dari besi, baja, plastik, kayu. Sepatu dibuat dari kulit, karet, ban, plastik, kayu. Pintu dibuat dari kayu, besi, kaca",
+    "aspect": "Bicara & Bahasa",
+    "image_path": null
+  }
+]

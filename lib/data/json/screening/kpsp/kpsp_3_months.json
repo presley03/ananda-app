@@ -1,0 +1,72 @@
+[
+  {
+    "age_months": 3,
+    "question_number": 1,
+    "question_text": "Pada waktu bayi telentang, apakah masing-masing lengan dan tungkai bergerak dengan mudah? jawab TIDAK jika bila salah satu atau kedua tungkai atau lengan bayi bergerak tak terarah/tak terkendali",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 3,
+    "question_number": 2,
+    "question_text": "Pada waktu bayi telentang apakah ia melihat dan menatap wajah anda?",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  },
+  {
+    "age_months": 3,
+    "question_number": 3,
+    "question_text": "Apakah bayi dapat mengeluarkan suara-suara lain (ngoceh) disamping menangis?",
+    "aspect": "Bicara & Bahasa",
+    "image_path": null
+  },
+  {
+    "age_months": 3,
+    "question_number": 4,
+    "question_text": "Pada waktu bayi telentang, apakah ia dapat mengikuti gerakan anda dengan menggerakkan kepalanya dari satu sisi ke sisi yang lain?",
+    "aspect": "Motorik Halus",
+    "image_path": "assets/images/screening/kpsp/3_months/baby-boy.png"
+  },
+  {
+    "age_months": 3,
+    "question_number": 5,
+    "question_text": "Pada waktu bayi telentang, apakah ia dapat mengikuti gerakan anda dengan menggerakkan kepalanya dan matanya hampir sampai pada sisi yang lain?",
+    "aspect": "Motorik Halus",
+    "image_path": "assets/images/screening/kpsp/3_months/baby-boy.png"
+  },
+  {
+    "age_months": 3,
+    "question_number": 6,
+    "question_text": "Pada waktu anda mengajak bayi berbicara dan tersenyum, apakah ia tersenyum kembali kepada anda",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  },
+  {
+    "age_months": 3,
+    "question_number": 7,
+    "question_text": "Pada waktu bayi telungkup di alas yang datar, apakah ia dapat mengangkat kepalanya seperti pada gambar ini?",
+    "aspect": "Motorik Kasar",
+    "image_path": "assets/images/screening/kpsp/3_months/baby-boy.png"
+  },
+  {
+    "age_months": 3,
+    "question_number": 8,
+    "question_text": "Pada waktu bayi telungkup di alas yang datar, apakah ia dapat mengangkat kepalanya sehingga membentuk sudut 45° seperti pada gambar?",
+    "aspect": "Motorik Kasar",
+    "image_path": "assets/images/screening/kpsp/3_months/baby-boy.png"
+  },
+  {
+    "age_months": 3,
+    "question_number": 9,
+    "question_text": "Pada waktu bayi telungkup di alas yang datar, apakah ia dapat mengangkat kepalanya dengan tegak seperti pada gambar?",
+    "aspect": "Motorik Kasar",
+    "image_path": "assets/images/screening/kpsp/3_months/baby-boy.png"
+  },
+  {
+    "age_months": 3,
+    "question_number": 10,
+    "question_text": "Apakah bayi suka tertawa keras walau tidak digelitik atau diraba-raba?",
+    "aspect": "Bicara & Bahasa",
+    "image_path": null
+  }
+]

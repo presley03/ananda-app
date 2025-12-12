@@ -1,0 +1,72 @@
+[
+  {
+    "age_months": 48,
+    "question_number": 1,
+    "question_text": "Dapatkah anak mengayuh sepeda roda tiga sejauh sedikitnya 3 meter?",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 48,
+    "question_number": 2,
+    "question_text": "Setelah makan, apakah anak mencuci dan mengeringkan tangannya dengan baik sehingga anda tidak perlu mengulanginya?",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  },
+  {
+    "age_months": 48,
+    "question_number": 3,
+    "question_text": "Suruh anak berdiri satu kaki tanpa berpegangan. Jika perlu tunjukkan caranya dan beri anak anda kesempatan melakukannya 3 kali. Dapatkah ia mempertahankan keseimbangan dalam waktu 2 detik atau lebih?",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 48,
+    "question_number": 4,
+    "question_text": "Letakkan selembar kertas seukuran buku ini di lantai. Apakah anak dapat melompati panjang kertas ini dengan mengangkat kedua kakinya secara bersamaan tanpa didahului lari?",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 48,
+    "question_number": 5,
+    "question_text": "Jangan membantu anak dan jangan menyebut lingkaran. Suruh anak menggambar seperti contoh ini di kertas kosong yang tersedia. Apakah anak dapat menggambar lingkaran?",
+    "aspect": "Motorik Halus",
+    "image_path": "assets/images/screening/kpsp/48_months/baby-boy.png"
+  },
+  {
+    "age_months": 48,
+    "question_number": 6,
+    "question_text": "Dapatkah anak meletakkan 8 buah kubus satu persatu di atas yang lain tanpa menjatuhkan kubus tersebut? Kubus yang digunakan ukuran 2.5 - 5 cm.",
+    "aspect": "Motorik Halus",
+    "image_path": null
+  },
+  {
+    "age_months": 48,
+    "question_number": 7,
+    "question_text": "Apakah anak dapat bermain petak umpet, ular naga atau permainan lain dimana ia ikut bermain dan mengikuti aturan bermain?",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  },
+  {
+    "age_months": 48,
+    "question_number": 8,
+    "question_text": "Dapatkah anak mengenakan celana panjang, kemeja, baju atau kaos kaki tanpa di bantu? (Tidak termasuk memasang kancing, gesper atau ikat pinggang)",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  },
+  {
+    "age_months": 48,
+    "question_number": 9,
+    "question_text": "Dapatkah anak menyebutkan nama lengkapnya tanpa dibantu?",
+    "aspect": "Bicara & Bahasa",
+    "image_path": null
+  },
+  {
+    "age_months": 48,
+    "question_number": 10,
+    "question_text": "Dapatkah anak menyebutkan paling sedikit 4 nama benda (misalnya: bola, sepatu, boneka, baju, atau benda lain) yang ditunjukkan kepada anak?",
+    "aspect": "Bicara & Bahasa",
+    "image_path": null
+  }
+]

@@ -1,0 +1,72 @@
+[
+  {
+    "age_months": 66,
+    "question_number": 1,
+    "question_text": "Jangan membantu anak dan jangan memberitahu nama gambar ini, suruh anak menggambar seperti contoh ini di kertas kosong yang tersedia. Berikan 3 kali kesempatan. Apakah anak dapat menggambar seperti contoh ini?",
+    "aspect": "Motorik Halus",
+    "image_path": "assets/images/screening/kpsp/66_months/baby-boy.png"
+  },
+  {
+    "age_months": 66,
+    "question_number": 2,
+    "question_text": "Ikuti perintah ini dengan seksama. Jangan memberi isyarat dengan telunjuk atau mata pada saat memberikan perintah berikut ini: Letakkan kertas ini di atas lantai, Letakkan kertas ini di bawah kursi, Letakkan kertas ini di depan kamu, Letakkan kertas ini di belakang kamu. Jawab YA hanya jika anak mengerti arti di atas, di bawah, di depan dan di belakang",
+    "aspect": "Bicara & Bahasa",
+    "image_path": null
+  },
+  {
+    "age_months": 66,
+    "question_number": 3,
+    "question_text": "Apakah anak bereaksi dengan tenang dan tidak rewel (tanpa menangis atau menggelayut pada anda) pada saat anda meninggalkannya?",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  },
+  {
+    "age_months": 66,
+    "question_number": 4,
+    "question_text": "Jangan menunjuk, membantu atau memberitahukan, katakan pada anak: Tunjukkan segi empat merah, Tunjukkan segi empat kuning, Tunjukkan segi empat biru, Tunjukkan segi empat hijau. Dapatkah anak menunjuk keempat warna itu dengan benar?",
+    "aspect": "Bicara & Bahasa",
+    "image_path": "assets/images/screening/kpsp/66_months/baby-boy.png"
+  },
+  {
+    "age_months": 66,
+    "question_number": 5,
+    "question_text": "Suruh anak melompat dengan satu kaki beberapa kali tanpa berpegangan (lompatan dengan dua kaki tidak ikut dinilai). Apakah ia dapat melompat 2-3 kali dengan satu kaki?",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 66,
+    "question_number": 6,
+    "question_text": "Dapatkah anak sepenuhnya berpakaian sendiri tanpa bantuan?",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  },
+  {
+    "age_months": 66,
+    "question_number": 7,
+    "question_text": "Suruh anak menggambar di tempat kosong yang tersedia. Katakan padanya: Buatlah gambar orang!. Jangan memberi perintah lebih dari itu. Jangan bertanya pada anak, biarkan ia menggambar anak bila ada bagian yang belum tergambar. Dalam gambar ini, hitunglah berapa bagian tubuh yang tergambar (setiap lengan, setiap tungkai, kepala, badan, mata, hidung, mulut dan telinga dihitung 1). Untuk bagian tubuh yang berpasangan seperti mata, telinga, lengan dan kaki, setiap pasang dinilai satu bagian. Dapatkah anak menggambarkan sedikitnya 3 bagian tubuh?",
+    "aspect": "Motorik Halus",
+    "image_path": null
+  },
+  {
+    "age_months": 66,
+    "question_number": 8,
+    "question_text": "Pada gambar orang yang dibuat pada nomor 7, dapatkah anak menggambarkan sedikitnya 6 bagian tubuh? Tulis apa yang dilakukan anak pada kalimat-kalimat yang belum selesai dibawah ini, contoh: Jika api panas maka es..., Jika es dingin maka api..., Jika ibu seorang wanita maka ayah adalah..., Apakah anak menjawab dengan benar (laku kecil, es dingin, ayah seorang pria)?",
+    "aspect": "Bicara & Bahasa",
+    "image_path": null
+  },
+  {
+    "age_months": 66,
+    "question_number": 9,
+    "question_text": "Dapatkah anak menangkap bola kecil sebesar bola tenis hanya dengan menggunakan kedua tangannya?",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 66,
+    "question_number": 10,
+    "question_text": "Apakah anak dapat menyebutkan nama 4 warna dari warna merah, biru, kuning, hijau, jingga dan ungu?",
+    "aspect": "Bicara & Bahasa",
+    "image_path": null
+  }
+]

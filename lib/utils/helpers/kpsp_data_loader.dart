@@ -15,7 +15,7 @@ class KpspDataLoader {
     try {
       // Load JSON file dari assets
       final String jsonString = await rootBundle.loadString(
-        'lib/data/json/kpsp_${ageMonths}_months.json',
+        'lib/data/json/screening/kpsp/kpsp_${ageMonths}_months.json',
       );
 
       // Parse JSON
@@ -62,7 +62,9 @@ class KpspDataLoader {
     // Check setiap umur apakah ada file-nya
     for (int age in allAges) {
       try {
-        await rootBundle.loadString('lib/data/json/kpsp_${age}_months.json');
+        await rootBundle.loadString(
+          'lib/data/json/screening/kpsp/kpsp_${age}_months.json',
+        );
         availableAges.add(age);
       } catch (e) {
         // File tidak ada, skip
@@ -81,7 +83,7 @@ class KpspDataLoader {
   static Future<bool> isDataAvailable(int ageMonths) async {
     try {
       await rootBundle.loadString(
-        'lib/data/json/kpsp_${ageMonths}_months.json',
+        'lib/data/json/screening/kpsp/kpsp_${ageMonths}_months.json',
       );
       return true;
     } catch (e) {

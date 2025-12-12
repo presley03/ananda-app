@@ -1,0 +1,72 @@
+[
+  {
+    "age_months": 21,
+    "question_number": 1,
+    "question_text": "Tanpa berpegangan atau menyentuh lantai, apakah anak dapat membungkuk untuk memungut mainan di lantai dan kemudian berdiri kembali?",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 21,
+    "question_number": 2,
+    "question_text": "Apakah anak dapat menunjukkan apa yang diinginkannya tanpa menangis atau merengek? Jawab YA bila ia menunjuk, menarik atau mengeluarkan suara yang menyenangkan.",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  },
+  {
+    "age_months": 21,
+    "question_number": 3,
+    "question_text": "Apakah anak dapat berjalan di sepanjang ruangan tanpa jatuh atau terhuyung-huyung?",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 21,
+    "question_number": 4,
+    "question_text": "Apakah anak dapat mengambil benda kecil seperti kacang, kismis, atau potongan biskuit dengan menggunakan ibu jari dan jari telunjuk seperti pada gambar?",
+    "aspect": "Motorik Halus",
+    "image_path": "assets/images/screening/kpsp/21_months/baby-boy.png"
+  },
+  {
+    "age_months": 21,
+    "question_number": 5,
+    "question_text": "Jika anda menggelindingkan bola ke anak, apakah ia menggelindingkan/melemparkan kembali bola pada anda?",
+    "aspect": "Motorik Halus",
+    "image_path": null
+  },
+  {
+    "age_months": 21,
+    "question_number": 6,
+    "question_text": "Apakah anak dapat memegang sendiri cangkir/gelas dan minum dari tempat tersebut tanpa tumpah?",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  },
+  {
+    "age_months": 21,
+    "question_number": 7,
+    "question_text": "Jika anda sedang melakukan pekerjaan rumah tangga, apakah anak meniru apa yang anda lakukan?",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  },
+  {
+    "age_months": 21,
+    "question_number": 8,
+    "question_text": "Apakah anak dapat meletakkan satu kubus di atas kubus yang lain tanpa menjatuhkan kubus itu? Kubus yang digunakan ukuran 2.5-5.0 Cm.",
+    "aspect": "Motorik Halus",
+    "image_path": null
+  },
+  {
+    "age_months": 21,
+    "question_number": 9,
+    "question_text": "Apakah anak dapat mengucapkan paling sedikit 3 kata yang mempunyai arti selain \"papa\" dan \"mama\"?",
+    "aspect": "Bicara & Bahasa",
+    "image_path": null
+  },
+  {
+    "age_months": 21,
+    "question_number": 10,
+    "question_text": "Apakah anak dapat berjalan mundur 5 langkah atau lebih tanpa kehilangan keseimbangan? (Anda mungkin dapat melihatnya ketika anak menarik mainannya).",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  }
+]

@@ -1,0 +1,72 @@
+[
+  {
+    "age_months": 6,
+    "question_number": 1,
+    "question_text": "Pada waktu bayi telentang, apakah ia dapat mengikuti gerakan anda dengan menggerakkan kepala sepenuhnya dari satu sisi ke sisi yang lain?",
+    "aspect": "Motorik Halus",
+    "image_path": "assets/images/screening/kpsp/6_months/baby-boy.png"
+  },
+  {
+    "age_months": 6,
+    "question_number": 2,
+    "question_text": "Dapatkah bayi mempertahankan posisi kepala dalam keadaan tegak dan stabil? Jawab TIDAK bila kepala bayi cenderung jatuh ke kanan/kiri atau ke dadanya.",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 6,
+    "question_number": 3,
+    "question_text": "Sentuhkan pensil di punggung tangan atau ujung jari bayi (jangan meletakkan di atas telapak tangan bayi). Apakah bayi dapat menggenggam pensil itu selama beberapa detik?",
+    "aspect": "Motorik Halus",
+    "image_path": "assets/images/screening/kpsp/6_months/baby-boy.png"
+  },
+  {
+    "age_months": 6,
+    "question_number": 4,
+    "question_text": "Ketika bayi telungkup di alas datar, apakah ia dapat mengangkat dada dengan kedua lengannya sebagai penyangga seperti pada gambar?",
+    "aspect": "Motorik Kasar",
+    "image_path": "assets/images/screening/kpsp/6_months/baby-boy.png"
+  },
+  {
+    "age_months": 6,
+    "question_number": 5,
+    "question_text": "Pernahkah bayi mengeluarkan suara gembira bernada tinggi atau memekik tetapi bukan menangis?",
+    "aspect": "Bicara & Bahasa",
+    "image_path": null
+  },
+  {
+    "age_months": 6,
+    "question_number": 6,
+    "question_text": "Pernahkah bayi berbalik paling sedikit dua kali, dari telentang ke telungkup atau sebaliknya?",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 6,
+    "question_number": 7,
+    "question_text": "Pernahkah anda melihat bayi tersenyum ketika melihat mainan yang lucu, gambar atau binatang peliharaan pada saat ia bermain sendiri?",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  },
+  {
+    "age_months": 6,
+    "question_number": 8,
+    "question_text": "Dapatkah bayi mengarahkan matanya pada benda kecil sebesar kacang, kismis atau uang logam? Jawab TIDAK jika ia tidak dapat mengarahkan matanya.",
+    "aspect": "Motorik Halus",
+    "image_path": null
+  },
+  {
+    "age_months": 6,
+    "question_number": 9,
+    "question_text": "Dapatkah bayi meraih mainan yang diletakkan agak jauh namun masih berada dalam jangkauan tangannya?",
+    "aspect": "Motorik Halus",
+    "image_path": null
+  },
+  {
+    "age_months": 6,
+    "question_number": 10,
+    "question_text": "Pada posisi bayi telentang, pegang kedua tangannya lalu tarik perlahan-lahan ke posisi duduk. Dapatkah bayi mempertahankan lehernya secara kaku seperti gambar di sebelah kiri ? Jawab TIDAK bila kepala bayi jatuh kembali seperti gambar sebelah kanan.",
+    "aspect": "Motorik Kasar",
+    "image_path": "assets/images/screening/kpsp/6_months/baby-boy.png"
+  }
+]

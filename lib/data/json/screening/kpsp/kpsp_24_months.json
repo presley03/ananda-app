@@ -1,0 +1,72 @@
+[
+  {
+    "age_months": 24,
+    "question_number": 1,
+    "question_text": "Jika anda sedang melakukan pekerjaan rumah tangga, apakah anak meniru apa yang anda lakukan?",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  },
+  {
+    "age_months": 24,
+    "question_number": 2,
+    "question_text": "Apakah anak dapat meletakkan 1 buah kubus di atas kubus yang lain tanpa menjatuhkan kubus itu? Kubus yang digunakan ukuran 2.5-5 cm.",
+    "aspect": "Motorik Halus",
+    "image_path": null
+  },
+  {
+    "age_months": 24,
+    "question_number": 3,
+    "question_text": "Apakah anak dapat mengucapkan paling sedikit 3 kata yang mempunyai arti selain \"papa\" dan \"mama\"?",
+    "aspect": "Bicara & Bahasa",
+    "image_path": null
+  },
+  {
+    "age_months": 24,
+    "question_number": 4,
+    "question_text": "Apakah anak dapat berjalan mundur 5 langkah atau lebih tanpa kehilangan keseimbangan? (Anda mungkin dapat melihatnya ketika anak menarik mainannya).",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 24,
+    "question_number": 5,
+    "question_text": "Dapatkah anak melepas pakaiannya seperti: baju, rok, atau celananya? (topi dan kaos kaki tidak ikut dinilai).",
+    "aspect": "Motorik Halus; Sosialisasi & Kemandirian",
+    "image_path": null
+  },
+  {
+    "age_months": 24,
+    "question_number": 6,
+    "question_text": "Dapatkah anak berjalan naik tangga sendiri? Jawab YA jika ia naik tangga dengan posisi tegak atau berpegangan pada dinding atau pegangan tangga. Jawab TIDAK jika ia naik tangga dengan merangkak atau anda tidak membolehkan anak naik tangga atau anak harus berpegangan pada seseorang.",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 24,
+    "question_number": 7,
+    "question_text": "Tanpa bimbingan, petunjuk atau bantuan anda, dapatkah anak menunjuk dengan benar paling sedikit satu bagian badannya (rambut, mata, hidung, mulut, atau bagian badan yang lain)?",
+    "aspect": "Bicara & Bahasa",
+    "image_path": null
+  },
+  {
+    "age_months": 24,
+    "question_number": 8,
+    "question_text": "Dapatkah anak makan nasi sendiri tanpa banyak tumpah?",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  },
+  {
+    "age_months": 24,
+    "question_number": 9,
+    "question_text": "Dapatkah anak membantu memungut mainannya sendiri atau membantu mengangkat piring jika diminta?",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  },
+  {
+    "age_months": 24,
+    "question_number": 10,
+    "question_text": "Dapatkah anak menendang bola kecil (sebesar bola tenis) ke depan tanpa berpegangan pada apapun? Mendorong tidak ikut dinilai.",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  }
+]

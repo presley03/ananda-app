@@ -1,0 +1,72 @@
+[
+  {
+    "age_months": 54,
+    "question_number": 1,
+    "question_text": "Dapatkah anak meletakkan 5 buah kubus satu persatu di atas yang lain tanpa menjatuhkan kubus? (Tidak disusun seperti piramid atau menara)",
+    "aspect": "Motorik Halus",
+    "image_path": null
+  },
+  {
+    "age_months": 54,
+    "question_number": 2,
+    "question_text": "Apakah anak dapat bermain petak umpet, cilukba, atau permainan lain dimana ia bisa bermain dan menanti giliran bermain?",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  },
+  {
+    "age_months": 54,
+    "question_number": 3,
+    "question_text": "Jika anda berbicara dengan anak, apakah ia mendengarkan dan menanggapi anda? (tidak usah menghentikan kegiatannya, tidak perlu ia diam tanpa bersuara)",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  },
+  {
+    "age_months": 54,
+    "question_number": 4,
+    "question_text": "Dapatkah anak menyebutkan nama lengkapnya tanpa dibantu? Jawab TIDAK jika ia hanya menyebut sebagian namanya atau salah satu dari namanya",
+    "aspect": "Bicara & Bahasa",
+    "image_path": null
+  },
+  {
+    "age_months": 54,
+    "question_number": 5,
+    "question_text": "Isi titik-titik di bawah ini dengan jawaban anak. Jangan membantu kecuali memberikan contoh bagaimana ia harus menjawab: Jika kuda menarik kereta maka disebut..., Apa yang kamu lakukan jika kamu lapar?..., Apa yang kamu lakukan jika kamu lelah?... Jawab YA bila anak menjawab ke 3 pertanyaan tadi dengan benar, bukan dengan perkiraan atau hayalan",
+    "aspect": "Bicara & Bahasa",
+    "image_path": null
+  },
+  {
+    "age_months": 54,
+    "question_number": 6,
+    "question_text": "Apakah anak dapat mengerti arti dari: di samping, di bawah, di depan atau di belakang? Suruh anak untuk meletakkan sepotong kertas di atas, di bawah, di depan, di samping atau di belakang sebuah kursi. Jawab YA bila ia mengerti ke 4 kata tadi",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  },
+  {
+    "age_months": 54,
+    "question_number": 7,
+    "question_text": "Suruh anak berdiri satu kaki tanpa berpegangan. Jika perlu tunjukkan caranya dan biarkan ia mencoba melakukannya 3 kali. Apakah ia dapat berdiri dengan satu kaki (kaki yang satunya diangkat) dalam waktu 6 detik atau lebih?",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 54,
+    "question_number": 8,
+    "question_text": "Jangan menggambarkan lebih dulu. Suruh anak menyalin gambar ini. Perhatikan gambar kedua garis ini pada anak. Buatlah garis seperti ini. Biarkan anak menunjuk garis yang lebih panjang. Minta anak menunjuk, putar lembar ini agar dan ulangi pertanyaan tadi: Apakah anak dapat menunjuk garis yang lebih panjang sebanyak 3 kali dengan benar?",
+    "aspect": "Motorik Halus",
+    "image_path": "assets/images/screening/kpsp/54_months/baby-boy.png"
+  },
+  {
+    "age_months": 54,
+    "question_number": 9,
+    "question_text": "Jangan membantu anak dan jangan memberitahu nama gambar ini. Suruh anak menggambar seperti ini di kertas kosong yang tersedia. Berikan 3 kali kesempatan. Apakah anak dapat menggambar seperti contoh ini?",
+    "aspect": "Motorik Halus",
+    "image_path": "assets/images/screening/kpsp/placeholder.png"
+  },
+  {
+    "age_months": 54,
+    "question_number": 10,
+    "question_text": "Ikuti perintah ini dengan seksama. Jangan memberi isyarat dengan telunjuk atau mata pada saat memberikan perintah berikut ini: Letakkan kertas ini di atas lantai, Letakkan kertas ini di bawah kursi, Letakkan kertas ini di depan kamu, Letakkan kertas ini di belakang kamu. Jawab YA hanya jika anak mengerti arti di atas, di bawah, di depan dan/atau di belakang",
+    "aspect": "Bicara & Bahasa",
+    "image_path": null
+  }
+]

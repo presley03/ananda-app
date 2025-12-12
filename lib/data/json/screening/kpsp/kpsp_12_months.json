@@ -1,0 +1,72 @@
+[
+  {
+    "age_months": 12,
+    "question_number": 1,
+    "question_text": "Jika anda bersembunyi di belakang sesuatu/di pojok, kemudian muncul dan menghilang secara berulang-ulang di hadapan anak, apakah ia mencari anda atau mengharapkan anda muncul kembali?",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  },
+  {
+    "age_months": 12,
+    "question_number": 2,
+    "question_text": "Letakkan pensil di telapak tangan bayi. Coba ambil pensil tersebut dengan perlahan-lahan. Sulitkah anda mendapatkan pensil itu kembali?",
+    "aspect": "Motorik Halus",
+    "image_path": null
+  },
+  {
+    "age_months": 12,
+    "question_number": 3,
+    "question_text": "Apakah anak dapat berdiri selama 30 detik atau lebih dengan berpegangan pada kursi/meja?",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 12,
+    "question_number": 4,
+    "question_text": "Apakah anak dapat mengatakan 2 suku kata yang sama, misalnya: \"ma-ma\", \"da-da\" atau \"pa-pa\". Jawab YA bila ia mengeluarkan salah satu suara tadi.",
+    "aspect": "Bicara & Bahasa",
+    "image_path": null
+  },
+  {
+    "age_months": 12,
+    "question_number": 5,
+    "question_text": "Apakah anak dapat mengangkat badannya ke posisi berdiri tanpa bantuan anda?",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 12,
+    "question_number": 6,
+    "question_text": "Apakah anak dapat membedakan anda dengan orang yang belum ia kenal? Ia akan menunjukkan sikap malu-malu atau ragu-ragu pada saat permulaan bertemu dengan orang yang belum dikenalnya.",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  },
+  {
+    "age_months": 12,
+    "question_number": 7,
+    "question_text": "Apakah anak dapat mengambil benda kecil seperti kacang atau kismis, dengan meremas di antara ibu jari dan jarinya seperti pada gambar?",
+    "aspect": "Motorik Halus",
+    "image_path": "assets/images/screening/kpsp/12_months/baby-boy.png"
+  },
+  {
+    "age_months": 12,
+    "question_number": 8,
+    "question_text": "Apakah anak dapat duduk sendiri tanpa bantuan?",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 12,
+    "question_number": 9,
+    "question_text": "Sebut 2-3 kata yang dapat ditiru oleh anak (tidak perlu kata-kata yang lengkap). Apakah ia mencoba meniru menyebutkan kata-kata tadi?",
+    "aspect": "Bicara & Bahasa",
+    "image_path": null
+  },
+  {
+    "age_months": 12,
+    "question_number": 10,
+    "question_text": "Tanpa bantuan, apakah anak dapat mempertemukan dua kubus kecil yang ia pegang? Kerincingan bertangkai dan tutup panci tidak ikut dinilai",
+    "aspect": "Motorik Halus",
+    "image_path": null
+  }
+]

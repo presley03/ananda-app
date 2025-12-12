@@ -35,3 +35,4 @@ flutter:
     - lib/data/json/materials/0-1/
     - lib/data/json/materials/1-2/
     - lib/data/json/materials/2-5/
+    - lib/data/json/screening/kpsp/

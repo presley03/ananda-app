@@ -1,0 +1,72 @@
+[
+  {
+    "age_months": 9,
+    "question_number": 1,
+    "question_text": "Pada posisi bayi telentang, pegang kedua tangannya lalu tarik perlahan-lahan ke posisi duduk. Dapatkah bayi mempertahankan lehernya secara kaku seperti gambar di sebelah kiri? Jawab TIDAK bila kepala bayi jatuh kembali seperti gambar sebelah kanan.",
+    "aspect": "Motorik Kasar",
+    "image_path": "assets/images/screening/kpsp/9_months/baby-boy.png"
+  },
+  {
+    "age_months": 9,
+    "question_number": 2,
+    "question_text": "Pernahkah anda melihat bayi memindahkan mainan atau kue kering dari satu tangan ke tangan yang lain? Benda-benda panjang seperti sendok atau kerincingan bertangkai tidak ikut dinilai.",
+    "aspect": "Motorik Halus",
+    "image_path": null
+  },
+  {
+    "age_months": 9,
+    "question_number": 3,
+    "question_text": "Tarik perhatian bayi dengan memperlihatkan selendang, sapu tangan atau serbet, kemudian jatuhkan ke lantai. Apakah bayi mencoba mencarinya? Misalnya mencari di bawah meja atau di belakang kursi?",
+    "aspect": "Motorik Halus",
+    "image_path": null
+  },
+  {
+    "age_months": 9,
+    "question_number": 4,
+    "question_text": "Apakah bayi dapat memungut dua benda seperti mainan/kue kering, dan masing-masing tangan memegang satu benda pada saat yang sama? Jawab TIDAK bila bayi tidak pernah melakukan perbuatan ini.",
+    "aspect": "Motorik Halus",
+    "image_path": null
+  },
+  {
+    "age_months": 9,
+    "question_number": 5,
+    "question_text": "Jika anda mengangkat bayi melalui ketiaknya ke posisi berdiri, dapatkah ia menyangga sebagian berat badan dengan kedua kakinya? Jawab YA bila ia mencoba berdiri dan sebagian berat badan tertumpu pada kedua kakinya.",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 9,
+    "question_number": 6,
+    "question_text": "Dapatkah bayi memungut dengan tangannya benda-benda kecil seperti kismis, kacang-kacangan, potongan biskuit, dengan gerakan miring atau menggerapai seperti gambar?",
+    "aspect": "Motorik Halus",
+    "image_path": "assets/images/screening/kpsp/9_months/baby-boy.png"
+  },
+  {
+    "age_months": 9,
+    "question_number": 7,
+    "question_text": "Tanpa disangga oleh bantal, kursi atau dinding, dapatkah bayi duduk sendiri selama 60 detik?",
+    "aspect": "Motorik Kasar",
+    "image_path": "assets/images/screening/kpsp/9_months/baby-boy.png"
+  },
+  {
+    "age_months": 9,
+    "question_number": 8,
+    "question_text": "Apakah bayi dapat makan kue kering sendiri?",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  },
+  {
+    "age_months": 9,
+    "question_number": 9,
+    "question_text": "Pada waktu bayi bermain sendiri dan anda diam-diam datang berdiri di belakangnya, apakah ia menengok ke belakang seperti mendengar kedatangan anda? Suara keras tidak ikut dihitung. Jawab YA hanya jika anda melihat reaksinya terhadap suara yang perlahan atau bisikan.",
+    "aspect": "Bicara & Bahasa",
+    "image_path": null
+  },
+  {
+    "age_months": 9,
+    "question_number": 10,
+    "question_text": "Letakkan suatu mainan yang dinginkannya di luar jangkauan bayi, apakah ia mencoba mendapatkannya dengan mengulurkan lengan atau badannya?",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  }
+]

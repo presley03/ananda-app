@@ -1,0 +1,72 @@
+[
+  {
+    "age_months": 36,
+    "question_number": 1,
+    "question_text": "Bila diberi pensil, apakah anak mencoret-coret kertas tanpa bantuan/petunjuk?",
+    "aspect": "Motorik Halus",
+    "image_path": null
+  },
+  {
+    "age_months": 36,
+    "question_number": 2,
+    "question_text": "Dapatkah anak meletakkan 4 buah kubus satu persatu di atas kubus yang lain tanpa menjatuhkan kubus itu? Kubus yang digunakan ukuran 2.5 - 5 cm.",
+    "aspect": "Motorik Halus",
+    "image_path": null
+  },
+  {
+    "age_months": 36,
+    "question_number": 3,
+    "question_text": "Dapatkah anak menggunakan 2 kata pada saat berbicara seperti \"minta minum\", \"mau tidur\"? \"Terimakasih\" dan \"Dadag\" tidak ikut dinilai.",
+    "aspect": "Bicara & Bahasa",
+    "image_path": null
+  },
+  {
+    "age_months": 36,
+    "question_number": 4,
+    "question_text": "Apakah anak dapat menyebut 2 diantara gambar-gambar ini tanpa bantuan? (Menyebut dengan suara binatang tidak ikut dinilai).",
+    "aspect": "Bicara & Bahasa",
+    "image_path": "assets/images/screening/kpsp/36_months/baby-boy.png"
+  },
+  {
+    "age_months": 36,
+    "question_number": 5,
+    "question_text": "Dapatkah anak melempar bola lurus ke arah perut atau dada anda dari jarak 1,5 meter?",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 36,
+    "question_number": 6,
+    "question_text": "Ikuti perintah ini dengan seksama. Jangan memberi isyarat dengan telunjuk atau mata pada saat memberikan perintah berikut ini: \"Letakkan kertas ini di lantai\". \"Letakkan kertas ini di kursi\". \"Berikan kertas ini kepada ibu\". Dapatkah anak melaksanakan ketiga perintah tadi?",
+    "aspect": "Bicara & Bahasa",
+    "image_path": null
+  },
+  {
+    "age_months": 36,
+    "question_number": 7,
+    "question_text": "Buat garis lurus ke bawah sepanjang sekurang-kurangnya 2.5 cm. Suruh anak menggambar garis lain di samping garis ini. Jawab YA bila ia menggambar garis seperti ini: | Jawab TIDAK bila ia menggambar garis seperti ini: /",
+    "aspect": "Motorik Halus",
+    "image_path": "assets/images/screening/kpsp/36_months/baby-boy.png"
+  },
+  {
+    "age_months": 36,
+    "question_number": 8,
+    "question_text": "Letakkan selembar kertas seukuran buku ini di lantai. Apakah anak dapat melompati bagian lebar kertas dengan mengangkat kedua kakinya secara bersamaan tanpa didahului lari?",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  },
+  {
+    "age_months": 36,
+    "question_number": 9,
+    "question_text": "Dapatkah anak mengenakan sepatunya sendiri?",
+    "aspect": "Sosialisasi & Kemandirian",
+    "image_path": null
+  },
+  {
+    "age_months": 36,
+    "question_number": 10,
+    "question_text": "Dapatkah anak mengayuh sepeda roda tiga sejauh sedikitnya 3 meter?",
+    "aspect": "Motorik Kasar",
+    "image_path": null
+  }
+]
