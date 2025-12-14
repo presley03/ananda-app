@@ -1,0 +1,72 @@
+[
+  {
+    "age_range": "24-36",
+    "question_number": 1,
+    "question_text": "Apakah anak mulai menggunakan kata-kata lain, selain kata 'mama', 'papa', anggota keluarga lain, dan hewan peliharaan?",
+    "category": "Ekspresif",
+    "image_path": null
+  },
+  {
+    "age_range": "24-36",
+    "question_number": 2,
+    "question_text": "Apakah anak mulai mengungkapkan kata yang berarti 'milik' misal \"Susu kamu\", \"Bonekaku\"?",
+    "category": "Ekspresif",
+    "image_path": null
+  },
+  {
+    "age_range": "24-36",
+    "question_number": 3,
+    "question_text": "Apakah anak dapat menyebutkan nama benda dan kegunaannya, seperti cangkir untuk minum, bola untuk dilempar, pensil warna untuk menggambar, sendok untuk makan?",
+    "category": "Ekspresif",
+    "image_path": null
+  },
+  {
+    "age_range": "24-36",
+    "question_number": 4,
+    "question_text": "Apakah lebih dari tiga perempat orang mengerti apa yang dibicarakan anak Anda?",
+    "category": "Ekspresif",
+    "image_path": null
+  },
+  {
+    "age_range": "24-36",
+    "question_number": 5,
+    "question_text": "Apakah anak dapat mengerjakan 2 macam perintah dalam satu kalimat, seperti \"Ambil sepatu dan taruh disini\" tanpa diberi contoh?",
+    "category": "Reseptif",
+    "image_path": null
+  },
+  {
+    "age_range": "24-36",
+    "question_number": 6,
+    "question_text": "Apakah anak dapat menunjuk minimal 2 nama benda di depannya (cangkir, bola, sendok)?",
+    "category": "Reseptif",
+    "image_path": null
+  },
+  {
+    "age_range": "24-36",
+    "question_number": 7,
+    "question_text": "Apakah anak dapat menunjukkan minimal 2 nama benda di depannya sesuai fungsinya (misal untuk minum: cangkir, untuk dilempar: bola, untuk makan: sendok, untuk menggambar: pensil warna)?",
+    "category": "Reseptif",
+    "image_path": null
+  },
+  {
+    "age_range": "24-36",
+    "question_number": 8,
+    "question_text": "Apakah anak dapat mengerjakan perintah yang disertai kata depan? (misal: \"Sekarang kubus itu di bawah meja, tolong taruh di atas meja\")?",
+    "category": "Reseptif",
+    "image_path": null
+  },
+  {
+    "age_range": "24-36",
+    "question_number": 9,
+    "question_text": "Apakah anak secara spontan memulai permainan dengan gerakan tubuh, seperti 'Pok Ame-Ame' atau 'Cilukba'?",
+    "category": "Visual",
+    "image_path": null
+  },
+  {
+    "age_range": "24-36",
+    "question_number": 10,
+    "question_text": "Apakah anak Anda menunjuk dengan jari telunjuk bila ingin sesuatu, bukan dengan cara memegang dengan semua jari?",
+    "category": "Visual",
+    "image_path": null
+  }
+]

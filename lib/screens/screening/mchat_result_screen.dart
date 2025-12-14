@@ -7,6 +7,15 @@ import '../../utils/helpers/mchat_data_loader.dart';
 
 /// Screen untuk menampilkan hasil M-CHAT-R
 /// Menampilkan: Risk level, scoring, interpretasi, rekomendasi
+///
+/// SCORING RULES (berdasarkan materi):
+/// - Untuk pertanyaan 2, 5, 12: Jawaban "YA" = risiko (reverse scoring)
+/// - Untuk pertanyaan lainnya: Jawaban "TIDAK" = risiko
+///
+/// RISK LEVELS:
+/// - LOW: Skor 0-2
+/// - MEDIUM: Skor 3-7
+/// - HIGH: Skor 8-20
 class MchatResultScreen extends StatelessWidget {
   final List<MchatQuestion> questions;
   final Map<int, bool> answers;
@@ -17,59 +26,59 @@ class MchatResultScreen extends StatelessWidget {
     required this.answers,
   });
 
-  /// Calculate total score (failed questions)
-  /// Pertanyaan 2, 5, 13: jawaban "Tidak" = fail
-  /// Pertanyaan lainnya: jawaban "Ya" = fail
-  int get totalFailed {
-    int failed = 0;
+  /// Calculate total score (at-risk answers)
+  ///
+  /// SCORING:
+  /// - Q2, Q5, Q12: "YA" = risiko (reverse scoring)
+  /// - Other questions: "TIDAK" = risiko
+  int get totalScore {
+    int score = 0;
     for (var question in questions) {
       final answer = answers[question.questionNumber];
       if (answer == null) continue;
 
-      // Pertanyaan 2, 5, 13: "Tidak" = fail
-      if ([2, 5, 13].contains(question.questionNumber)) {
-        if (answer == false) failed++;
+      // Q2, Q5, Q12: "YA" indicates risk (reverse scoring)
+      if ([2, 5, 12].contains(question.questionNumber)) {
+        if (answer == true) score++; // YA = at risk
       } else {
-        // Pertanyaan lainnya: "Ya" = fail (expected behavior)
-        // Sebenarnya untuk M-CHAT, "Tidak" pada pertanyaan normal = fail
-        // Mari kita ikuti aturan standar M-CHAT:
-        // Semua pertanyaan: "Tidak" = fail, kecuali #2, 5, 13
-        if (answer == false) failed++;
+        // All other questions: "TIDAK" indicates risk
+        if (answer == false) score++; // TIDAK = at risk
       }
     }
-    return failed;
+    return score;
   }
 
-  /// Calculate critical questions failed
-  int get criticalFailed {
-    int failed = 0;
+  /// Calculate critical questions at-risk count
+  /// Critical items: Q2, Q5, Q7, Q9, Q12, Q13, Q15
+  int get criticalScore {
+    int score = 0;
     for (var question in questions) {
       if (!question.isCritical) continue;
 
       final answer = answers[question.questionNumber];
       if (answer == null) continue;
 
-      // Critical questions (2, 5, 7, 9, 13, 15): "Tidak" = fail
-      // Exception: #13 (berjalan) "Ya" is expected
-      if (question.questionNumber == 13) {
-        if (answer == false) failed++;
+      // Q2, Q5, Q12: "YA" = risk (reverse scoring)
+      if ([2, 5, 12].contains(question.questionNumber)) {
+        if (answer == true) score++;
       } else {
-        if (answer == false) failed++;
+        // Q7, Q9, Q13, Q15: "TIDAK" = risk
+        if (answer == false) score++;
       }
     }
-    return failed;
+    return score;
   }
 
-  /// Determine risk level
-  /// Low: 0-2 total failed
-  /// Medium: 3-7 total failed OR 2+ critical failed
-  /// High: 8+ total failed
+  /// Determine risk level based on total score
+  ///
+  /// Algorithm dari materi:
+  /// - 0-2: Risiko Rendah
+  /// - 3-7: Risiko Sedang
+  /// - 8-20: Risiko Tinggi
   String get riskLevel {
-    if (criticalFailed >= 2) {
+    if (totalScore >= 8) {
       return 'high';
-    } else if (totalFailed >= 8) {
-      return 'high';
-    } else if (totalFailed >= 3) {
+    } else if (totalScore >= 3) {
       return 'medium';
     } else {
       return 'low';
@@ -118,11 +127,24 @@ class MchatResultScreen extends StatelessWidget {
   String get recommendation {
     switch (riskLevel) {
       case 'low':
-        return 'Hasil skrining menunjukkan risiko rendah untuk gangguan spektrum autisme. Lanjutkan pemantauan perkembangan anak secara berkala dan lakukan skrining ulang pada usia 24 bulan.';
+        return 'Hasil skrining menunjukkan risiko rendah untuk gangguan spektrum autisme. Tidak perlu tindakan lanjutan, kecuali surveilans rutin. Jika anak berusia kurang dari 24 bulan, lakukan skrining ulang setelah ulang tahun kedua.';
       case 'medium':
-        return 'Hasil skrining menunjukkan risiko sedang. Disarankan untuk berkonsultasi dengan dokter anak atau psikolog untuk evaluasi lebih lanjut. Lakukan skrining ulang dalam 1-2 bulan.';
+        return 'Hasil skrining menunjukkan risiko sedang. Disarankan untuk melakukan follow-up (M-CHAT-R/F tahap kedua) untuk mendapat informasi tambahan. Konsultasikan dengan dokter anak atau psikolog untuk evaluasi lebih lanjut.';
       case 'high':
-        return 'Hasil skrining menunjukkan risiko tinggi untuk gangguan spektrum autisme. Segera konsultasi dengan dokter spesialis anak, psikolog, atau ahli perkembangan anak untuk evaluasi diagnostik lengkap dan intervensi dini.';
+        return 'Hasil skrining menunjukkan risiko tinggi untuk gangguan spektrum autisme. Segera rujuk ke dokter spesialis anak, psikolog, atau ahli perkembangan anak untuk evaluasi diagnostik lengkap dan eligibilitas intervensi awal.';
+      default:
+        return '';
+    }
+  }
+
+  String get interpretationText {
+    switch (riskLevel) {
+      case 'low':
+        return 'Skor total 0-2 menunjukkan risiko rendah. Lanjutkan pemantauan perkembangan anak secara berkala.';
+      case 'medium':
+        return 'Skor total 3-7 menunjukkan risiko sedang. Follow-up diperlukan untuk menentukan apakah rujukan diagnostik diperlukan.';
+      case 'high':
+        return 'Skor total 8 atau lebih menunjukkan risiko tinggi. Rujukan untuk evaluasi diagnostik sangat direkomendasikan.';
       default:
         return '';
     }
@@ -224,14 +246,13 @@ class MchatResultScreen extends StatelessWidget {
           ),
           const SizedBox(height: AppDimensions.spacingM),
           Text(
-            'Level Risiko',
-            style: AppTextStyles.body2.copyWith(color: AppColors.textSecondary),
-          ),
-          const SizedBox(height: AppDimensions.spacingXS),
-          Text(
             riskLevelDisplay,
-            style: AppTextStyles.h1.copyWith(color: riskColor),
-            textAlign: TextAlign.center,
+            style: AppTextStyles.h2.copyWith(color: riskColor),
+          ),
+          const SizedBox(height: AppDimensions.spacingS),
+          Text(
+            'Gangguan Spektrum Autisme',
+            style: AppTextStyles.body2.copyWith(color: AppColors.textSecondary),
           ),
         ],
       ),
@@ -247,21 +268,38 @@ class MchatResultScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppDimensions.radiusM),
         border: Border.all(color: AppColors.glassBorder, width: 1.5),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildScoreItem(
-            'Total Gagal',
-            '$totalFailed/20',
-            AppColors.danger,
-            Icons.cancel,
+          Text(
+            'Skor Skrining',
+            style: AppTextStyles.h4.copyWith(color: AppColors.primary),
           ),
-          Container(width: 1, height: 40, color: AppColors.glassBorder),
-          _buildScoreItem(
-            'Kritis Gagal',
-            '$criticalFailed/6',
-            AppColors.warning,
-            Icons.star,
+          const SizedBox(height: AppDimensions.spacingM),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildScoreItem(
+                'Total Skor',
+                '$totalScore',
+                riskColor,
+                Icons.assessment,
+              ),
+              Container(height: 60, width: 1, color: AppColors.glassBorder),
+              _buildScoreItem(
+                'Dari 20',
+                '20',
+                AppColors.textSecondary,
+                Icons.list_alt,
+              ),
+              Container(height: 60, width: 1, color: AppColors.glassBorder),
+              _buildScoreItem(
+                'Item Kritis',
+                '$criticalScore',
+                AppColors.warning,
+                Icons.priority_high,
+              ),
+            ],
           ),
         ],
       ),
@@ -280,7 +318,7 @@ class MchatResultScreen extends StatelessWidget {
         Icon(icon, color: color, size: AppDimensions.iconM),
         const SizedBox(height: AppDimensions.spacingS),
         Text(value, style: AppTextStyles.h1.copyWith(color: color)),
-        Text(label, style: AppTextStyles.caption, textAlign: TextAlign.center),
+        Text(label, style: AppTextStyles.caption),
       ],
     );
   }
@@ -302,68 +340,57 @@ class MchatResultScreen extends StatelessWidget {
             style: AppTextStyles.h4.copyWith(color: AppColors.primary),
           ),
           const SizedBox(height: AppDimensions.spacingM),
-          _buildInterpretationItem(
-            'Risiko Rendah (0-2 gagal)',
-            'Perkembangan normal, lanjutkan pemantauan',
-            AppColors.success,
-          ),
-          const SizedBox(height: AppDimensions.spacingS),
-          _buildInterpretationItem(
-            'Risiko Sedang (3-7 gagal)',
-            'Perlu evaluasi lebih lanjut',
-            AppColors.warning,
-          ),
-          const SizedBox(height: AppDimensions.spacingS),
-          _buildInterpretationItem(
-            'Risiko Tinggi (8+ gagal atau 2+ kritis)',
-            'Segera konsultasi ahli',
-            AppColors.danger,
+          Text(interpretationText, style: AppTextStyles.body2),
+          const SizedBox(height: AppDimensions.spacingM),
+          Container(
+            padding: const EdgeInsets.all(AppDimensions.spacingS),
+            decoration: BoxDecoration(
+              color: AppColors.info.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(AppDimensions.radiusS),
+              border: Border.all(
+                color: AppColors.info.withOpacity(0.3),
+                width: 1,
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.info_outline,
+                  color: AppColors.info,
+                  size: AppDimensions.iconS,
+                ),
+                const SizedBox(width: AppDimensions.spacingS),
+                Expanded(
+                  child: Text(
+                    'Scoring: Q2, 5, 12: "YA" = risiko | Lainnya: "TIDAK" = risiko',
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.info,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
     );
   }
 
-  /// Interpretation item
-  Widget _buildInterpretationItem(
-    String condition,
-    String meaning,
-    Color color,
-  ) {
-    return Row(
-      children: [
-        Container(
-          width: 12,
-          height: 12,
-          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-        ),
-        const SizedBox(width: AppDimensions.spacingS),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                condition,
-                style: AppTextStyles.body2.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              Text(meaning, style: AppTextStyles.caption),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
   /// Recommendation card
   Widget _buildRecommendationCard() {
+    final cardColor =
+        riskLevel == 'low'
+            ? AppColors.info
+            : riskLevel == 'medium'
+            ? AppColors.warning
+            : AppColors.danger;
+
     return Container(
       padding: const EdgeInsets.all(AppDimensions.spacingM),
       decoration: BoxDecoration(
-        color: riskColor.withOpacity(0.1),
+        color: cardColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-        border: Border.all(color: riskColor.withOpacity(0.3), width: 1.5),
+        border: Border.all(color: cardColor.withOpacity(0.3), width: 1.5),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -374,47 +401,18 @@ class MchatResultScreen extends StatelessWidget {
                 riskLevel == 'low'
                     ? Icons.lightbulb_outline
                     : Icons.warning_amber,
-                color: riskColor,
+                color: cardColor,
                 size: AppDimensions.iconM,
               ),
               const SizedBox(width: AppDimensions.spacingS),
               Text(
                 'Rekomendasi',
-                style: AppTextStyles.h4.copyWith(color: riskColor),
+                style: AppTextStyles.h4.copyWith(color: cardColor),
               ),
             ],
           ),
           const SizedBox(height: AppDimensions.spacingM),
-          Text(recommendation, style: AppTextStyles.body1),
-          if (riskLevel == 'high') ...[
-            const SizedBox(height: AppDimensions.spacingM),
-            Container(
-              padding: const EdgeInsets.all(AppDimensions.spacingM),
-              decoration: BoxDecoration(
-                color: AppColors.danger.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(AppDimensions.radiusS),
-              ),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.priority_high,
-                    color: AppColors.danger,
-                    size: AppDimensions.iconS,
-                  ),
-                  const SizedBox(width: AppDimensions.spacingS),
-                  Expanded(
-                    child: Text(
-                      'Penting: Intervensi dini sangat penting untuk hasil terbaik',
-                      style: AppTextStyles.body2.copyWith(
-                        color: AppColors.danger,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+          Text(recommendation, style: AppTextStyles.body2),
         ],
       ),
     );
@@ -425,30 +423,33 @@ class MchatResultScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppDimensions.spacingM),
       decoration: BoxDecoration(
-        color: AppColors.info.withOpacity(0.1),
+        color: AppColors.warning.withOpacity(0.1),
         borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-        border: Border.all(color: AppColors.info.withOpacity(0.3), width: 1.5),
+        border: Border.all(
+          color: AppColors.warning.withOpacity(0.3),
+          width: 1.5,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.info_outline,
-                color: AppColors.info,
+                color: AppColors.warning,
                 size: AppDimensions.iconM,
               ),
               const SizedBox(width: AppDimensions.spacingS),
               Text(
-                'Catatan Penting',
-                style: AppTextStyles.h4.copyWith(color: AppColors.info),
+                'Perhatian',
+                style: AppTextStyles.h4.copyWith(color: AppColors.warning),
               ),
             ],
           ),
           const SizedBox(height: AppDimensions.spacingM),
           Text(
-            'M-CHAT-R adalah alat skrining, bukan alat diagnostik. Hasil positif tidak berarti anak pasti memiliki autisme. Diperlukan evaluasi diagnostik lengkap oleh profesional untuk diagnosis yang akurat.',
+            'M-CHAT-R adalah alat skrining, bukan alat diagnostik. Hasil skrining positif tidak berarti anak pasti memiliki gangguan spektrum autisme. Diperlukan evaluasi diagnostik komprehensif oleh profesional yang berkualifikasi untuk diagnosis yang akurat.',
             style: AppTextStyles.body2,
           ),
         ],
@@ -460,59 +461,53 @@ class MchatResultScreen extends StatelessWidget {
   Widget _buildActionButtons(BuildContext context) {
     return Column(
       children: [
-        // Tombol Simpan
-        ElevatedButton(
-          onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  'Fitur simpan akan ditambahkan di fase berikutnya',
+        // Save result button
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () {
+              // TODO: Save result to database
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Hasil telah disimpan'),
+                  backgroundColor: AppColors.success,
                 ),
-                backgroundColor: AppColors.info,
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.all(AppDimensions.spacingM),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppDimensions.radiusM),
               ),
-            );
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(
-              vertical: AppDimensions.spacingM,
             ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppDimensions.radiusM),
+            child: const Text(
+              'Simpan Hasil',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.save, size: AppDimensions.iconM),
-              const SizedBox(width: AppDimensions.spacingS),
-              Text(
-                'Simpan Hasil',
-                style: AppTextStyles.h4.copyWith(color: Colors.white),
-              ),
-            ],
           ),
         ),
         const SizedBox(height: AppDimensions.spacingM),
-        // Tombol Kembali
-        OutlinedButton(
-          onPressed: () {
-            Navigator.popUntil(context, (route) => route.isFirst);
-          },
-          style: OutlinedButton.styleFrom(
-            foregroundColor: AppColors.primary,
-            side: const BorderSide(color: AppColors.primary, width: 2),
-            padding: const EdgeInsets.symmetric(
-              vertical: AppDimensions.spacingM,
+        // Back to home button
+        SizedBox(
+          width: double.infinity,
+          child: OutlinedButton(
+            onPressed: () {
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            },
+            style: OutlinedButton.styleFrom(
+              foregroundColor: AppColors.primary,
+              side: const BorderSide(color: AppColors.primary, width: 2),
+              padding: const EdgeInsets.all(AppDimensions.spacingM),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppDimensions.radiusM),
+              ),
             ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppDimensions.radiusM),
+            child: const Text(
+              'Kembali ke Beranda',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
-          ),
-          child: Text(
-            'Kembali ke Beranda',
-            style: AppTextStyles.h4.copyWith(color: AppColors.primary),
           ),
         ),
       ],

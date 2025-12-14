@@ -1,0 +1,44 @@
+[
+  {
+    "age_range": "3-6",
+    "question_number": 1,
+    "question_text": "Apakah bayi Anda dapat tertawa keras?",
+    "category": "Ekspresif",
+    "image_path": null
+  },
+  {
+    "age_range": "3-6",
+    "question_number": 2,
+    "question_text": "Apakah bayi dapat bermain menggelembungkan mulut seperti meniup balon?",
+    "category": "Ekspresif",
+    "image_path": null
+  },
+  {
+    "age_range": "3-6",
+    "question_number": 3,
+    "question_text": "Apakah bayi memberi respons tertentu, seperti menjadi lebih riang bila Anda datang?",
+    "category": "Reseptif",
+    "image_path": null
+  },
+  {
+    "age_range": "3-6",
+    "question_number": 4,
+    "question_text": "Pemeriksa duduk menghadap bayi yang dipangku orang tuanya, bunyikan bel disamping tanpa terlihat bayi, apakah bayi itu menoleh ke samping?",
+    "category": "Reseptif",
+    "image_path": null
+  },
+  {
+    "age_range": "3-6",
+    "question_number": 5,
+    "question_text": "Pemeriksa menatap mata bayi sekitar 45 cm, lalu gunakan mainan untuk menarik pandangan bayi ke kiri, kanan, atas, dan bawah. Apakah bayi dapat mengikutinya?",
+    "category": "Visual",
+    "image_path": null
+  },
+  {
+    "age_range": "3-6",
+    "question_number": 6,
+    "question_text": "Apakah bayi berkedip bila pemeriksa melakukan gerakan menusuk mata?",
+    "category": "Visual",
+    "image_path": null
+  }
+]

@@ -9,34 +9,41 @@
   {
     "age_range": "<3",
     "question_number": 2,
-    "question_text": "Apakah bayi menatap wajah dan tampak mendengarkan Anda, lalu berbicara saat Anda diam? Apakah Anda dapat seolah-olah berbicara dengan bayi Anda?",
+    "question_text": "Apakah bayi menatap wajah dan tampak mendengarkan Anda, lalu berbicara saat Anda diam?",
     "category": "Ekspresif",
     "image_path": null
   },
   {
     "age_range": "<3",
     "question_number": 3,
+    "question_text": "Apakah Anda dapat seolah-olah berbicara dengan bayi Anda?",
+    "category": "Ekspresif",
+    "image_path": null
+  },
+  {
+    "age_range": "<3",
+    "question_number": 4,
     "question_text": "Apakah bayi kaget bila mendengar suara (mengejapkan mata, napas lebih cepat)?",
     "category": "Reseptif",
     "image_path": null
   },
   {
     "age_range": "<3",
-    "question_number": 4,
+    "question_number": 5,
     "question_text": "Apakah bayi kelihatan menoleh bila Anda berbicara di sebelahnya?",
     "category": "Reseptif",
     "image_path": null
   },
   {
     "age_range": "<3",
-    "question_number": 5,
+    "question_number": 6,
     "question_text": "Apakah bayi Anda dapat tersenyum?",
     "category": "Visual",
     "image_path": null
   },
   {
     "age_range": "<3",
-    "question_number": 6,
+    "question_number": 7,
     "question_text": "Apakah bayi Anda kenal dengan Anda, seperti tersenyum lebih cepat pada Anda dibandingkan orang lain?",
     "category": "Visual",
     "image_path": null

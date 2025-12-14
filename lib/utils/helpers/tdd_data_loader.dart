@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import '../../models/tdd_question.dart';
 
 /// Helper untuk load pertanyaan TDD dari JSON files
-/// JSON files: lib/data/json/tdd_{age_range}.json
+/// JSON files: lib/data/json/screening/tdd/tdd_{age_range}.json
 class TddDataLoader {
   /// Load pertanyaan TDD untuk rentang usia tertentu
   ///
@@ -18,7 +18,7 @@ class TddDataLoader {
       String filename = _ageRangeToFilename(ageRange);
 
       final String jsonString = await rootBundle.loadString(
-        'lib/data/json/tdd_$filename.json',
+        'lib/data/json/screening/tdd/tdd_$filename.json',
       );
 
       final List<dynamic> jsonList = json.decode(jsonString);
@@ -54,66 +54,81 @@ class TddDataLoader {
     return available;
   }
 
-  /// Check apakah data tersedia untuk age range tertentu
-  static Future<bool> isDataAvailable(String ageRange) async {
+  /// Check apakah data untuk rentang usia tertentu tersedia
+  static Future<bool> isAgeRangeAvailable(String ageRange) async {
     final questions = await loadQuestions(ageRange);
     return questions != null && questions.isNotEmpty;
   }
 
-  /// Convert age range string ke filename format
-  /// "<3" → "less_3"
-  /// "3-6" → "3_6"
-  /// ">36" → "more_36"
+  /// Convert age range string ke format filename
+  /// Internal helper method
   static String _ageRangeToFilename(String ageRange) {
-    if (ageRange.startsWith('<')) {
-      // "<3" → "less_3"
-      return 'less_${ageRange.substring(1)}';
-    } else if (ageRange.startsWith('>')) {
-      // ">36" → "more_36"
-      return 'more_${ageRange.substring(1)}';
+    // Remove spaces
+    String clean = ageRange.replaceAll(' ', '');
+
+    // Convert special characters
+    if (clean.startsWith('<')) {
+      // "<3" â†' "less_3"
+      return 'less_${clean.substring(1)}';
+    } else if (clean.startsWith('>')) {
+      // ">36" â†' "more_36"
+      return 'more_${clean.substring(1)}';
     } else {
-      // "3-6" → "3_6"
-      return ageRange.replaceAll('-', '_');
+      // "3-6" â†' "3_6"
+      return clean.replaceAll('-', '_');
     }
   }
 
-  /// Convert bulan ke age range
-  /// 0-2 bulan → "<3"
-  /// 3-5 bulan → "3-6"
-  /// dst...
-  static String getAgeRangeFromMonths(int months) {
-    if (months < 3) {
-      return '<3';
-    } else if (months >= 3 && months < 6) {
-      return '3-6';
-    } else if (months >= 6 && months < 12) {
-      return '6-12';
-    } else if (months >= 12 && months < 24) {
-      return '12-24';
-    } else if (months >= 24 && months < 36) {
-      return '24-36';
-    } else {
-      return '>36';
+  /// Get all TDD questions grouped by age range
+  /// Returns Map<ageRange, List<TddQuestion>>
+  static Future<Map<String, List<TddQuestion>>> loadAllQuestions() async {
+    final Map<String, List<TddQuestion>> allQuestions = {};
+    final availableRanges = await getAvailableAgeRanges();
+
+    for (String ageRange in availableRanges) {
+      final questions = await loadQuestions(ageRange);
+      if (questions != null) {
+        allQuestions[ageRange] = questions;
+      }
     }
+
+    return allQuestions;
   }
 
-  /// Get display name untuk age range
-  static String getAgeRangeDisplayName(String ageRange) {
+  /// Get total number of questions for a specific age range
+  static Future<int> getQuestionCount(String ageRange) async {
+    final questions = await loadQuestions(ageRange);
+    return questions?.length ?? 0;
+  }
+
+  /// Get age range description (untuk display)
+  static String getAgeRangeDescription(String ageRange) {
     switch (ageRange) {
       case '<3':
-        return 'Kurang dari 3 Bulan';
+        return 'Kurang dari 3 bulan';
       case '3-6':
-        return '3-6 Bulan';
+        return '3-6 bulan';
       case '6-12':
-        return '6-12 Bulan';
+        return '6-12 bulan';
       case '12-24':
-        return '12-24 Bulan';
+        return '12-24 bulan (1-2 tahun)';
       case '24-36':
-        return '24-36 Bulan';
+        return '24-36 bulan (2-3 tahun)';
       case '>36':
-        return 'Lebih dari 36 Bulan';
+        return 'Lebih dari 36 bulan (>3 tahun)';
       default:
         return ageRange;
     }
+  }
+
+  /// Alias untuk getAgeRangeDescription (backward compatibility)
+  static String getAgeRangeDisplayName(String ageRange) {
+    return getAgeRangeDescription(ageRange);
+  }
+
+  /// Check apakah data tersedia untuk age range tertentu
+  static Future<bool> isDataAvailable(String ageRange) async {
+    final questions = await loadQuestions(ageRange);
+    return questions != null && questions.isNotEmpty;
   }
 }

@@ -4,6 +4,7 @@ import '../../models/mchat_question.dart';
 
 /// Helper untuk load pertanyaan M-CHAT-R dari JSON file
 /// M-CHAT-R: 20 pertanyaan untuk anak usia 16-30 bulan
+/// JSON file: lib/data/json/screening/mchat/mchat_questions.json
 class MchatDataLoader {
   /// Load semua pertanyaan M-CHAT-R
   ///
@@ -11,7 +12,7 @@ class MchatDataLoader {
   static Future<List<MchatQuestion>?> loadQuestions() async {
     try {
       final String jsonString = await rootBundle.loadString(
-        'lib/data/json/mchat_questions.json',
+        'lib/data/json/screening/mchat/mchat_questions.json',
       );
 
       final List<dynamic> jsonList = json.decode(jsonString);
@@ -43,5 +44,11 @@ class MchatDataLoader {
   /// Check apakah usia anak sesuai untuk M-CHAT-R
   static bool isAgeAppropriate(int ageInMonths) {
     return ageInMonths >= 16 && ageInMonths <= 30;
+  }
+
+  /// Get total question count
+  static Future<int> getQuestionCount() async {
+    final questions = await loadQuestions();
+    return questions?.length ?? 0;
   }
 }

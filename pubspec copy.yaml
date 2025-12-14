@@ -36,5 +36,5 @@ flutter:
     - lib/data/json/materials/1-2/
     - lib/data/json/materials/2-5/
     - lib/data/json/screening/kpsp/
-    - lib/data/json/screening/tdd/
-    - lib/data/json/screening/mchat/
+    - lib/data/json/screening/ttd/
+    

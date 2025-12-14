@@ -1,0 +1,44 @@
+[
+  {
+    "age_range": "6-12",
+    "question_number": 1,
+    "question_text": "Apakah bayi dapat membuat suara berulang seperti 'mamamama', 'babababa'?",
+    "category": "Ekspresif",
+    "image_path": null
+  },
+  {
+    "age_range": "6-12",
+    "question_number": 2,
+    "question_text": "Apakah bayi dapat memanggil mama atau papa, walaupun tidak untuk memanggil orang tuanya?",
+    "category": "Ekspresif",
+    "image_path": null
+  },
+  {
+    "age_range": "6-12",
+    "question_number": 3,
+    "question_text": "Pemeriksa duduk menghadap bayi yang dipangku orang tuanya, bunyikan bel di samping bawah tanpa terlihat bayi, apakah bayi langsung menoleh ke samping bawah?",
+    "category": "Reseptif",
+    "image_path": null
+  },
+  {
+    "age_range": "6-12",
+    "question_number": 4,
+    "question_text": "Apakah bayi mengikuti perintah tanpa dibantu gerakan badan, seperti \"Stop, berikan mainanmu\"?",
+    "category": "Reseptif",
+    "image_path": null
+  },
+  {
+    "age_range": "6-12",
+    "question_number": 5,
+    "question_text": "Apakah bayi mengikuti perintah dengan dibantu gerakan badan, seperti \"Stop, berikan mainanmu\"?",
+    "category": "Visual",
+    "image_path": null
+  },
+  {
+    "age_range": "6-12",
+    "question_number": 6,
+    "question_text": "Apakah bayi secara spontan memulai permainan dengan gerakan tubuh, seperti 'Pok Ame-Ame' atau 'Cilukba'?",
+    "category": "Visual",
+    "image_path": null
+  }
+]

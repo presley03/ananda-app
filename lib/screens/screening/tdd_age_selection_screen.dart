@@ -236,6 +236,7 @@ class _TddAgeSelectionScreenState extends State<TddAgeSelectionScreen> {
             Text(
               TddDataLoader.getAgeRangeDisplayName(ageRange),
               style: AppTextStyles.body1.copyWith(
+                fontSize: 13,
                 color:
                     isAvailable ? AppColors.primary : AppColors.textSecondary,
                 fontWeight: FontWeight.w600,
