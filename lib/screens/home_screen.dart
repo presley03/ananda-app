@@ -5,16 +5,21 @@ import '../widgets/top_bar.dart';
 import '../widgets/greeting_section.dart';
 import '../widgets/category_section.dart';
 import '../widgets/screening_tools_section.dart';
+import '../services/database_service.dart';
+import '../models/user_profile.dart';
 import 'screening/kpsp_age_selection_screen.dart';
 import 'screening/nutrition_input_screen.dart';
 import 'screening/tdd_age_selection_screen.dart';
 import 'screening/mchat_questions_screen.dart';
 import 'material_list_screen.dart';
+import 'material_search_screen.dart';
+import 'user_profile_form_screen.dart';
+import 'user_profile_view_screen.dart';
 
-/// Home Screen
+/// Home Screen (with User Profile support)
 /// Main home screen dengan:
-/// - Top Bar (user, search, notification)
-/// - Greeting Section
+/// - Top Bar (user, search)
+/// - Greeting Section (personalized)
 /// - Category Section (Materi Edukatif)
 /// - Screening Tools Section
 ///
@@ -26,6 +31,68 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final DatabaseService _db = DatabaseService();
+  UserProfile? _userProfile;
+  String _greeting = 'Selamat pagi, Bunda!';
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserProfile();
+  }
+
+  /// Load user profile from database
+  Future<void> _loadUserProfile() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final profile = await _db.getUserProfile();
+      final greeting = await _db.getUserGreeting();
+
+      setState(() {
+        _userProfile = profile;
+        _greeting = greeting;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  /// Handle user icon tap
+  Future<void> _onUserTap() async {
+    if (_userProfile == null) {
+      // No profile yet, navigate to form
+      final result = await Navigator.push<bool>(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const UserProfileFormScreen(isFirstTime: false),
+        ),
+      );
+
+      if (result == true) {
+        _loadUserProfile(); // Reload profile
+      }
+    } else {
+      // Has profile, show profile view
+      final result = await Navigator.push<bool>(
+        context,
+        MaterialPageRoute(
+          builder: (context) => UserProfileViewScreen(profile: _userProfile!),
+        ),
+      );
+
+      if (result == true) {
+        _loadUserProfile(); // Reload if edited
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,31 +110,13 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               // Top Bar
               TopBar(
-                hasNotification: true, // Show notification badge
-                onUserTap: () {
-                  // TODO: Navigate to profile/user settings
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Profile - Coming soon! 👤'),
-                      duration: Duration(seconds: 1),
-                    ),
-                  );
-                },
+                onUserTap: _onUserTap,
                 onSearchTap: () {
-                  // TODO: Navigate to search screen
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Search - Coming soon! 🔍'),
-                      duration: Duration(seconds: 1),
-                    ),
-                  );
-                },
-                onNotificationTap: () {
-                  // TODO: Navigate to notifications
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Notifications - Coming soon! 🔔'),
-                      duration: Duration(seconds: 1),
+                  // Navigate to search screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MaterialSearchScreen(),
                     ),
                   );
                 },
@@ -79,9 +128,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Greeting Section
-                      const GreetingSection(
-                        userName: 'Bunda',
+                      // Greeting Section (personalized!)
+                      GreetingSection(
+                        userName: _userProfile?.name ?? 'Bunda',
                         subtitle:
                             'Mari pantau tumbuh kembang si kecil hari ini! 👶',
                       ),
@@ -92,7 +141,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       CategorySection(
                         title: 'Materi Edukatif',
                         onCategory01Tap: () {
-                          // Navigate to Material List with 0-1 filter
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -104,7 +152,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                         onCategory12Tap: () {
-                          // Navigate to Material List with 1-2 filter
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -116,7 +163,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                         onCategory25Tap: () {
-                          // Navigate to Material List with 2-5 filter
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -135,7 +181,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       ScreeningToolsSection(
                         title: 'Tools Skrining',
                         onKPSPTap: () {
-                          // Navigate to KPSP screening
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -145,7 +190,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                         onGiziTap: () {
-                          // Navigate to Nutrition calculator
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -154,7 +198,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                         onTDDTap: () {
-                          // Navigate to TDD screening
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -163,7 +206,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                         onMCHATTap: () {
-                          // Navigate to M-CHAT-R screening
                           Navigator.push(
                             context,
                             MaterialPageRoute(

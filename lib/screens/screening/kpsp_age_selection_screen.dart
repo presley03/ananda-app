@@ -194,9 +194,11 @@ class _KpspAgeSelectionScreenState extends State<KpspAgeSelectionScreen> {
                 child: Container(
                   padding: EdgeInsets.all(AppDimensions.spacingM),
                   decoration: BoxDecoration(
-                    color: AppColors.info.withOpacity(0.1),
+                    color: AppColors.info.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-                    border: Border.all(color: AppColors.info.withOpacity(0.3)),
+                    border: Border.all(
+                      color: AppColors.info.withValues(alpha: 0.3),
+                    ),
                   ),
                   child: Row(
                     children: [
@@ -292,13 +294,13 @@ class _AgeCard extends StatelessWidget {
             color:
                 hasData
                     ? AppColors.glassWhite
-                    : AppColors.glassWhite.withOpacity(0.5),
+                    : AppColors.glassWhite.withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(AppDimensions.radiusM),
             border: Border.all(
               color:
                   hasData
                       ? AppColors.glassBorder
-                      : AppColors.glassBorder.withOpacity(0.5),
+                      : AppColors.glassBorder.withValues(alpha: 0.5),
               width: 1.5,
             ),
           ),

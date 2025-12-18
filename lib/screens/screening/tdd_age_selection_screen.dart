@@ -154,7 +154,7 @@ class _TddAgeSelectionScreenState extends State<TddAgeSelectionScreen> {
           Container(
             padding: const EdgeInsets.all(AppDimensions.spacingS),
             decoration: BoxDecoration(
-              color: AppColors.info.withOpacity(0.1),
+              color: AppColors.info.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(AppDimensions.radiusS),
             ),
             child: const Icon(
@@ -254,7 +254,7 @@ class _TddAgeSelectionScreenState extends State<TddAgeSelectionScreen> {
                   vertical: AppDimensions.spacingXS,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.warning.withOpacity(0.2),
+                  color: AppColors.warning.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(AppDimensions.radiusS),
                 ),
                 child: Text(

@@ -118,7 +118,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Profil berhasil diperbarui! ✅'),
+            content: Text('Profil berhasil diperbarui! âœ…'),
             backgroundColor: AppColors.success,
           ),
         );
@@ -228,7 +228,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 vertical: AppDimensions.spacingS,
               ),
               decoration: BoxDecoration(
-                color: AppColors.warning.withOpacity(0.2),
+                color: AppColors.warning.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(AppDimensions.radiusRound),
               ),
               child: Text(
@@ -247,7 +247,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   /// Build info card
   Widget _buildInfoCard() {
     return GlassCard(
-      tintColor: AppColors.warning.withOpacity(0.1),
+      tintColor: AppColors.warning.withValues(alpha: 0.1),
       child: Row(
         children: [
           Icon(
@@ -283,7 +283,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 color: AppColors.textHint,
               ),
               filled: true,
-              fillColor: Colors.white.withOpacity(0.5),
+              fillColor: Colors.white.withValues(alpha: 0.5),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(AppDimensions.radiusM),
                 borderSide: BorderSide.none,
@@ -323,7 +323,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             child: Container(
               padding: const EdgeInsets.all(AppDimensions.spacingM),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.5),
+                color: Colors.white.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(AppDimensions.radiusM),
               ),
               child: Row(
@@ -400,8 +400,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         decoration: BoxDecoration(
           color:
               isSelected
-                  ? color.withOpacity(0.2)
-                  : Colors.white.withOpacity(0.3),
+                  ? color.withValues(alpha: 0.2)
+                  : Colors.white.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(AppDimensions.radiusM),
           border: Border.all(
             color: isSelected ? color : Colors.transparent,

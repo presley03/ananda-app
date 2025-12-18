@@ -1,3 +1,5 @@
+library;
+
 /// File: material_list_screen.dart
 /// Path: lib/screens/material_list_screen.dart
 /// Description: Screen untuk display list materi edukatif dengan filter
@@ -59,7 +61,7 @@ class _MaterialListScreenState extends State<MaterialListScreen> {
   Future<void> _initializeData() async {
     // CRITICAL: Prevent multiple initialization
     if (_isInitialized) {
-      print('⚠️ Already initialized, skipping...');
+      // print('âš ï¸ Already initialized, skipping...');
       return;
     }
 
@@ -68,7 +70,7 @@ class _MaterialListScreenState extends State<MaterialListScreen> {
     });
 
     try {
-      print('🔄 Initializing MaterialListScreen...');
+      // print('ðŸ”„ Initializing MaterialListScreen...');
 
       // 1. Populate database (force clear & reload for update)
       await _populator.clearAndRepopulate();
@@ -83,9 +85,9 @@ class _MaterialListScreenState extends State<MaterialListScreen> {
         _isInitialized = true;
       });
 
-      print('✅ MaterialListScreen initialized successfully');
+      // print('âœ… MaterialListScreen initialized successfully');
     } catch (e) {
-      print('❌ Error initializing: $e');
+      // print('âŒ Error initializing: $e');
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -132,9 +134,9 @@ class _MaterialListScreenState extends State<MaterialListScreen> {
         _allMaterials = materials;
       });
 
-      print('✅ Loaded ${materials.length} materials');
+      // print('âœ… Loaded ${materials.length} materials');
     } catch (e) {
-      print('❌ Error loading materials: $e');
+      // print('âŒ Error loading materials: $e');
       rethrow;
     }
   }
@@ -148,9 +150,9 @@ class _MaterialListScreenState extends State<MaterialListScreen> {
         _bookmarkedIds = bookmarks.map((b) => b['id'] as int).toSet();
       });
 
-      print('✅ Loaded ${_bookmarkedIds.length} bookmarks');
+      // print('âœ… Loaded ${_bookmarkedIds.length} bookmarks');
     } catch (e) {
-      print('❌ Error loading bookmarks: $e');
+      // print('âŒ Error loading bookmarks: $e');
     }
   }
 
@@ -466,7 +468,7 @@ class _MaterialListScreenState extends State<MaterialListScreen> {
         // Then update database
         await _dbService.removeBookmark(materialId);
 
-        print('✅ Bookmark removed: $materialId');
+        // print('âœ… Bookmark removed: $materialId');
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -485,7 +487,7 @@ class _MaterialListScreenState extends State<MaterialListScreen> {
         // Then update database
         await _dbService.addBookmark(materialId);
 
-        print('✅ Bookmark added: $materialId');
+        // print('âœ… Bookmark added: $materialId');
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -497,7 +499,7 @@ class _MaterialListScreenState extends State<MaterialListScreen> {
         }
       }
     } catch (e) {
-      print('❌ Error toggling bookmark: $e');
+      // print('âŒ Error toggling bookmark: $e');
 
       // Rollback on error
       setState(() {
@@ -523,7 +525,7 @@ class _MaterialListScreenState extends State<MaterialListScreen> {
   /// Handle pull to refresh
   Future<void> _onRefresh() async {
     try {
-      print('🔄 Refreshing data...');
+      // print('ðŸ”„ Refreshing data...');
 
       // Only reload bookmarks, materials already loaded
       await _loadBookmarks();
@@ -537,9 +539,9 @@ class _MaterialListScreenState extends State<MaterialListScreen> {
         );
       }
 
-      print('✅ Refresh complete');
+      // print('Refresh complete');
     } catch (e) {
-      print('❌ Error refreshing: $e');
+      // print('Error refreshing: $e');
     }
   }
 }

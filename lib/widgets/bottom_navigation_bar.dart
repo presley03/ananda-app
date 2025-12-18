@@ -31,16 +31,16 @@ class CustomBottomNavigationBar extends StatelessWidget {
     return Container(
       height: 64,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.9),
+        color: Colors.white.withValues(alpha: 0.9),
         border: Border(
           top: BorderSide(
-            color: AppColors.glassBorder.withOpacity(0.3),
+            color: AppColors.glassBorder.withValues(alpha: 0.3),
             width: 1,
           ),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, -2),
           ),

@@ -3,6 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import '../utils/constants/app_info.dart';
+import '../models/user_profile.dart';
 
 /// Database Service
 /// Mengelola semua operasi database SQLite untuk aplikasi Ananda
@@ -11,6 +12,8 @@ import '../utils/constants/app_info.dart';
 /// - Inisialisasi database
 /// - CRUD operations untuk semua tabel
 /// - Pre-populate data materi dan KPSP
+/// - User profile management (NEW!)
+/// - Auto-migration dari v1 ke v2
 class DatabaseService {
   static final DatabaseService _instance = DatabaseService._internal();
   static Database? _database;
@@ -149,6 +152,19 @@ class DatabaseService {
       )
     ''');
 
+    // Table: user_profile (NEW! - profil pengguna/pengasuh - opsional)
+    await db.execute('''
+      CREATE TABLE user_profile (
+        id INTEGER PRIMARY KEY CHECK(id = 1),
+        name TEXT NOT NULL,
+        role TEXT NOT NULL CHECK(role IN ('Ibu', 'Ayah', 'Nenek', 'Kakek', 'Pengasuh', 'Nakes')),
+        photo_path TEXT,
+        location TEXT,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+      )
+    ''');
+
     // Insert default app_info
     await db.insert('app_info', {
       'key': 'version',
@@ -160,6 +176,10 @@ class DatabaseService {
     });
     await db.insert('app_info', {'key': 'first_launch', 'value': '1'});
     await db.insert('app_info', {'key': 'disclaimer_accepted', 'value': '0'});
+    await db.insert('app_info', {
+      'key': 'user_profile_completed',
+      'value': '0',
+    });
 
     // Create indexes for performance
     await db.execute(
@@ -174,16 +194,40 @@ class DatabaseService {
       'CREATE INDEX idx_bookmarks_material ON bookmarks(material_id)',
     );
 
-    print('✅ Database created successfully');
+    print('✅ Database created successfully (v${AppInfo.databaseVersion})');
   }
 
   /// Handle database upgrades
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    // Handle future database migrations
-    if (oldVersion < newVersion) {
-      print('⚠️ Database upgrade from v$oldVersion to v$newVersion');
-      // Add migration logic here when needed
+    print('⚠️ Database upgrade from v$oldVersion to v$newVersion');
+
+    // Migration from v1 to v2: Add user_profile table
+    if (oldVersion < 2) {
+      print('📝 Adding user_profile table...');
+
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS user_profile (
+          id INTEGER PRIMARY KEY CHECK(id = 1),
+          name TEXT NOT NULL,
+          role TEXT NOT NULL CHECK(role IN ('Ibu', 'Ayah', 'Nenek', 'Kakek', 'Pengasuh', 'Nakes')),
+          photo_path TEXT,
+          location TEXT,
+          created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+          updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+        )
+      ''');
+
+      // Add user_profile_completed flag to app_info
+      await db.insert('app_info', {
+        'key': 'user_profile_completed',
+        'value': '0',
+      }, conflictAlgorithm: ConflictAlgorithm.replace);
+
+      print('✅ user_profile table added successfully');
     }
+
+    // Future migrations will go here
+    // if (oldVersion < 3) { ... }
   }
 
   // ==================== CHILDREN OPERATIONS ====================
@@ -462,6 +506,108 @@ class DatabaseService {
     );
   }
 
+  // ==================== USER PROFILE OPERATIONS ====================
+
+  /// Get user profile (returns null if not set)
+  Future<UserProfile?> getUserProfile() async {
+    final db = await database;
+    final maps = await db.query(
+      'user_profile',
+      where: 'id = ?',
+      whereArgs: [1],
+    );
+
+    if (maps.isEmpty) return null;
+    return UserProfile.fromMap(maps.first);
+  }
+
+  /// Save or update user profile
+  Future<int> saveUserProfile(UserProfile profile) async {
+    final db = await database;
+
+    // Always use id = 1 for single user
+    final profileData = profile.toMap();
+    profileData['id'] = 1;
+    profileData['updated_at'] = DateTime.now().toIso8601String();
+
+    // Insert or replace
+    final result = await db.insert(
+      'user_profile',
+      profileData,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+
+    // Update app_info flag
+    await db.insert('app_info', {
+      'key': 'user_profile_completed',
+      'value': '1',
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
+
+    return result;
+  }
+
+  /// Update user profile
+  Future<int> updateUserProfile(UserProfile profile) async {
+    final db = await database;
+
+    final profileData = profile.toMap();
+    profileData['updated_at'] = DateTime.now().toIso8601String();
+
+    return await db.update(
+      'user_profile',
+      profileData,
+      where: 'id = ?',
+      whereArgs: [1],
+    );
+  }
+
+  /// Delete user profile
+  Future<int> deleteUserProfile() async {
+    final db = await database;
+
+    // Delete profile
+    final result = await db.delete(
+      'user_profile',
+      where: 'id = ?',
+      whereArgs: [1],
+    );
+
+    // Update app_info flag
+    await db.insert('app_info', {
+      'key': 'user_profile_completed',
+      'value': '0',
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
+
+    return result;
+  }
+
+  /// Check if user profile exists
+  Future<bool> hasUserProfile() async {
+    final profile = await getUserProfile();
+    return profile != null && profile.isComplete;
+  }
+
+  /// Get user name for greeting (returns default if not set)
+  Future<String> getUserName() async {
+    final profile = await getUserProfile();
+    return profile?.name ?? 'Bunda';
+  }
+
+  /// Get user greeting based on time
+  Future<String> getUserGreeting() async {
+    final profile = await getUserProfile();
+    if (profile != null) {
+      return profile.getTimeBasedGreeting();
+    }
+
+    // Default greeting
+    final hour = DateTime.now().hour;
+    if (hour < 12) return 'Selamat pagi, Bunda!';
+    if (hour < 15) return 'Selamat siang, Bunda!';
+    if (hour < 18) return 'Selamat sore, Bunda!';
+    return 'Selamat malam, Bunda!';
+  }
+
   // ==================== UTILITY OPERATIONS ====================
 
   /// Close database
@@ -507,11 +653,18 @@ class DatabaseService {
         ) ??
         0;
 
+    final hasProfile =
+        Sqflite.firstIntValue(
+          await db.rawQuery('SELECT COUNT(*) FROM user_profile'),
+        ) ??
+        0;
+
     return {
       'children': childrenCount,
       'materials': materialsCount,
       'screenings': screeningsCount,
       'bookmarks': bookmarksCount,
+      'hasProfile': hasProfile,
     };
   }
 }

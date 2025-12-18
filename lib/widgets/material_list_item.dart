@@ -1,3 +1,5 @@
+library;
+
 /// File: material_list_item.dart
 /// Path: lib/widgets/material_list_item.dart
 /// Description: Reusable card widget untuk display satu materi edukatif
@@ -34,13 +36,13 @@ class MaterialListItem extends StatelessWidget {
   final VoidCallback? onBookmarkTap;
 
   const MaterialListItem({
-    Key? key,
+    super.key,
     required this.material,
     required this.onTap,
     this.showBookmark = false,
     this.isBookmarked = false,
     this.onBookmarkTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -125,9 +127,12 @@ class MaterialListItem extends StatelessWidget {
         vertical: AppDimensions.spacingXS,
       ),
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.1),
+        color: AppColors.primary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(AppDimensions.radiusS),
-        border: Border.all(color: AppColors.primary.withOpacity(0.3), width: 1),
+        border: Border.all(
+          color: AppColors.primary.withValues(alpha: 0.3),
+          width: 1,
+        ),
       ),
       child: Text(
         material.categoryDisplay,

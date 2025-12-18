@@ -121,7 +121,7 @@ class _SplashScreenState extends State<SplashScreen>
                         width: 180,
                         height: 180,
                         decoration: BoxDecoration(
-                          color: AppColors.primary.withOpacity(0.2),
+                          color: AppColors.primary.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(90),
                         ),
                         child: const Icon(
@@ -176,7 +176,7 @@ class _SplashScreenState extends State<SplashScreen>
                     child: CircularProgressIndicator(
                       strokeWidth: 3,
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        AppColors.primary.withOpacity(0.7),
+                        AppColors.primary.withValues(alpha: 0.7),
                       ),
                     ),
                   ),

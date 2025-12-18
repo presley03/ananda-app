@@ -4,29 +4,20 @@ import '../utils/constants/dimensions.dart';
 import 'custom_search_bar.dart';
 
 /// Top Bar Widget
-/// Bar atas dengan user icon, search bar, dan notification icon
+/// Bar atas dengan user icon dan search bar
 ///
 /// Usage:
 /// ```dart
 /// TopBar(
 ///   onUserTap: () => print('User tapped'),
 ///   onSearchTap: () => print('Search tapped'),
-///   onNotificationTap: () => print('Notification tapped'),
 /// )
 /// ```
 class TopBar extends StatelessWidget {
   final VoidCallback? onUserTap;
   final VoidCallback? onSearchTap;
-  final VoidCallback? onNotificationTap;
-  final bool hasNotification;
 
-  const TopBar({
-    super.key,
-    this.onUserTap,
-    this.onSearchTap,
-    this.onNotificationTap,
-    this.hasNotification = false,
-  });
+  const TopBar({super.key, this.onUserTap, this.onSearchTap});
 
   @override
   Widget build(BuildContext context) {
@@ -39,28 +30,15 @@ class TopBar extends StatelessWidget {
 
           const SizedBox(width: AppDimensions.spacingM),
 
-          // Search Bar (Expanded - takes remaining space)
+          // Search Bar (Expanded - takes all remaining space)
           Expanded(child: CustomSearchBar(onTap: onSearchTap)),
-
-          const SizedBox(width: AppDimensions.spacingM),
-
-          // Notification Icon with badge
-          _buildIconButton(
-            icon: Icons.notifications_outlined,
-            onTap: onNotificationTap,
-            showBadge: hasNotification,
-          ),
         ],
       ),
     );
   }
 
-  /// Build icon button with optional badge
-  Widget _buildIconButton({
-    required IconData icon,
-    VoidCallback? onTap,
-    bool showBadge = false,
-  }) {
+  /// Build icon button
+  Widget _buildIconButton({required IconData icon, VoidCallback? onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -81,33 +59,12 @@ class TopBar extends StatelessWidget {
             ),
           ],
         ),
-        child: Stack(
-          children: [
-            // Icon
-            Center(
-              child: Icon(
-                icon,
-                color: AppColors.primary,
-                size: AppDimensions.iconM,
-              ),
-            ),
-
-            // Badge (notification dot)
-            if (showBadge)
-              Positioned(
-                top: 10,
-                right: 10,
-                child: Container(
-                  width: 10,
-                  height: 10,
-                  decoration: BoxDecoration(
-                    color: AppColors.danger,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 1.5),
-                  ),
-                ),
-              ),
-          ],
+        child: Center(
+          child: Icon(
+            icon,
+            color: AppColors.primary,
+            size: AppDimensions.iconM,
+          ),
         ),
       ),
     );

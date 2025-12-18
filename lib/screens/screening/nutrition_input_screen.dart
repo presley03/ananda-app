@@ -179,7 +179,7 @@ class _NutritionInputScreenState extends State<NutritionInputScreen> {
           Container(
             padding: const EdgeInsets.all(AppDimensions.spacingS),
             decoration: BoxDecoration(
-              color: AppColors.info.withOpacity(0.1),
+              color: AppColors.info.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(AppDimensions.radiusS),
             ),
             child: const Icon(
@@ -252,7 +252,7 @@ class _NutritionInputScreenState extends State<NutritionInputScreen> {
       icon: Icons.height,
       iconColor: AppColors.secondary,
       title: 'Panjang/Tinggi Badan',
-      subtitle: '< 2 tahun: ukur berbaring, ≥ 2 tahun: ukur berdiri',
+      subtitle: '< 2 tahun: ukur berbaring, â‰¥ 2 tahun: ukur berdiri',
       child: TextFormField(
         controller: _heightController,
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -369,7 +369,9 @@ class _NutritionInputScreenState extends State<NutritionInputScreen> {
         ),
         decoration: BoxDecoration(
           color:
-              isSelected ? AppColors.info.withOpacity(0.1) : Colors.transparent,
+              isSelected
+                  ? AppColors.info.withValues(alpha: 0.1)
+                  : Colors.transparent,
           borderRadius: BorderRadius.circular(AppDimensions.radiusS),
           border: Border.all(
             color: isSelected ? AppColors.info : AppColors.glassBorder,
@@ -421,7 +423,7 @@ class _NutritionInputScreenState extends State<NutritionInputScreen> {
               Container(
                 padding: const EdgeInsets.all(AppDimensions.spacingXS),
                 decoration: BoxDecoration(
-                  color: iconColor.withOpacity(0.1),
+                  color: iconColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(AppDimensions.radiusS),
                 ),
                 child: Icon(icon, color: iconColor, size: AppDimensions.iconS),

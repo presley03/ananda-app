@@ -81,7 +81,7 @@ class NutritionResultScreen extends StatelessWidget {
                   style: AppTextStyles.h2.copyWith(color: AppColors.primary),
                 ),
                 Text(
-                  '${measurement.genderDisplay} • ${measurement.ageDisplay}',
+                  '${measurement.genderDisplay} â€¢ ${measurement.ageDisplay}',
                   style: AppTextStyles.body2,
                 ),
               ],
@@ -154,7 +154,7 @@ class NutritionResultScreen extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(AppDimensions.spacingXS),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(AppDimensions.radiusS),
           ),
           child: Icon(icon, color: color, size: AppDimensions.iconS),
@@ -190,7 +190,7 @@ class NutritionResultScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(AppDimensions.spacingM),
             decoration: BoxDecoration(
-              color: statusColor.withOpacity(0.1),
+              color: statusColor.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(statusIcon, size: 48, color: statusColor),
@@ -291,9 +291,12 @@ class NutritionResultScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppDimensions.spacingM),
       decoration: BoxDecoration(
-        color: AppColors.info.withOpacity(0.1),
+        color: AppColors.info.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-        border: Border.all(color: AppColors.info.withOpacity(0.3), width: 1.5),
+        border: Border.all(
+          color: AppColors.info.withValues(alpha: 0.3),
+          width: 1.5,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

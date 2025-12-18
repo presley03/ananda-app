@@ -39,7 +39,7 @@ class KpspResultScreen extends StatelessWidget {
   // Berdasarkan pedoman KPSP:
   // - 9-10 jawaban "Ya" = Normal
   // - 7-8 jawaban "Ya" = Meragukan
-  // - ≤6 jawaban "Ya" = Penyimpangan
+  // - â‰¤6 jawaban "Ya" = Penyimpangan
   String get _resultStatus {
     if (score >= 9) {
       return 'Normal';
@@ -175,7 +175,7 @@ class KpspResultScreen extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(AppDimensions.spacingXL),
       decoration: BoxDecoration(
-        color: _resultColor.withOpacity(0.1),
+        color: _resultColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(AppDimensions.radiusL),
         border: Border.all(color: _resultColor, width: 2),
       ),
@@ -263,7 +263,7 @@ class KpspResultScreen extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(AppDimensions.spacingM),
       decoration: BoxDecoration(
-        color: AppColors.info.withOpacity(0.1),
+        color: AppColors.info.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(AppDimensions.radiusM),
       ),
       child: Column(
@@ -276,7 +276,7 @@ class KpspResultScreen extends StatelessWidget {
           SizedBox(height: AppDimensions.spacingS),
           _buildGuideItem('9-10', 'Normal', AppColors.success),
           _buildGuideItem('7-8', 'Meragukan', AppColors.warning),
-          _buildGuideItem('≤6', 'Penyimpangan', AppColors.danger),
+          _buildGuideItem('â‰¤6', 'Penyimpangan', AppColors.danger),
         ],
       ),
     );
@@ -294,7 +294,7 @@ class KpspResultScreen extends StatelessWidget {
               vertical: AppDimensions.spacingXS,
             ),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.2),
+              color: color.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(AppDimensions.radiusS),
             ),
             child: Center(

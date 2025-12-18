@@ -125,7 +125,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
     );
 
     // Reload if profile was updated
-    if (result == true) {
+    if (result == true && mounted) {
       // Refresh data and return to reload previous screen
       Navigator.pop(context, true);
     }
@@ -208,8 +208,8 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
             decoration: BoxDecoration(
               color:
                   widget.profile.gender == 'L'
-                      ? AppColors.info.withOpacity(0.2)
-                      : Colors.pink.withOpacity(0.2),
+                      ? AppColors.info.withValues(alpha: 0.2)
+                      : Colors.pink.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(AppDimensions.radiusRound),
             ),
             child: Icon(
@@ -230,7 +230,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
           const SizedBox(height: AppDimensions.spacingS),
 
           // Divider
-          Divider(color: Colors.grey.withOpacity(0.3)),
+          Divider(color: Colors.grey.withValues(alpha: 0.3)),
           const SizedBox(height: AppDimensions.spacingM),
 
           // Info rows
@@ -360,7 +360,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                   vertical: AppDimensions.spacingXS,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.1),
+                  color: AppColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(
                     AppDimensions.radiusRound,
                   ),
@@ -456,7 +456,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
             width: 50,
             height: 50,
             decoration: BoxDecoration(
-              color: statusColor.withOpacity(0.2),
+              color: statusColor.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(AppDimensions.radiusM),
             ),
             child: Center(
@@ -519,7 +519,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                 vertical: AppDimensions.spacingS,
               ),
               decoration: BoxDecoration(
-                color: statusColor.withOpacity(0.1),
+                color: statusColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(AppDimensions.radiusM),
               ),
               child: Text(

@@ -278,7 +278,7 @@ class _TddQuestionsScreenState extends State<TddQuestionsScreen> {
                   vertical: AppDimensions.spacingS,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.secondary.withOpacity(0.2),
+                  color: AppColors.secondary.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(AppDimensions.radiusS),
                 ),
                 child: Text(
@@ -340,7 +340,8 @@ class _TddQuestionsScreenState extends State<TddQuestionsScreen> {
       child: Container(
         padding: const EdgeInsets.all(AppDimensions.spacingL),
         decoration: BoxDecoration(
-          color: isSelected ? color.withOpacity(0.2) : AppColors.glassWhite,
+          color:
+              isSelected ? color.withValues(alpha: 0.2) : AppColors.glassWhite,
           borderRadius: BorderRadius.circular(AppDimensions.radiusM),
           border: Border.all(
             color: isSelected ? color : AppColors.glassBorder,
