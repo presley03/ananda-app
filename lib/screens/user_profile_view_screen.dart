@@ -4,12 +4,12 @@ import '../models/user_profile.dart';
 import '../services/database_service.dart';
 import '../utils/constants/colors.dart';
 import '../utils/constants/dimensions.dart';
-import '../widgets/glass_card.dart';
+import '../widgets/simple_card.dart';
 import 'user_profile_form_screen.dart';
 
 /// User Profile View Screen
 /// Screen untuk melihat detail profil user
-/// 
+///
 /// Features:
 /// - Tampilkan foto, nama, role, lokasi
 /// - Button edit profil
@@ -17,10 +17,7 @@ import 'user_profile_form_screen.dart';
 class UserProfileViewScreen extends StatelessWidget {
   final UserProfile profile;
 
-  const UserProfileViewScreen({
-    super.key,
-    required this.profile,
-  });
+  const UserProfileViewScreen({super.key, required this.profile});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +35,7 @@ class UserProfileViewScreen extends StatelessWidget {
             children: [
               // Header
               _buildHeader(context),
-              
+
               // Content
               Expanded(
                 child: SingleChildScrollView(
@@ -46,22 +43,22 @@ class UserProfileViewScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       const SizedBox(height: AppDimensions.spacingL),
-                      
+
                       // Photo
                       _buildPhoto(),
-                      
+
                       const SizedBox(height: AppDimensions.spacingL),
-                      
+
                       // Profile info
                       _buildProfileInfo(),
-                      
+
                       const SizedBox(height: AppDimensions.spacingXL),
-                      
+
                       // Edit button
                       _buildEditButton(context),
-                      
+
                       const SizedBox(height: AppDimensions.spacingM),
-                      
+
                       // Delete button
                       _buildDeleteButton(context),
                     ],
@@ -85,7 +82,7 @@ class UserProfileViewScreen extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(AppDimensions.spacingS),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha: 0.9),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(
@@ -115,29 +112,27 @@ class UserProfileViewScreen extends StatelessWidget {
       height: 120,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: AppColors.primary.withOpacity(0.1),
+        color: AppColors.primary.withValues(alpha: 0.1),
         border: Border.all(
-          color: AppColors.primary.withOpacity(0.3),
+          color: AppColors.primary.withValues(alpha: 0.3),
           width: 3,
         ),
       ),
-      child: profile.photoPath != null
-          ? ClipOval(
-              child: Image.file(
-                File(profile.photoPath!),
-                fit: BoxFit.cover,
+      child:
+          profile.photoPath != null
+              ? ClipOval(
+                child: Image.file(File(profile.photoPath!), fit: BoxFit.cover),
+              )
+              : Icon(
+                Icons.person_rounded,
+                size: 60,
+                color: AppColors.primary.withValues(alpha: 0.5),
               ),
-            )
-          : Icon(
-              Icons.person_rounded,
-              size: 60,
-              color: AppColors.primary.withOpacity(0.5),
-            ),
     );
   }
 
   Widget _buildProfileInfo() {
-    return GlassCard(
+    return SimpleCard(
       child: Padding(
         padding: const EdgeInsets.all(AppDimensions.spacingL),
         child: Column(
@@ -148,19 +143,19 @@ class UserProfileViewScreen extends StatelessWidget {
               label: 'Nama',
               value: profile.name,
             ),
-            
+
             const SizedBox(height: AppDimensions.spacingL),
-            
+
             // Role
             _buildInfoRow(
               icon: Icons.family_restroom_rounded,
               label: 'Hubungan',
               value: profile.roleDisplay,
             ),
-            
+
             if (profile.location != null) ...[
               const SizedBox(height: AppDimensions.spacingL),
-              
+
               // Location
               _buildInfoRow(
                 icon: Icons.location_on_rounded,
@@ -184,14 +179,10 @@ class UserProfileViewScreen extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(AppDimensions.spacingS),
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.1),
+            color: AppColors.primary.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(
-            icon,
-            color: AppColors.primary,
-            size: 24,
-          ),
+          child: Icon(icon, color: AppColors.primary, size: 24),
         ),
         const SizedBox(width: AppDimensions.spacingM),
         Expanded(
@@ -200,10 +191,7 @@ class UserProfileViewScreen extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: AppColors.textHint,
-                ),
+                style: const TextStyle(fontSize: 12, color: AppColors.textHint),
               ),
               const SizedBox(height: 4),
               Text(
@@ -229,13 +217,14 @@ class UserProfileViewScreen extends StatelessWidget {
           final result = await Navigator.push<bool>(
             context,
             MaterialPageRoute(
-              builder: (context) => UserProfileFormScreen(
-                existingProfile: profile,
-                isFirstTime: false,
-              ),
+              builder:
+                  (context) => UserProfileFormScreen(
+                    existingProfile: profile,
+                    isFirstTime: false,
+                  ),
             ),
           );
-          
+
           if (result == true && context.mounted) {
             Navigator.pop(context, true); // Return true to reload
           }
@@ -267,31 +256,32 @@ class UserProfileViewScreen extends StatelessWidget {
         onPressed: () async {
           final confirm = await showDialog<bool>(
             context: context,
-            builder: (context) => AlertDialog(
-              title: const Text('Hapus Profil?'),
-              content: const Text(
-                'Data profil Anda akan dihapus. Anda masih bisa membuat profil baru nanti.',
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context, false),
-                  child: const Text('Batal'),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.pop(context, true),
-                  style: TextButton.styleFrom(
-                    foregroundColor: AppColors.danger,
+            builder:
+                (context) => AlertDialog(
+                  title: const Text('Hapus Profil?'),
+                  content: const Text(
+                    'Data profil Anda akan dihapus. Anda masih bisa membuat profil baru nanti.',
                   ),
-                  child: const Text('Hapus'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: const Text('Batal'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      style: TextButton.styleFrom(
+                        foregroundColor: AppColors.danger,
+                      ),
+                      child: const Text('Hapus'),
+                    ),
+                  ],
                 ),
-              ],
-            ),
           );
 
           if (confirm == true && context.mounted) {
             final db = DatabaseService();
             await db.deleteUserProfile();
-            
+
             if (context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(

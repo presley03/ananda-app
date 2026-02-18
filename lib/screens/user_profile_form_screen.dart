@@ -5,7 +5,7 @@ import '../models/user_profile.dart';
 import '../services/database_service.dart';
 import '../utils/constants/colors.dart';
 import '../utils/constants/dimensions.dart';
-import '../widgets/glass_card.dart';
+import '../widgets/simple_card.dart';
 
 /// User Profile Form Screen
 /// Screen untuk input/edit profil user (opsional)
@@ -98,7 +98,7 @@ class _UserProfileFormScreenState extends State<UserProfileFormScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Profil berhasil disimpan! âœ…'),
+            content: Text('Profil berhasil disimpan! Ã¢Å“â€¦'),
             backgroundColor: AppColors.success,
           ),
         );
@@ -225,7 +225,9 @@ class _UserProfileFormScreenState extends State<UserProfileFormScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.isFirstTime ? 'Selamat Datang! ðŸ‘‹' : 'Edit Profil',
+                  widget.isFirstTime
+                      ? 'Selamat Datang! Ã°Å¸â€˜â€¹'
+                      : 'Edit Profil',
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -293,7 +295,7 @@ class _UserProfileFormScreenState extends State<UserProfileFormScreen> {
 
   /// Build name field
   Widget _buildNameField() {
-    return GlassCard(
+    return SimpleCard(
       child: TextFormField(
         controller: _nameController,
         decoration: const InputDecoration(
@@ -315,7 +317,7 @@ class _UserProfileFormScreenState extends State<UserProfileFormScreen> {
 
   /// Build role selector
   Widget _buildRoleSelector() {
-    return GlassCard(
+    return SimpleCard(
       child: Padding(
         padding: const EdgeInsets.all(AppDimensions.spacingM),
         child: Column(
@@ -384,7 +386,7 @@ class _UserProfileFormScreenState extends State<UserProfileFormScreen> {
 
   /// Build location field
   Widget _buildLocationField() {
-    return GlassCard(
+    return SimpleCard(
       child: TextFormField(
         controller: _locationController,
         decoration: const InputDecoration(

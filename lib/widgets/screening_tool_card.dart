@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../utils/constants/colors.dart';
 import '../utils/constants/text_styles.dart';
 import '../utils/constants/dimensions.dart';
-import 'glass_card.dart';
+import 'simple_card.dart';
 
 /// Screening Tool Card Widget
 /// Card untuk tools skrining (KPSP, Gizi, TDD, M-CHAT)
@@ -38,7 +38,7 @@ class ScreeningToolCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GlassCard(
+    return SimpleCard(
       onTap: onTap,
       child: Row(
         children: [

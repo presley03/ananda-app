@@ -1,19 +1,20 @@
 /// File: material_detail_screen.dart
 /// Path: lib/screens/material_detail_screen.dart
 /// Description: Screen untuk menampilkan detail lengkap materi edukatif
-/// 
+///
 /// Features:
 /// - Full content display
 /// - Bookmark toggle
 /// - Share functionality
 /// - Reading time estimate
 /// - Back navigation
-/// - Glassmorphism design
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../models/material.dart' as model;
-import '../widgets/glass_card.dart';
+import '../widgets/simple_card.dart';
+import '../widgets/formatted_material_content.dart';
 import '../utils/constants/colors.dart';
 import '../utils/constants/text_styles.dart';
 import '../utils/constants/dimensions.dart';
@@ -21,10 +22,10 @@ import '../utils/constants/dimensions.dart';
 class MaterialDetailScreen extends StatefulWidget {
   /// Material data to display
   final model.Material material;
-  
+
   /// Initial bookmark state
   final bool isBookmarked;
-  
+
   /// Callback when bookmark toggled
   final VoidCallback? onBookmarkToggle;
 
@@ -56,10 +57,7 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              AppColors.gradientStart,
-              AppColors.gradientEnd,
-            ],
+            colors: [AppColors.gradientStart, AppColors.gradientEnd],
           ),
         ),
         child: SafeArea(
@@ -67,7 +65,7 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
             children: [
               // Custom AppBar
               _buildAppBar(),
-              
+
               // Scrollable Content
               Expanded(
                 child: SingleChildScrollView(
@@ -77,27 +75,26 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
                     children: [
                       // Category & Subcategory Badges
                       _buildBadges(),
-                      
+
                       const SizedBox(height: AppDimensions.spacingM),
-                      
+
                       // Title
                       _buildTitle(),
-                      
+
                       const SizedBox(height: AppDimensions.spacingM),
-                      
+
                       // Meta info (reading time, date)
                       _buildMetaInfo(),
-                      
+
                       const SizedBox(height: AppDimensions.spacingL),
-                      
+
                       // Content
                       _buildContent(),
-                      
+
                       const SizedBox(height: AppDimensions.spacingXL),
-                      
+
                       // Tags (if available)
-                      if (widget.material.tagList.isNotEmpty)
-                        _buildTags(),
+                      if (widget.material.tagList.isNotEmpty) _buildTags(),
                     ],
                   ),
                 ),
@@ -106,7 +103,7 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
           ),
         ),
       ),
-      
+
       // Share FAB
       floatingActionButton: _buildShareFAB(),
     );
@@ -126,14 +123,15 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
             icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
             onPressed: () => Navigator.pop(context),
           ),
-          
+
           const Spacer(),
-          
+
           // Bookmark button
           IconButton(
             icon: Icon(
               _isBookmarked ? Icons.bookmark : Icons.bookmark_border_rounded,
-              color: _isBookmarked ? AppColors.secondary : AppColors.textPrimary,
+              color:
+                  _isBookmarked ? AppColors.secondary : AppColors.textPrimary,
             ),
             onPressed: _toggleBookmark,
           ),
@@ -155,10 +153,10 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
             vertical: AppDimensions.spacingS,
           ),
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.1),
+            color: AppColors.primary.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(AppDimensions.radiusM),
             border: Border.all(
-              color: AppColors.primary.withOpacity(0.3),
+              color: AppColors.primary.withValues(alpha: 0.3),
               width: 1.5,
             ),
           ),
@@ -170,7 +168,7 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
             ),
           ),
         ),
-        
+
         // Subcategory badge
         Container(
           padding: const EdgeInsets.symmetric(
@@ -178,10 +176,10 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
             vertical: AppDimensions.spacingS,
           ),
           decoration: BoxDecoration(
-            color: AppColors.secondary.withOpacity(0.1),
+            color: AppColors.secondary.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(AppDimensions.radiusM),
             border: Border.all(
-              color: AppColors.secondary.withOpacity(0.3),
+              color: AppColors.secondary.withValues(alpha: 0.3),
               width: 1.5,
             ),
           ),
@@ -201,16 +199,13 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
   Widget _buildTitle() {
     return Text(
       widget.material.title,
-      style: AppTextStyles.h2.copyWith(
-        fontSize: 26,
-        height: 1.3,
-      ),
+      style: AppTextStyles.h2.copyWith(fontSize: 26, height: 1.3),
     );
   }
 
   /// Build meta information
   Widget _buildMetaInfo() {
-    return GlassCard(
+    return SimpleCard(
       padding: const EdgeInsets.all(AppDimensions.spacingM),
       child: Row(
         children: [
@@ -225,9 +220,9 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
             '${widget.material.estimatedReadingTime} menit baca',
             style: AppTextStyles.body2,
           ),
-          
+
           const SizedBox(width: AppDimensions.spacingL),
-          
+
           // Date (if available)
           if (widget.material.createdAt != null) ...[
             const Icon(
@@ -248,15 +243,12 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
 
   /// Build content
   Widget _buildContent() {
-    return GlassCard(
+    return SimpleCard(
       tintColor: _getCategoryTintColor(),
       padding: const EdgeInsets.all(AppDimensions.spacingL),
-      child: SelectableText(
-        widget.material.content,
-        style: AppTextStyles.body1.copyWith(
-          height: 1.7,
-          fontSize: 16,
-        ),
+      child: FormattedMaterialContent(
+        content: widget.material.content,
+        baseStyle: AppTextStyles.body1.copyWith(height: 1.7, fontSize: 15),
       ),
     );
   }
@@ -266,36 +258,31 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Tags:',
-          style: AppTextStyles.label,
-        ),
+        const Text('Tags:', style: AppTextStyles.label),
         const SizedBox(height: AppDimensions.spacingS),
         Wrap(
           spacing: AppDimensions.spacingS,
           runSpacing: AppDimensions.spacingS,
-          children: widget.material.tagList.map((tag) {
-            return Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppDimensions.spacingM,
-                vertical: AppDimensions.spacingXS,
-              ),
-              decoration: BoxDecoration(
-                color: AppColors.glassWhite,
-                borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-                border: Border.all(
-                  color: AppColors.glassBorder,
-                  width: 1,
-                ),
-              ),
-              child: Text(
-                tag,
-                style: AppTextStyles.caption.copyWith(
-                  color: AppColors.textSecondary,
-                ),
-              ),
-            );
-          }).toList(),
+          children:
+              widget.material.tagList.map((tag) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppDimensions.spacingM,
+                    vertical: AppDimensions.spacingXS,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.glassWhite,
+                    borderRadius: BorderRadius.circular(AppDimensions.radiusM),
+                    border: Border.all(color: AppColors.glassBorder, width: 1),
+                  ),
+                  child: Text(
+                    tag,
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                );
+              }).toList(),
         ),
         const SizedBox(height: AppDimensions.spacingL),
       ],
@@ -310,10 +297,7 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
       icon: const Icon(Icons.share, color: Colors.white),
       label: const Text(
         'Bagikan',
-        style: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.w600,
-        ),
+        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
       ),
     );
   }
@@ -323,20 +307,19 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
     setState(() {
       _isBookmarked = !_isBookmarked;
     });
-    
+
     // Callback to parent
     widget.onBookmarkToggle?.call();
-    
+
     // Show feedback
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          _isBookmarked 
-            ? 'Ditambahkan ke bookmark' 
-            : 'Dihapus dari bookmark',
+          _isBookmarked ? 'Ditambahkan ke bookmark' : 'Dihapus dari bookmark',
         ),
         duration: const Duration(seconds: 1),
-        backgroundColor: _isBookmarked ? AppColors.success : AppColors.textSecondary,
+        backgroundColor:
+            _isBookmarked ? AppColors.success : AppColors.textSecondary,
       ),
     );
   }
@@ -358,7 +341,7 @@ ${widget.material.subcategoryDisplay}
 ''',
       ),
     );
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Konten telah disalin ke clipboard!'),
@@ -366,7 +349,7 @@ ${widget.material.subcategoryDisplay}
         backgroundColor: AppColors.success,
       ),
     );
-    
+
     // TODO: Implement native share dialog
     // Share.share(content) - requires share_plus package
   }
@@ -374,10 +357,20 @@ ${widget.material.subcategoryDisplay}
   /// Format date to readable string
   String _formatDate(DateTime date) {
     final months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun',
-      'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'Mei',
+      'Jun',
+      'Jul',
+      'Ags',
+      'Sep',
+      'Okt',
+      'Nov',
+      'Des',
     ];
-    
+
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }
 

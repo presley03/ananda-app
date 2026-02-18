@@ -5,7 +5,7 @@ import '../../utils/constants/text_styles.dart';
 import '../../utils/constants/app_info.dart';
 import '../../services/database_service.dart';
 import '../../models/child_profile.dart';
-import '../../widgets/glass_card.dart';
+import '../../widgets/simple_card.dart';
 
 /// Edit Profile Screen
 /// Form untuk mengedit profil anak yang sudah ada
@@ -118,7 +118,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Profil berhasil diperbarui! âœ…'),
+            content: Text('Profil berhasil diperbarui! Ã¢Å“â€¦'),
             backgroundColor: AppColors.success,
           ),
         );
@@ -246,7 +246,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   /// Build info card
   Widget _buildInfoCard() {
-    return GlassCard(
+    return SimpleCard(
       tintColor: AppColors.warning.withValues(alpha: 0.1),
       child: Row(
         children: [
@@ -269,7 +269,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   /// Build name field
   Widget _buildNameField() {
-    return GlassCard(
+    return SimpleCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -311,7 +311,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   /// Build date field
   Widget _buildDateField() {
-    return GlassCard(
+    return SimpleCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -346,7 +346,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   /// Build gender field
   Widget _buildGenderField() {
-    return GlassCard(
+    return SimpleCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -3,7 +3,7 @@ import '../utils/constants/colors.dart';
 import '../utils/constants/text_styles.dart';
 import '../utils/constants/dimensions.dart';
 import '../utils/constants/app_info.dart';
-import '../widgets/glass_card.dart';
+import '../widgets/simple_card.dart';
 import 'settings/about_screen.dart';
 import 'settings/disclaimer_screen.dart';
 import 'settings/privacy_screen.dart';
@@ -195,7 +195,7 @@ class SettingsScreen extends StatelessWidget {
                       const SizedBox(height: AppDimensions.spacingXL),
 
                       // App Version
-                      GlassCard(
+                      SimpleCard(
                         padding: const EdgeInsets.all(AppDimensions.spacingM),
                         child: Column(
                           children: [
@@ -249,7 +249,7 @@ class SettingsScreen extends StatelessWidget {
     required String subtitle,
     required VoidCallback onTap,
   }) {
-    return GlassCard(
+    return SimpleCard(
       onTap: onTap,
       child: Row(
         children: [

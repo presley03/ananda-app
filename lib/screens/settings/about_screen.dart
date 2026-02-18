@@ -3,7 +3,7 @@ import '../../utils/constants/colors.dart';
 import '../../utils/constants/text_styles.dart';
 import '../../utils/constants/dimensions.dart';
 import '../../utils/constants/app_info.dart';
-import '../../widgets/glass_card.dart';
+import '../../widgets/simple_card.dart';
 
 /// About Screen
 /// Menampilkan informasi tentang aplikasi Ananda
@@ -52,7 +52,7 @@ class AboutScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       // App Logo & Name
-                      GlassCard(
+                      SimpleCard(
                         padding: const EdgeInsets.all(AppDimensions.spacingL),
                         child: Column(
                           children: [
@@ -88,7 +88,7 @@ class AboutScreen extends StatelessWidget {
                       const SizedBox(height: AppDimensions.spacingL),
 
                       // App Info
-                      GlassCard(
+                      SimpleCard(
                         padding: const EdgeInsets.all(AppDimensions.spacingL),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,7 +130,7 @@ class AboutScreen extends StatelessWidget {
                       const SizedBox(height: AppDimensions.spacingL),
 
                       // Features
-                      GlassCard(
+                      SimpleCard(
                         padding: const EdgeInsets.all(AppDimensions.spacingL),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

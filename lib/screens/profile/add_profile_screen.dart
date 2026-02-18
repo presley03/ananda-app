@@ -5,7 +5,7 @@ import '../../utils/constants/text_styles.dart';
 import '../../utils/constants/app_info.dart';
 import '../../services/database_service.dart';
 import '../../models/child_profile.dart';
-import '../../widgets/glass_card.dart';
+import '../../widgets/simple_card.dart';
 
 /// Add Profile Screen
 /// Form untuk menambah profil anak baru
@@ -92,7 +92,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Profil berhasil ditambahkan! ✅'),
+            content: Text('Profil berhasil ditambahkan! âœ…'),
             backgroundColor: AppColors.success,
           ),
         );
@@ -200,8 +200,8 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
 
   /// Build info card
   Widget _buildInfoCard() {
-    return GlassCard(
-      tintColor: AppColors.info.withOpacity(0.1),
+    return SimpleCard(
+      tintColor: AppColors.info.withValues(alpha: 0.1),
       child: Row(
         children: [
           Icon(
@@ -223,7 +223,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
 
   /// Build name field
   Widget _buildNameField() {
-    return GlassCard(
+    return SimpleCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -237,7 +237,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
                 color: AppColors.textHint,
               ),
               filled: true,
-              fillColor: Colors.white.withOpacity(0.5),
+              fillColor: Colors.white.withValues(alpha: 0.5),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(AppDimensions.radiusM),
                 borderSide: BorderSide.none,
@@ -265,7 +265,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
 
   /// Build date field
   Widget _buildDateField() {
-    return GlassCard(
+    return SimpleCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -277,7 +277,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
             child: Container(
               padding: const EdgeInsets.all(AppDimensions.spacingM),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.5),
+                color: Colors.white.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(AppDimensions.radiusM),
               ),
               child: Row(
@@ -310,7 +310,7 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
 
   /// Build gender field
   Widget _buildGenderField() {
-    return GlassCard(
+    return SimpleCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -359,8 +359,8 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
         decoration: BoxDecoration(
           color:
               isSelected
-                  ? color.withOpacity(0.2)
-                  : Colors.white.withOpacity(0.3),
+                  ? color.withValues(alpha: 0.2)
+                  : Colors.white.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(AppDimensions.radiusM),
           border: Border.all(
             color: isSelected ? color : Colors.transparent,

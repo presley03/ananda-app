@@ -3,7 +3,7 @@ import '../../utils/constants/colors.dart';
 import '../../utils/constants/text_styles.dart';
 import '../../utils/constants/dimensions.dart';
 import '../../utils/constants/app_info.dart';
-import '../../widgets/glass_card.dart';
+import '../../widgets/simple_card.dart';
 
 /// Credits Screen
 /// Menampilkan informasi pembuat aplikasi
@@ -52,7 +52,7 @@ class CreditsScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       // Developer Card
-                      GlassCard(
+                      SimpleCard(
                         padding: const EdgeInsets.all(AppDimensions.spacingL),
                         child: Column(
                           children: [
@@ -83,7 +83,7 @@ class CreditsScreen extends StatelessWidget {
                       const SizedBox(height: AppDimensions.spacingL),
 
                       // Contact Info
-                      GlassCard(
+                      SimpleCard(
                         padding: const EdgeInsets.all(AppDimensions.spacingL),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,7 +107,7 @@ class CreditsScreen extends StatelessWidget {
                       const SizedBox(height: AppDimensions.spacingL),
 
                       // Thanks Card
-                      GlassCard(
+                      SimpleCard(
                         padding: const EdgeInsets.all(AppDimensions.spacingL),
                         child: Column(
                           children: [
@@ -137,7 +137,7 @@ class CreditsScreen extends StatelessWidget {
 
                       // Copyright
                       Text(
-                        '© 2025 ${AppInfo.appName}',
+                        'Â© 2025 ${AppInfo.appName}',
                         style: AppTextStyles.caption.copyWith(
                           color: AppColors.textHint,
                         ),

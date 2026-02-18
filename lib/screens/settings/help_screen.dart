@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../utils/constants/colors.dart';
 import '../../utils/constants/text_styles.dart';
 import '../../utils/constants/dimensions.dart';
-import '../../widgets/glass_card.dart';
+import '../../widgets/simple_card.dart';
 
 /// Help Screen
 /// Menampilkan panduan penggunaan aplikasi
@@ -51,7 +51,7 @@ class HelpScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       // Help Icon Card
-                      GlassCard(
+                      SimpleCard(
                         padding: const EdgeInsets.all(AppDimensions.spacingL),
                         child: Row(
                           children: [
@@ -115,7 +115,7 @@ class HelpScreen extends StatelessWidget {
                       const SizedBox(height: AppDimensions.spacingL),
 
                       // FAQ Card
-                      GlassCard(
+                      SimpleCard(
                         padding: const EdgeInsets.all(AppDimensions.spacingL),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,7 +157,7 @@ class HelpScreen extends StatelessWidget {
     required String title,
     required List<String> items,
   }) {
-    return GlassCard(
+    return SimpleCard(
       padding: const EdgeInsets.all(AppDimensions.spacingL),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

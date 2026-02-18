@@ -3,7 +3,7 @@ import '../../utils/constants/colors.dart';
 import '../../utils/constants/text_styles.dart';
 import '../../utils/constants/dimensions.dart';
 import '../../utils/constants/legal_texts.dart';
-import '../../widgets/glass_card.dart';
+import '../../widgets/simple_card.dart';
 
 /// Privacy Screen
 /// Menampilkan kebijakan privasi aplikasi
@@ -52,7 +52,7 @@ class PrivacyScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       // Privacy Icon Card
-                      GlassCard(
+                      SimpleCard(
                         padding: const EdgeInsets.all(AppDimensions.spacingL),
                         child: Row(
                           children: [
@@ -77,7 +77,7 @@ class PrivacyScreen extends StatelessWidget {
                       const SizedBox(height: AppDimensions.spacingL),
 
                       // Privacy Content
-                      GlassCard(
+                      SimpleCard(
                         padding: const EdgeInsets.all(AppDimensions.spacingL),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,7 +101,7 @@ class PrivacyScreen extends StatelessWidget {
                       const SizedBox(height: AppDimensions.spacingL),
 
                       // Key Points
-                      GlassCard(
+                      SimpleCard(
                         padding: const EdgeInsets.all(AppDimensions.spacingL),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,7 +114,7 @@ class PrivacyScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: AppDimensions.spacingM),
                             _buildPoint(
-                              '🔒 Data tersimpan lokal di perangkat Anda',
+                              'ðŸ”’ Data tersimpan lokal di perangkat Anda',
                             ),
                             _buildPoint('✅ Tidak ada transmisi data ke server'),
                             _buildPoint('✅ Tidak ada tracking atau analitik'),

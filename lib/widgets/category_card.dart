@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../utils/constants/colors.dart';
 import '../utils/constants/text_styles.dart';
 import '../utils/constants/dimensions.dart';
-import 'glass_card.dart';
+import 'simple_card.dart';
 
 /// Category Card Widget
 /// Card untuk kategori materi edukatif dengan icon dan description
@@ -38,7 +38,7 @@ class CategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GlassCard(
+    return SimpleCard(
       tintColor: tintColor,
       onTap: onTap,
       child: Row(

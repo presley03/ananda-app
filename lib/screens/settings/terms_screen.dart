@@ -3,7 +3,7 @@ import '../../utils/constants/colors.dart';
 import '../../utils/constants/text_styles.dart';
 import '../../utils/constants/dimensions.dart';
 import '../../utils/constants/legal_texts.dart';
-import '../../widgets/glass_card.dart';
+import '../../widgets/simple_card.dart';
 
 /// Terms Screen
 /// Menampilkan syarat dan ketentuan aplikasi
@@ -54,7 +54,7 @@ class TermsScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       // Terms Icon Card
-                      GlassCard(
+                      SimpleCard(
                         padding: const EdgeInsets.all(AppDimensions.spacingL),
                         child: Row(
                           children: [
@@ -79,7 +79,7 @@ class TermsScreen extends StatelessWidget {
                       const SizedBox(height: AppDimensions.spacingL),
 
                       // Terms Content
-                      GlassCard(
+                      SimpleCard(
                         padding: const EdgeInsets.all(AppDimensions.spacingL),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,7 +103,7 @@ class TermsScreen extends StatelessWidget {
                       const SizedBox(height: AppDimensions.spacingL),
 
                       // Agreement Card
-                      GlassCard(
+                      SimpleCard(
                         padding: const EdgeInsets.all(AppDimensions.spacingL),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

@@ -3,7 +3,7 @@ import '../../utils/constants/colors.dart';
 import '../../utils/constants/text_styles.dart';
 import '../../utils/constants/dimensions.dart';
 import '../../utils/constants/legal_texts.dart';
-import '../../widgets/glass_card.dart';
+import '../../widgets/simple_card.dart';
 
 /// References Screen
 /// Menampilkan sumber referensi aplikasi
@@ -52,7 +52,7 @@ class ReferencesScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       // References Icon Card
-                      GlassCard(
+                      SimpleCard(
                         padding: const EdgeInsets.all(AppDimensions.spacingL),
                         child: Row(
                           children: [
@@ -77,7 +77,7 @@ class ReferencesScreen extends StatelessWidget {
                       const SizedBox(height: AppDimensions.spacingL),
 
                       // References Content
-                      GlassCard(
+                      SimpleCard(
                         padding: const EdgeInsets.all(AppDimensions.spacingL),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,7 +101,7 @@ class ReferencesScreen extends StatelessWidget {
                       const SizedBox(height: AppDimensions.spacingL),
 
                       // Main References
-                      GlassCard(
+                      SimpleCard(
                         padding: const EdgeInsets.all(AppDimensions.spacingL),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

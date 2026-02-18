@@ -5,7 +5,7 @@ library;
 /// Description: Reusable card widget untuk display satu materi edukatif
 ///
 /// Features:
-/// - Glass morphism card design
+/// - Simple flat card design (performance optimized)
 /// - Category badge dengan tint color
 /// - Subcategory dengan emoji
 /// - Title dan content preview
@@ -17,7 +17,7 @@ import '../models/material.dart' as model;
 import '../utils/constants/colors.dart';
 import '../utils/constants/text_styles.dart';
 import '../utils/constants/dimensions.dart';
-import 'glass_card.dart';
+import 'simple_card.dart';
 
 class MaterialListItem extends StatelessWidget {
   /// Material data object
@@ -46,7 +46,7 @@ class MaterialListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GlassCard(
+    return SimpleCard(
       onTap: onTap,
       tintColor: _getCategoryTintColor(),
       child: Padding(

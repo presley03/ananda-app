@@ -1,37 +1,16 @@
 [
   {
     "category": "0-1",
-    "subcategory": "Perawatan",
-    "title": "Pengenalan Imunisasi dan PD3I",
-    "content": "Imunisasi merupakan upaya pencegahan penyakit menular yang dilakukan dengan cara memberikan vaksin agar tubuh membentuk kekebalan terhadap penyakit tertentu. Penyakit yang dapat dicegah dengan imunisasi atau PD3I meliputi tuberkulosis, difteri, tetanus, pertusis atau batuk rejan, hepatitis B, infeksi Haemophilus influenzae tipe B, polio, dan campak. Pemberian imunisasi pada bayi sangat penting karena daya tahan tubuh bayi masih belum sempurna sehingga memerlukan perlindungan tambahan dari vaksin. Imunisasi juga bertujuan menurunkan angka kesakitan, kecacatan, dan kematian akibat penyakit infeksi yang sebenarnya dapat dicegah. Dalam periode 0–1 tahun, bayi menerima beberapa jenis vaksin dasar yang wajib dan sebagian besar vaksin diberikan lebih dari satu kali sesuai jadwal pengulangan untuk pembentukan antibodi yang optimal. Jadwal imunisasi ditetapkan oleh program imunisasi nasional dan biasanya diberikan sejak bayi lahir hingga usia satu tahun, kemudian dilanjutkan dengan imunisasi lanjutan di usia berikutnya.",
-    "tags": "imunisasi, PD3I, vaksin, bayi, pencegahan"
+    "subcategory": "Imunisasi",
+    "title": "Penyakit Yang Dapat Dicegah Dengan Imunisasi",
+    "content": "Imunisasi berasal dari kata imun, kebal atau resisten. Anak diimunisasi, berarti diberikan kekebalan terhadap suatu penyakit tertentu. Anak kebal atau resisten terhadap suatu penyakit tetapi belum tentu kebal terhadap penyakit yang lain. Imunisasi adalah suatu upaya untuk menimbulkan/meningkatkan kekebalan seseorang secara aktif terhadap suatu penyakit, sehingga apabila suatu saat terpajan dengan penyakit tersebut tidak akan sakit atau hanya mengalami sakit ringan.\n\nAda banyak penyakit menular di Indonesia yang dapat dicegah dengan imunisasi, selanjutnya disebut dengan Penyakit yang Dapat Dicegah dengan Imunisasi (PD3I):\n• Tuberkulosis (TBC) melalui vaksin BCG\n• Difteri melalui vaksin DPT-HB-HIB\n• Tetanus melalui vaksin DPT-HB-HIB\n• Pertusus (batuk rejan) melalui vaksin DPT-HB-HIB\n• Hepatitis B melalui vaksin DPT-HB-HIB\n• Haemophilis influenza tipe b melalui vaksin DPT-HB-HIB\n• Poliomielitis melalui vaksin polio oral\n• Campak melalui vaksin campak",
+    "tags": "imunisasi, vaksin, PD3I, BCG, DPT, campak, polio"
   },
   {
     "category": "0-1",
-    "subcategory": "Perawatan",
-    "title": "Vaksin BCG",
-    "content": "Vaksin BCG diberikan untuk mencegah bentuk berat tuberkulosis pada anak, terutama TB meningitis dan TB milier. Vaksin biasanya diberikan satu kali pada masa bayi. Setelah disuntikkan, pada tempat suntikan akan timbul benjolan merah kecil yang kemudian dapat berkembang menjadi bisul kecil, pecah, dan meninggalkan jaringan parut berukuran beberapa milimeter. Proses ini merupakan reaksi normal dalam pembentukan kekebalan. Orang tua tidak dianjurkan mengoleskan ramuan, minyak, salep, atau bedak pada bekas suntikan, cukup menjaga kebersihan dan membiarkan luka terbuka mengering secara alami. Bila benjolan tampak sangat membesar, bernanah berlebihan, mengeluarkan cairan terus-menerus, atau disertai demam tinggi dan bayi tampak tidak nyaman, bayi perlu dibawa ke layanan kesehatan untuk pemeriksaan lebih lanjut. Secara umum, efek samping vaksin BCG bersifat lokal dan sementara.",
-    "tags": "BCG, imunisasi, tuberkulosis, vaksin, bayi"
-  },
-  {
-    "category": "0-1",
-    "subcategory": "Perawatan",
-    "title": "Vaksin DPT-HB-HIB",
-    "content": "Vaksin DPT-HB-HIB adalah vaksin kombinasi untuk melindungi bayi dari difteri, pertusis atau batuk rejan, tetanus, hepatitis B, dan infeksi Haemophilus influenzae tipe B yang dapat menyebabkan radang selaput otak dan pneumonia. Vaksin ini diberikan beberapa kali sesuai jadwal imunisasi dasar. Setelah imunisasi, bayi dapat mengalami efek samping berupa reaksi lokal sementara di lokasi suntikan seperti bengkak, kemerahan, dan nyeri, serta demam ringan yang dapat terjadi dalam 24 jam pertama. Kadang-kadang reaksi dapat lebih berat berupa demam tinggi, rewel, dan menangis bernada tinggi. Penanganan efek samping meliputi pemberian minum yang cukup, misalnya ASI atau cairan lain yang sesuai, mengenakan pakaian tipis bila demam, dan mengompres air dingin di lokasi suntikan yang nyeri. Obat penurun panas dapat diberikan sesuai anjuran tenaga kesehatan bila bayi tampak tidak nyaman atau demamnya tinggi. Bayi tetap boleh dimandikan atau diseka dengan air hangat. Bila reaksi demam atau rewel tampak memberat, berlanjut lebih dari dua hari, atau disertai gejala lain seperti kejang dan sesak napas, bayi perlu segera diperiksakan ke dokter.",
-    "tags": "DPT, hepatitis B, HIB, imunisasi, vaksin"
-  },
-  {
-    "category": "0-1",
-    "subcategory": "Perawatan",
-    "title": "Vaksin Polio",
-    "content": "Vaksin polio diberikan untuk melindungi anak dari kelumpuhan akibat infeksi virus polio. Vaksin dapat diberikan dalam bentuk tetes oral ataupun suntikan, tergantung program imunisasi yang berlaku. Vaksin polio oral umumnya tidak menimbulkan reaksi lokal yang berarti dan jarang menyebabkan demam. Setelah mendapat vaksin polio oral, bayi boleh makan dan minum seperti biasa. Bila bayi muntah dalam waktu sekitar 30 menit setelah pemberian vaksin tetes, dosis perlu diulang sesuai anjuran tenaga kesehatan. Orang tua tidak perlu melakukan tindakan khusus bila tidak ada keluhan. Meskipun reaksi vaksin polio sangat jarang, jadwal imunisasi polio harus tetap diikuti dengan lengkap untuk memastikan terbentuknya kekebalan yang memadai dan mencegah terjadinya kejadian lumpuh layu yang disebabkan virus polio.",
-    "tags": "polio, vaksin, imunisasi, bayi, kelumpuhan"
-  },
-  {
-    "category": "0-1",
-    "subcategory": "Perawatan",
-    "title": "Vaksin Campak",
-    "content": "Vaksin campak diberikan untuk mencegah penyakit campak yang dapat menimbulkan komplikasi serius seperti pneumonia, diare berat, dan infeksi telinga. Setelah vaksinasi campak, sekitar beberapa hari kemudian sebagian anak dapat mengalami demam ringan dan kemerahan pada kulit yang berlangsung singkat. Reaksi ini merupakan tanda respons imun tubuh terhadap vaksin. Penanganan efek samping meliputi pemberian minum yang cukup, mengenakan pakaian tipis bila demam, mengompres air dingin di lokasi suntikan yang nyeri, dan memberikan obat penurun panas sesuai anjuran bila diperlukan. Anak tetap boleh mandi atau diseka dengan air hangat. Orang tua perlu mewaspadai bila demam bertambah tinggi, ruam tampak sangat luas, anak tampak sangat lemah, sesak napas, atau muncul kejang; dalam kondisi tersebut anak harus segera dibawa ke fasilitas kesehatan. Pemberian vaksin campak sesuai jadwal membantu membentuk kekebalan jangka panjang dan mencegah wabah campak di masyarakat.",
-    "tags": "campak, vaksin, imunisasi, bayi, pencegahan"
+    "subcategory": "Imunisasi",
+    "title": "Efek Samping dan Penanganan",
+    "content": "Vaksin BCG\n\nEfek samping:\n• 2–6 minggu setelah imunisasi BCG daerah bekas suntikan timbul bisul kecil (papula) yang semakin membesar dan dapat terjadi ulserasi dalam waktu 2–4 bulan, kemudian menyembuh perlahan dengan menimbulkan jaringan parut dengan diameter 2–10 mm\n\nPenanganan efek samping:\n• Apabila ulkus mengeluarkan cairan perlu dikompres dengan cairan antiseptik\n• Apabila cairan bertambah banyak atau koreng semakin membesar anjurkan orangtua membawa bayi ke tenaga kesehatan\n\nVaksin DPT-HB-HIB\n\nEfek samping:\n• Reaksi lokal sementara, seperti bengkak, nyeri, dan kemerahan pada lokasi suntikan, disertai demam dapat timbul dalam sejumlah besar kasus; kadang-kadang reaksi berat, seperti demam tinggi, irritabilitas (rewel), dan menangis dengan nada tinggi dapat terjadi dalam 24 jam setelah pemberian\n\nPenanganan efek samping:\n• Orangtua dianjurkan untuk memberikan minum lebih banyak (ASI atau sari buah)\n• Jika demam, kenakan pakaian yang tipis\n• Bekas suntikan yang nyeri dapat dikompres air dingin\n• Jika demam berikan paracetamol 15 mg/kgBB setiap 3–4 jam (maksimal 6 kali dalam 24 jam)\n• Bayi boleh mandi atau cukup diseka dengan air hangat\n• Jika reaksi memberat dan menetap bawa bayi ke dokter\n\nVaksin polio oral\n\nEfek samping:\n• Sangat jarang terjadi reaksi sesudah imunisasi polio oral; setelah mendapat vaksin polio oral bayi boleh makan minum seperti biasa; apabila muntah dalam 30 menit segera diberi dosis ulang\n\nPenanganan efek samping:\n• Orangtua tidak perlu melakukan tindakan apa pun\n\nVaksin campak\n\nEfek samping:\n• Hingga 15% pasien dapat mengalami demam ringan dan kemerahan selama 3 hari yang dapat terjadi 8–12 hari setelah vaksinasi\n\nPenanganan efek samping:\n• Orangtua dianjurkan untuk memberikan minum lebih banyak (ASI atau sari buah)\n• Jika demam kenakan pakaian yang tipis\n• Bekas suntikan yang nyeri dapat dikompres air dingin\n• Jika demam berikan paracetamol 15 mg/kgBB setiap 3–4 jam (maksimal 6 kali dalam 24 jam)\n• Bayi boleh mandi atau cukup diseka dengan air hangat\n• Jika reaksi tersebut berat dan menetap bawa bayi ke dokter",
+    "tags": "imunisasi, efek samping, BCG, DPT-HB-HIB, polio, campak, penanganan"
   }
 ]

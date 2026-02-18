@@ -5,7 +5,7 @@ import '../../utils/constants/text_styles.dart';
 import '../../services/database_service.dart';
 import '../../models/child_profile.dart';
 import '../../models/screening_result.dart';
-import '../../widgets/glass_card.dart';
+import '../../widgets/simple_card.dart';
 import 'edit_profile_screen.dart';
 
 /// Profile Detail Screen
@@ -198,7 +198,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
 
   /// Build profile info card
   Widget _buildProfileCard() {
-    return GlassCard(
+    return SimpleCard(
       child: Column(
         children: [
           // Avatar
@@ -397,7 +397,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
 
   /// Build empty history state
   Widget _buildEmptyHistoryState() {
-    return GlassCard(
+    return SimpleCard(
       child: Column(
         children: [
           Icon(Icons.assignment_outlined, size: 60, color: AppColors.textHint),
@@ -447,7 +447,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
         statusColor = AppColors.info;
     }
 
-    return GlassCard(
+    return SimpleCard(
       margin: const EdgeInsets.only(bottom: AppDimensions.spacingM),
       child: Row(
         children: [

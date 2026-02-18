@@ -4,7 +4,7 @@ import '../models/material.dart' as model;
 import '../services/database_service.dart';
 import '../utils/constants/colors.dart';
 import '../utils/constants/dimensions.dart';
-import '../widgets/glass_card.dart';
+import '../widgets/simple_card.dart';
 import 'material_detail_screen.dart';
 
 /// Material Search Screen
@@ -177,11 +177,11 @@ class _MaterialSearchScreenState extends State<MaterialSearchScreen> {
             child: Container(
               padding: const EdgeInsets.all(AppDimensions.spacingS),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha: 0.9),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primary.withOpacity(0.1),
+                    color: AppColors.primary.withValues(alpha: 0.1),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -219,7 +219,7 @@ class _MaterialSearchScreenState extends State<MaterialSearchScreen> {
                   vertical: AppDimensions.spacingS,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.danger.withOpacity(0.1),
+                  color: AppColors.danger.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Row(
@@ -257,7 +257,7 @@ class _MaterialSearchScreenState extends State<MaterialSearchScreen> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: AppColors.primary.withOpacity(0.1),
+              color: AppColors.primary.withValues(alpha: 0.1),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -381,20 +381,23 @@ class _MaterialSearchScreenState extends State<MaterialSearchScreen> {
         margin: const EdgeInsets.only(right: AppDimensions.spacingS),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : Colors.white.withOpacity(0.8),
+          color:
+              isSelected
+                  ? AppColors.primary
+                  : Colors.white.withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color:
                 isSelected
                     ? AppColors.primary
-                    : AppColors.primary.withOpacity(0.3),
+                    : AppColors.primary.withValues(alpha: 0.3),
             width: 1.5,
           ),
           boxShadow:
               isSelected
                   ? [
                     BoxShadow(
-                      color: AppColors.primary.withOpacity(0.3),
+                      color: AppColors.primary.withValues(alpha: 0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -488,13 +491,13 @@ class _MaterialSearchScreenState extends State<MaterialSearchScreen> {
             Container(
               padding: const EdgeInsets.all(AppDimensions.spacingL),
               decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.1),
+                color: AppColors.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 icon,
                 size: 48,
-                color: AppColors.primary.withOpacity(0.5),
+                color: AppColors.primary.withValues(alpha: 0.5),
               ),
             ),
             const SizedBox(height: AppDimensions.spacingM),
@@ -535,7 +538,7 @@ class _MaterialSearchScreenState extends State<MaterialSearchScreen> {
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: AppDimensions.spacingM),
-        child: GlassCard(
+        child: SimpleCard(
           child: Padding(
             padding: const EdgeInsets.all(AppDimensions.spacingM),
             child: Column(
@@ -643,7 +646,7 @@ class _MaterialSearchScreenState extends State<MaterialSearchScreen> {
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.primary.withOpacity(0.1),
+                              color: AppColors.primary.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(

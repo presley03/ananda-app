@@ -4,7 +4,7 @@ import '../../utils/constants/dimensions.dart';
 import '../../utils/constants/text_styles.dart';
 import '../../services/database_service.dart';
 import '../../models/child_profile.dart';
-import '../../widgets/glass_card.dart';
+import '../../widgets/simple_card.dart';
 import 'add_profile_screen.dart';
 import 'profile_detail_screen.dart';
 
@@ -145,7 +145,7 @@ class _ProfileListScreenState extends State<ProfileListScreen> {
                 vertical: AppDimensions.spacingS,
               ),
               decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.1),
+                color: AppColors.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(AppDimensions.radiusRound),
               ),
               child: Text(
@@ -179,7 +179,7 @@ class _ProfileListScreenState extends State<ProfileListScreen> {
             Icon(
               Icons.child_care_outlined,
               size: 100,
-              color: AppColors.primary.withOpacity(0.3),
+              color: AppColors.primary.withValues(alpha: 0.3),
             ),
             const SizedBox(height: AppDimensions.spacingL),
             Text(
@@ -233,7 +233,7 @@ class _ProfileListScreenState extends State<ProfileListScreen> {
 
   /// Build individual profile card
   Widget _buildProfileCard(ChildProfile profile) {
-    return GlassCard(
+    return SimpleCard(
       margin: const EdgeInsets.only(bottom: AppDimensions.spacingM),
       onTap: () => _navigateToDetail(profile),
       child: Row(
@@ -245,8 +245,8 @@ class _ProfileListScreenState extends State<ProfileListScreen> {
             decoration: BoxDecoration(
               color:
                   profile.gender == 'L'
-                      ? AppColors.info.withOpacity(0.2)
-                      : Colors.pink.withOpacity(0.2),
+                      ? AppColors.info.withValues(alpha: 0.2)
+                      : Colors.pink.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(AppDimensions.radiusL),
             ),
             child: Icon(
