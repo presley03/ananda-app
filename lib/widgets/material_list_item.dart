@@ -1,175 +1,162 @@
 library;
 
-/// File: material_list_item.dart
-/// Path: lib/widgets/material_list_item.dart
-/// Description: Reusable card widget untuk display satu materi edukatif
-///
-/// Features:
-/// - Simple flat card design (performance optimized)
-/// - Category badge dengan tint color
-/// - Subcategory dengan emoji
-/// - Title dan content preview
-/// - Reading time badge
-/// - Tap callback untuk navigation
-
 import 'package:flutter/material.dart';
 import '../models/material.dart' as model;
 import '../utils/constants/colors.dart';
-import '../utils/constants/text_styles.dart';
-import '../utils/constants/dimensions.dart';
-import 'simple_card.dart';
 
 class MaterialListItem extends StatelessWidget {
-  /// Material data object
   final model.Material material;
-
-  /// Callback saat card di-tap
   final VoidCallback onTap;
-
-  /// Optional: Show bookmark icon
   final bool showBookmark;
-
-  /// Optional: Bookmark state
   final bool isBookmarked;
-
-  /// Optional: Bookmark tap callback
   final VoidCallback? onBookmarkTap;
+  final int index;
 
   const MaterialListItem({
     super.key,
     required this.material,
     required this.onTap,
+    required this.index,
     this.showBookmark = false,
     this.isBookmarked = false,
     this.onBookmarkTap,
   });
 
+  static const List<List<Color>> _palette = [
+    [Color(0xFFFFF0ED), Color(0xFFFF6B6B)], // coral
+    [Color(0xFFEDF6FF), Color(0xFF5B9BD5)], // soft blue
+    [Color(0xFFFFFBED), Color(0xFFD4AC0D)], // golden
+    [Color(0xFFEDFFF5), Color(0xFF4CAF82)], // mint green
+    [Color(0xFFFFF3ED), Color(0xFFFF8C42)], // orange
+    [Color(0xFFF3EDFF), Color(0xFF9B72CF)], // soft purple
+  ];
+
+  List<Color> get _cardColors => _palette[index % _palette.length];
+
   @override
   Widget build(BuildContext context) {
-    return SimpleCard(
+    final bg = _cardColors[0];
+    final accent = _cardColors[1];
+
+    return GestureDetector(
       onTap: onTap,
-      tintColor: _getCategoryTintColor(),
-      child: Padding(
-        padding: const EdgeInsets.all(AppDimensions.spacingM),
-        child: Column(
+      child: Container(
+        decoration: BoxDecoration(
+          color: bg,
+          borderRadius: BorderRadius.circular(16),
+          // Tidak ada border, tidak ada shadow — flat & clean
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header: Category badge + Bookmark icon
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Category badge
-                _buildCategoryBadge(),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Badge + subkategori
+                  Row(
+                    children: [
+                      _buildBadge(accent),
+                      const SizedBox(width: 8),
+                      Text(
+                        material.subcategoryDisplay,
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: accent,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 7),
 
-                // Bookmark icon (optional)
-                if (showBookmark) _buildBookmarkIcon(),
-              ],
-            ),
+                  // Judul
+                  Text(
+                    material.title,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary,
+                      height: 1.35,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 6),
 
-            const SizedBox(height: AppDimensions.spacingS),
+                  // Preview 2 baris
+                  Text(
+                    material.contentPreview,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textSecondary.withValues(alpha: 0.8),
+                      height: 1.5,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 10),
 
-            // Subcategory dengan emoji
-            Text(
-              material.subcategoryDisplay,
-              style: AppTextStyles.labelSmall.copyWith(
-                color: AppColors.textSecondary,
+                  // Waktu baca
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.access_time_rounded,
+                        size: 12,
+                        color: accent.withValues(alpha: 0.7),
+                      ),
+                      const SizedBox(width: 3),
+                      Text(
+                        '${material.estimatedReadingTime} menit baca',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: accent.withValues(alpha: 0.8),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
 
-            const SizedBox(height: AppDimensions.spacingXS),
-
-            // Title
-            Text(
-              material.title,
-              style: AppTextStyles.h4,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-
-            const SizedBox(height: AppDimensions.spacingS),
-
-            // Content preview
-            Text(
-              material.contentPreview,
-              style: AppTextStyles.body2,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-
-            const SizedBox(height: AppDimensions.spacingM),
-
-            // Footer: Reading time
-            Row(
-              children: [
-                const Icon(
-                  Icons.access_time_rounded,
-                  size: AppDimensions.iconS,
-                  color: AppColors.textHint,
+            // Bookmark
+            if (showBookmark)
+              GestureDetector(
+                onTap: onBookmarkTap,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8, top: 2),
+                  child: Icon(
+                    isBookmarked
+                        ? Icons.bookmark_rounded
+                        : Icons.bookmark_border_rounded,
+                    size: 20,
+                    color: isBookmarked ? accent : AppColors.textHint,
+                  ),
                 ),
-                const SizedBox(width: AppDimensions.spacingXS),
-                Text(
-                  '${material.estimatedReadingTime} menit baca',
-                  style: AppTextStyles.caption,
-                ),
-              ],
-            ),
+              ),
           ],
         ),
       ),
     );
   }
 
-  /// Build category badge
-  Widget _buildCategoryBadge() {
+  Widget _buildBadge(Color accent) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppDimensions.spacingS,
-        vertical: AppDimensions.spacingXS,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(AppDimensions.radiusS),
-        border: Border.all(
-          color: AppColors.primary.withValues(alpha: 0.3),
-          width: 1,
-        ),
+        color: accent.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
         material.categoryDisplay,
-        style: AppTextStyles.caption.copyWith(
-          color: AppColors.primary,
-          fontWeight: FontWeight.w600,
+        style: TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w700,
+          color: accent,
         ),
       ),
     );
-  }
-
-  /// Build bookmark icon
-  Widget _buildBookmarkIcon() {
-    return GestureDetector(
-      onTap: onBookmarkTap,
-      child: Container(
-        padding: const EdgeInsets.all(AppDimensions.spacingXS),
-        child: Icon(
-          isBookmarked ? Icons.bookmark : Icons.bookmark_border_rounded,
-          size: AppDimensions.iconM,
-          color: isBookmarked ? AppColors.secondary : AppColors.textHint,
-        ),
-      ),
-    );
-  }
-
-  /// Get category tint color based on material category
-  Color _getCategoryTintColor() {
-    switch (material.category) {
-      case '0-1':
-        return AppColors.category01Tint;
-      case '1-2':
-        return AppColors.category12Tint;
-      case '2-5':
-        return AppColors.category25Tint;
-      default:
-        return AppColors.glassWhite;
-    }
   }
 }

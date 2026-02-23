@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../models/nutrition_measurement.dart';
+import '../../models/child_profile.dart';
+import '../../services/database_service.dart';
 import '../../services/nutrition_calculator.dart';
 import '../../utils/constants/colors.dart';
-import '../../utils/constants/dimensions.dart';
-import '../../utils/constants/text_styles.dart';
 import 'nutrition_result_screen.dart';
 
-/// Screen untuk input data pengukuran gizi anak
-/// Input: Berat, Tinggi, Umur, Jenis Kelamin
 class NutritionInputScreen extends StatefulWidget {
-  const NutritionInputScreen({super.key});
+  final ChildProfile? child;
+  const NutritionInputScreen({super.key, this.child});
 
   @override
   State<NutritionInputScreen> createState() => _NutritionInputScreenState();
@@ -18,15 +17,38 @@ class NutritionInputScreen extends StatefulWidget {
 
 class _NutritionInputScreenState extends State<NutritionInputScreen> {
   final _formKey = GlobalKey<FormState>();
-
-  // Controllers untuk input
   final _weightController = TextEditingController();
   final _heightController = TextEditingController();
   final _ageYearsController = TextEditingController();
   final _ageMonthsController = TextEditingController();
 
-  // Pilihan gender
-  String _selectedGender = 'L'; // Default: Laki-laki
+  final DatabaseService _db = DatabaseService();
+  List<ChildProfile> _children = [];
+  ChildProfile? _selectedChild;
+  bool _loadingChildren = true;
+  String _selectedGender = 'L';
+
+  static const List<List<int>> _childPalettes = [
+    [0xFFFFF0ED, 0xFFFF6B6B],
+    [0xFFEDF6FF, 0xFF5B9BD5],
+    [0xFFFFFBED, 0xFFD4AC0D],
+    [0xFFEDFFF5, 0xFF4CAF82],
+    [0xFFF3EDFF, 0xFF9B72CF],
+    [0xFFFFEDF5, 0xFFE0679A],
+  ];
+
+  Color _childBg(int i) => Color(_childPalettes[i % _childPalettes.length][0]);
+  Color _childAccent(int i) =>
+      Color(_childPalettes[i % _childPalettes.length][1]);
+
+  static const Color _green = Color(0xFF27AE60);
+  static const Color _greenLight = Color(0xFF2ECC71);
+
+  @override
+  void initState() {
+    super.initState();
+    _loadChildren();
+  }
 
   @override
   void dispose() {
@@ -37,442 +59,536 @@ class _NutritionInputScreenState extends State<NutritionInputScreen> {
     super.dispose();
   }
 
-  /// Validasi dan hitung status gizi
-  void _calculateNutrition() {
-    if (_formKey.currentState!.validate()) {
-      // Parse input
-      final weight = double.parse(_weightController.text);
-      final height = double.parse(_heightController.text);
-      final ageYears = int.parse(
-        _ageYearsController.text.isEmpty ? '0' : _ageYearsController.text,
-      );
-      final ageMonths = int.parse(
-        _ageMonthsController.text.isEmpty ? '0' : _ageMonthsController.text,
-      );
-      final totalAgeMonths = (ageYears * 12) + ageMonths;
+  Future<void> _loadChildren() async {
+    try {
+      final maps = await _db.getAllChildren();
+      final children = maps.map((m) => ChildProfile.fromMap(m)).toList();
+      setState(() {
+        _children = children;
+        if (widget.child != null) {
+          _selectedChild = widget.child;
+        } else if (children.isNotEmpty) {
+          _selectedChild = children.first;
+        }
+        if (_selectedChild != null) _fillFromChild(_selectedChild!);
+        _loadingChildren = false;
+      });
+    } catch (e) {
+      setState(() => _loadingChildren = false);
+    }
+  }
 
-      // Validasi umur (maksimal 5 tahun = 60 bulan)
-      if (totalAgeMonths > 60) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Umur maksimal 5 tahun (60 bulan)'),
-            backgroundColor: AppColors.danger,
-          ),
-        );
-        return;
-      }
+  void _fillFromChild(ChildProfile child) {
+    final totalMonths = child.ageInMonths;
+    final years = totalMonths ~/ 12;
+    final months = totalMonths % 12;
+    _ageYearsController.text = years > 0 ? '$years' : '';
+    _ageMonthsController.text = months > 0 ? '$months' : '';
+    setState(() => _selectedGender = child.gender);
+  }
 
-      if (totalAgeMonths == 0) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Umur harus diisi'),
-            backgroundColor: AppColors.danger,
-          ),
-        );
-        return;
-      }
+  void _calculate() {
+    if (!_formKey.currentState!.validate()) return;
 
-      // Buat object measurement
-      final measurement = NutritionMeasurement(
-        weight: weight,
-        height: height,
-        ageMonths: totalAgeMonths,
-        gender: _selectedGender,
-        measurementDate: DateTime.now(),
-      );
+    final weight = double.parse(_weightController.text);
+    final height = double.parse(_heightController.text);
+    final ageYears = int.tryParse(_ageYearsController.text) ?? 0;
+    final ageMonths = int.tryParse(_ageMonthsController.text) ?? 0;
+    final totalAgeMonths = (ageYears * 12) + ageMonths;
 
-      // Hitung Z-Score
-      final result = NutritionCalculator.calculate(measurement);
-
-      // Navigate ke result screen
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder:
-              (context) => NutritionResultScreen(
-                measurement: measurement,
-                result: result,
-              ),
+    if (totalAgeMonths > 60) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Umur maksimal 5 tahun (60 bulan)'),
+          backgroundColor: AppColors.danger,
         ),
       );
+      return;
     }
+    if (totalAgeMonths == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Umur harus diisi'),
+          backgroundColor: AppColors.danger,
+        ),
+      );
+      return;
+    }
+
+    final measurement = NutritionMeasurement(
+      weight: weight,
+      height: height,
+      ageMonths: totalAgeMonths,
+      gender: _selectedGender,
+      measurementDate: DateTime.now(),
+    );
+
+    final result = NutritionCalculator.calculate(measurement);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder:
+            (context) => NutritionResultScreen(
+              measurement: measurement,
+              result: result,
+              child: _selectedChild,
+            ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [AppColors.gradientStart, AppColors.gradientEnd],
-          ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              _buildHeader(),
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(AppDimensions.spacingM),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+      backgroundColor: const Color(0xFFF5F5F5),
+      body: Column(
+        children: [
+          // HEADER
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [_green, _greenLight],
+              ),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(28),
+                bottomRight: Radius.circular(28),
+              ),
+            ),
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 16, 20, 28),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back_rounded,
+                        color: Colors.white,
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildInfoCard(),
-                        const SizedBox(height: AppDimensions.spacingL),
-                        _buildWeightInput(),
-                        const SizedBox(height: AppDimensions.spacingM),
-                        _buildHeightInput(),
-                        const SizedBox(height: AppDimensions.spacingM),
-                        _buildAgeInput(),
-                        const SizedBox(height: AppDimensions.spacingM),
-                        _buildGenderSelector(),
-                        const SizedBox(height: AppDimensions.spacingXL),
-                        _buildCalculateButton(),
+                        Text(
+                          'Kalkulator Gizi',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          'Status Gizi Anak (0-5 Tahun)',
+                          style: TextStyle(fontSize: 12, color: Colors.white70),
+                        ),
                       ],
                     ),
-                  ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// Header dengan back button
-  Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.all(AppDimensions.spacingM),
-      child: Row(
-        children: [
-          IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pop(context),
-            color: AppColors.primary,
-          ),
-          const SizedBox(width: AppDimensions.spacingS),
-          Text(
-            'Kalkulator Status Gizi',
-            style: AppTextStyles.h2.copyWith(color: AppColors.primary),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Info card instruksi
-  Widget _buildInfoCard() {
-    return Container(
-      padding: const EdgeInsets.all(AppDimensions.spacingM),
-      decoration: BoxDecoration(
-        color: AppColors.glassWhite,
-        borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-        border: Border.all(color: AppColors.glassBorder, width: 1.5),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(AppDimensions.spacingS),
-            decoration: BoxDecoration(
-              color: AppColors.info.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(AppDimensions.radiusS),
-            ),
-            child: const Icon(
-              Icons.info_outline,
-              color: AppColors.info,
-              size: AppDimensions.iconM,
             ),
           ),
-          const SizedBox(width: AppDimensions.spacingM),
+
+          // CONTENT
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Petunjuk Pengisian',
-                  style: AppTextStyles.h4.copyWith(
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-                const SizedBox(height: AppDimensions.spacingXS),
-                Text(
-                  'Isi data pengukuran anak untuk menghitung status gizi berdasarkan standar WHO',
-                  style: AppTextStyles.body2,
-                ),
-              ],
-            ),
+            child:
+                _loadingChildren
+                    ? const Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(_green),
+                      ),
+                    )
+                    : SingleChildScrollView(
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Pilih profil anak
+                            if (_children.isNotEmpty) ...[
+                              _label('PROFIL ANAK'),
+                              const SizedBox(height: 8),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children:
+                                      _children.asMap().entries.map((entry) {
+                                        final i = entry.key;
+                                        final c = entry.value;
+                                        final isSelected =
+                                            _selectedChild?.id == c.id;
+                                        final accent = _childAccent(i);
+                                        final bg = _childBg(i);
+                                        return GestureDetector(
+                                          onTap: () {
+                                            setState(() => _selectedChild = c);
+                                            _fillFromChild(c);
+                                          },
+                                          child: AnimatedContainer(
+                                            duration: const Duration(
+                                              milliseconds: 200,
+                                            ),
+                                            margin: const EdgeInsets.only(
+                                              right: 10,
+                                            ),
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 16,
+                                              vertical: 10,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  isSelected
+                                                      ? bg
+                                                      : Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(14),
+                                              border: Border.all(
+                                                color:
+                                                    isSelected
+                                                        ? accent
+                                                        : Colors.transparent,
+                                                width: 1.5,
+                                              ),
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  c.gender == 'L'
+                                                      ? Icons.boy_rounded
+                                                      : Icons.girl_rounded,
+                                                  color:
+                                                      isSelected
+                                                          ? accent
+                                                          : AppColors.textHint,
+                                                  size: 22,
+                                                ),
+                                                const SizedBox(width: 8),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      c.name,
+                                                      style: TextStyle(
+                                                        fontSize: 13,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        color:
+                                                            isSelected
+                                                                ? AppColors
+                                                                    .textPrimary
+                                                                : AppColors
+                                                                    .textSecondary,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      c.ageDescription,
+                                                      style: TextStyle(
+                                                        fontSize: 11,
+                                                        color:
+                                                            isSelected
+                                                                ? accent
+                                                                : AppColors
+                                                                    .textHint,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      }).toList(),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                            ],
+
+                            // Berat badan
+                            _label('BERAT BADAN'),
+                            const SizedBox(height: 8),
+                            _field(
+                              controller: _weightController,
+                              hint: 'Contoh: 10.5',
+                              suffix: 'kg',
+                              icon: Icons.monitor_weight_outlined,
+                              keyboard: const TextInputType.numberWithOptions(
+                                decimal: true,
+                              ),
+                              formatters: [
+                                FilteringTextInputFormatter.allow(
+                                  RegExp(r'^\d+\.?\d{0,2}'),
+                                ),
+                              ],
+                              validator: (v) {
+                                if (v == null || v.isEmpty)
+                                  return 'Berat badan harus diisi';
+                                final w = double.tryParse(v);
+                                if (w == null || w <= 0 || w > 50)
+                                  return 'Berat tidak valid (1-50 kg)';
+                                return null;
+                              },
+                            ),
+
+                            const SizedBox(height: 16),
+
+                            // Tinggi badan
+                            _label('PANJANG / TINGGI BADAN'),
+                            const SizedBox(height: 4),
+                            const Text(
+                              'Di bawah 2 tahun diukur berbaring, 2 tahun ke atas diukur berdiri',
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: AppColors.textHint,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            _field(
+                              controller: _heightController,
+                              hint: 'Contoh: 85.5',
+                              suffix: 'cm',
+                              icon: Icons.height_rounded,
+                              keyboard: const TextInputType.numberWithOptions(
+                                decimal: true,
+                              ),
+                              formatters: [
+                                FilteringTextInputFormatter.allow(
+                                  RegExp(r'^\d+\.?\d{0,2}'),
+                                ),
+                              ],
+                              validator: (v) {
+                                if (v == null || v.isEmpty)
+                                  return 'Tinggi badan harus diisi';
+                                final h = double.tryParse(v);
+                                if (h == null || h < 40 || h > 130)
+                                  return 'Tinggi tidak valid (40-130 cm)';
+                                return null;
+                              },
+                            ),
+
+                            const SizedBox(height: 16),
+
+                            // Umur
+                            _label('UMUR ANAK'),
+                            const SizedBox(height: 4),
+                            const Text(
+                              'Maksimal 5 tahun (60 bulan)',
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: AppColors.textHint,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: _field(
+                                    controller: _ageYearsController,
+                                    hint: '0',
+                                    suffix: 'tahun',
+                                    icon: Icons.cake_outlined,
+                                    keyboard: TextInputType.number,
+                                    formatters: [
+                                      FilteringTextInputFormatter.digitsOnly,
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: _field(
+                                    controller: _ageMonthsController,
+                                    hint: '0',
+                                    suffix: 'bulan',
+                                    icon: Icons.today_outlined,
+                                    keyboard: TextInputType.number,
+                                    formatters: [
+                                      FilteringTextInputFormatter.digitsOnly,
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 16),
+
+                            // Jenis kelamin
+                            _label('JENIS KELAMIN'),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: _genderCard(
+                                    'L',
+                                    'Laki-laki',
+                                    Icons.boy_rounded,
+                                    AppColors.accentTeal,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: _genderCard(
+                                    'P',
+                                    'Perempuan',
+                                    Icons.girl_rounded,
+                                    const Color(0xFFE0679A),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 16),
+                          ],
+                        ),
+                      ),
+                    ),
           ),
-        ],
-      ),
-    );
-  }
 
-  /// Input berat badan
-  Widget _buildWeightInput() {
-    return _buildInputCard(
-      icon: Icons.monitor_weight_outlined,
-      iconColor: AppColors.primary,
-      title: 'Berat Badan',
-      child: TextFormField(
-        controller: _weightController,
-        keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
-        ],
-        style: AppTextStyles.h3,
-        decoration: InputDecoration(
-          hintText: 'Contoh: 10.5',
-          hintStyle: AppTextStyles.body2.copyWith(color: AppColors.textHint),
-          suffixText: 'kg',
-          suffixStyle: AppTextStyles.h4.copyWith(color: AppColors.primary),
-          border: InputBorder.none,
-        ),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Berat badan harus diisi';
-          }
-          final weight = double.tryParse(value);
-          if (weight == null || weight <= 0 || weight > 50) {
-            return 'Berat badan tidak valid (1-50 kg)';
-          }
-          return null;
-        },
-      ),
-    );
-  }
-
-  /// Input tinggi badan
-  Widget _buildHeightInput() {
-    return _buildInputCard(
-      icon: Icons.height,
-      iconColor: AppColors.secondary,
-      title: 'Panjang/Tinggi Badan',
-      subtitle: '< 2 tahun: ukur berbaring, â‰¥ 2 tahun: ukur berdiri',
-      child: TextFormField(
-        controller: _heightController,
-        keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
-        ],
-        style: AppTextStyles.h3,
-        decoration: InputDecoration(
-          hintText: 'Contoh: 85.5',
-          hintStyle: AppTextStyles.body2.copyWith(color: AppColors.textHint),
-          suffixText: 'cm',
-          suffixStyle: AppTextStyles.h4.copyWith(color: AppColors.secondary),
-          border: InputBorder.none,
-        ),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Tinggi badan harus diisi';
-          }
-          final height = double.tryParse(value);
-          if (height == null || height < 40 || height > 130) {
-            return 'Tinggi badan tidak valid (40-130 cm)';
-          }
-          return null;
-        },
-      ),
-    );
-  }
-
-  /// Input umur (tahun dan bulan)
-  Widget _buildAgeInput() {
-    return _buildInputCard(
-      icon: Icons.cake_outlined,
-      iconColor: AppColors.success,
-      title: 'Umur Anak',
-      subtitle: 'Maksimal 5 tahun (60 bulan)',
-      child: Row(
-        children: [
-          // Tahun
-          Expanded(
-            child: TextFormField(
-              controller: _ageYearsController,
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              style: AppTextStyles.h3,
-              decoration: InputDecoration(
-                hintText: '0',
-                hintStyle: AppTextStyles.body2.copyWith(
-                  color: AppColors.textHint,
+          // TOMBOL HITUNG - fixed di bawah
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+            child: GestureDetector(
+              onTap: _calculate,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(colors: [_green, _greenLight]),
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                suffixText: 'tahun',
-                suffixStyle: AppTextStyles.body1.copyWith(
-                  color: AppColors.success,
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.calculate_rounded,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      'Hitung Status Gizi',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
                 ),
-                border: InputBorder.none,
               ),
             ),
           ),
-          const SizedBox(width: AppDimensions.spacingM),
-          // Bulan
-          Expanded(
-            child: TextFormField(
-              controller: _ageMonthsController,
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              style: AppTextStyles.h3,
-              decoration: InputDecoration(
-                hintText: '0',
-                hintStyle: AppTextStyles.body2.copyWith(
-                  color: AppColors.textHint,
-                ),
-                suffixText: 'bulan',
-                suffixStyle: AppTextStyles.body1.copyWith(
-                  color: AppColors.success,
-                ),
-                border: InputBorder.none,
-              ),
-            ),
-          ),
         ],
       ),
     );
   }
 
-  /// Selector jenis kelamin
-  Widget _buildGenderSelector() {
-    return _buildInputCard(
-      icon: Icons.wc,
-      iconColor: AppColors.info,
-      title: 'Jenis Kelamin',
-      child: Row(
-        children: [
-          Expanded(child: _buildGenderOption('L', 'Laki-laki', Icons.male)),
-          const SizedBox(width: AppDimensions.spacingM),
-          Expanded(child: _buildGenderOption('P', 'Perempuan', Icons.female)),
-        ],
+  Widget _label(String text) => Text(
+    text,
+    style: const TextStyle(
+      fontSize: 11,
+      fontWeight: FontWeight.w700,
+      color: AppColors.textSecondary,
+      letterSpacing: 1.2,
+    ),
+  );
+
+  Widget _field({
+    required TextEditingController controller,
+    required String hint,
+    required String suffix,
+    required IconData icon,
+    required TextInputType keyboard,
+    List<TextInputFormatter>? formatters,
+    String? Function(String?)? validator,
+  }) {
+    return TextFormField(
+      controller: controller,
+      keyboardType: keyboard,
+      inputFormatters: formatters,
+      style: const TextStyle(
+        fontSize: 15,
+        fontWeight: FontWeight.w600,
+        color: AppColors.textPrimary,
       ),
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: const TextStyle(color: AppColors.textHint, fontSize: 14),
+        suffixText: suffix,
+        suffixStyle: const TextStyle(
+          color: AppColors.textSecondary,
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+        ),
+        prefixIcon: Icon(icon, color: const Color(0xFF27AE60), size: 20),
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: Color(0xFF27AE60), width: 1.5),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: AppColors.danger, width: 1.5),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: AppColors.danger, width: 1.5),
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
+      ),
+      validator: validator,
     );
   }
 
-  /// Option button gender
-  Widget _buildGenderOption(String value, String label, IconData icon) {
+  Widget _genderCard(String value, String label, IconData icon, Color color) {
     final isSelected = _selectedGender == value;
-
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedGender = value;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          vertical: AppDimensions.spacingM,
-          horizontal: AppDimensions.spacingS,
-        ),
+      onTap: () => setState(() => _selectedGender = value),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color:
-              isSelected
-                  ? AppColors.info.withValues(alpha: 0.1)
-                  : Colors.transparent,
-          borderRadius: BorderRadius.circular(AppDimensions.radiusS),
+          color: isSelected ? color.withValues(alpha: 0.1) : Colors.white,
+          borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: isSelected ? AppColors.info : AppColors.glassBorder,
-            width: isSelected ? 2 : 1,
+            color: isSelected ? color : Colors.transparent,
+            width: 2,
           ),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
           children: [
             Icon(
               icon,
-              color: isSelected ? AppColors.info : AppColors.textSecondary,
-              size: AppDimensions.iconM,
+              color: isSelected ? color : AppColors.textHint,
+              size: 36,
             ),
-            const SizedBox(width: AppDimensions.spacingS),
+            const SizedBox(height: 6),
             Text(
               label,
-              style: AppTextStyles.body1.copyWith(
-                color: isSelected ? AppColors.info : AppColors.textSecondary,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                color: isSelected ? color : AppColors.textSecondary,
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  /// Template card untuk input
-  Widget _buildInputCard({
-    required IconData icon,
-    required Color iconColor,
-    required String title,
-    String? subtitle,
-    required Widget child,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(AppDimensions.spacingM),
-      decoration: BoxDecoration(
-        color: AppColors.glassWhite,
-        borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-        border: Border.all(color: AppColors.glassBorder, width: 1.5),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(AppDimensions.spacingXS),
-                decoration: BoxDecoration(
-                  color: iconColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusS),
-                ),
-                child: Icon(icon, color: iconColor, size: AppDimensions.iconS),
-              ),
-              const SizedBox(width: AppDimensions.spacingS),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title, style: AppTextStyles.h4),
-                    if (subtitle != null) ...[
-                      const SizedBox(height: AppDimensions.spacingXS),
-                      Text(subtitle, style: AppTextStyles.caption),
-                    ],
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppDimensions.spacingM),
-          child,
-        ],
-      ),
-    );
-  }
-
-  /// Tombol hitung
-  Widget _buildCalculateButton() {
-    return ElevatedButton(
-      onPressed: _calculateNutrition,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: AppDimensions.spacingM),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-        ),
-        elevation: 2,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.calculate, size: AppDimensions.iconM),
-          const SizedBox(width: AppDimensions.spacingS),
-          Text(
-            'Hitung Status Gizi',
-            style: AppTextStyles.h3.copyWith(color: Colors.white),
-          ),
-        ],
       ),
     );
   }

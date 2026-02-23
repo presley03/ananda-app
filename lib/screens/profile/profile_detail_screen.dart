@@ -1,25 +1,14 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../utils/constants/colors.dart';
-import '../../utils/constants/dimensions.dart';
-import '../../utils/constants/text_styles.dart';
 import '../../services/database_service.dart';
 import '../../models/child_profile.dart';
 import '../../models/screening_result.dart';
-import '../../widgets/simple_card.dart';
+import '../../screens/screening/screening_result_detail_screen.dart';
 import 'edit_profile_screen.dart';
 
-/// Profile Detail Screen
-/// Menampilkan detail profil anak dan riwayat skrining
-///
-/// Features:
-/// - Info profil lengkap (nama, umur, gender, tanggal lahir)
-/// - Riwayat skrining semua jenis (KPSP, Gizi, TDD, M-CHAT)
-/// - Edit profile button
-/// - Delete profile button
-/// - Kategori usia otomatis
 class ProfileDetailScreen extends StatefulWidget {
   final ChildProfile profile;
-
   const ProfileDetailScreen({super.key, required this.profile});
 
   @override
@@ -30,165 +19,132 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
   final DatabaseService _dbService = DatabaseService();
   List<ScreeningResult> _screeningHistory = [];
   bool _isLoading = true;
+  late ChildProfile _profile;
 
   @override
   void initState() {
     super.initState();
+    _profile = widget.profile;
     _loadScreeningHistory();
   }
 
-  /// Load screening history from database
   Future<void> _loadScreeningHistory() async {
     setState(() => _isLoading = true);
-
     try {
-      final results = await _dbService.getScreeningResultsByChild(
-        widget.profile.id!,
-      );
+      final results = await _dbService.getScreeningResultsByChild(_profile.id!);
       setState(() {
         _screeningHistory =
-            results.map((map) => ScreeningResult.fromMap(map)).toList();
+            results.map((m) => ScreeningResult.fromMap(m)).toList();
         _isLoading = false;
       });
     } catch (e) {
       setState(() => _isLoading = false);
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error: $e')));
-      }
     }
   }
 
-  /// Show delete confirmation dialog
-  Future<void> _showDeleteDialog() async {
-    final confirmed = await showDialog<bool>(
+  Future<void> _editProfile() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditProfileScreen(profile: _profile),
+      ),
+    );
+    if (result == true && mounted) Navigator.pop(context, true);
+  }
+
+  Future<void> _deleteProfile() async {
+    final confirm = await showDialog<bool>(
       context: context,
       builder:
           (context) => AlertDialog(
-            title: const Text('Hapus Profil?'),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            title: const Text(
+              'Hapus Profil?',
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: AppColors.textPrimary,
+              ),
+            ),
             content: Text(
-              'Semua data dan riwayat skrining ${widget.profile.name} akan dihapus permanen.',
+              'Profil ${_profile.name} dan semua riwayat skrining akan dihapus permanen.',
+              style: const TextStyle(color: AppColors.textSecondary),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
-                child: const Text('Batal'),
+                child: const Text(
+                  'Batal',
+                  style: TextStyle(color: AppColors.textSecondary),
+                ),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(context, true),
-                style: TextButton.styleFrom(foregroundColor: AppColors.danger),
-                child: const Text('Hapus'),
+                child: const Text(
+                  'Hapus',
+                  style: TextStyle(
+                    color: AppColors.danger,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ),
             ],
           ),
     );
-
-    if (confirmed == true && mounted) {
-      _deleteProfile();
-    }
-  }
-
-  /// Delete profile from database
-  Future<void> _deleteProfile() async {
-    try {
-      await _dbService.deleteChild(widget.profile.id!);
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Profil berhasil dihapus'),
-            backgroundColor: AppColors.success,
-          ),
-        );
-        Navigator.pop(context, true); // Return true to refresh list
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-            backgroundColor: AppColors.danger,
-          ),
-        );
-      }
-    }
-  }
-
-  /// Navigate to edit screen
-  Future<void> _navigateToEdit() async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => EditProfileScreen(profile: widget.profile),
-      ),
-    );
-
-    // Reload if profile was updated
-    if (result == true && mounted) {
-      // Refresh data and return to reload previous screen
-      Navigator.pop(context, true);
+    if (confirm == true) {
+      await _dbService.deleteChild(_profile.id!);
+      if (mounted) Navigator.pop(context, true);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final isBoy = _profile.gender == 'L';
+    final color = isBoy ? AppColors.accentTeal : const Color(0xFFE0679A);
+    final bg = isBoy ? const Color(0xFFEDFAFF) : const Color(0xFFFFEDF5);
+
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [AppColors.gradientStart, AppColors.gradientEnd],
-          ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              // Header
-              _buildHeader(),
+      backgroundColor: Colors.white,
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          SliverToBoxAdapter(child: _buildHeader(color, isBoy)),
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(20, 24, 20, 40),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate([
+                // Info dasar
+                _buildInfoCard(color, bg),
+                const SizedBox(height: 16),
 
-              // Content
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(AppDimensions.spacingM),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _buildProfileCard(),
-                      const SizedBox(height: AppDimensions.spacingL),
-                      _buildActionButtons(),
-                      const SizedBox(height: AppDimensions.spacingL),
-                      _buildScreeningHistorySection(),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+                // Shortcut skrining
+                const SizedBox(height: 8),
+                _buildSectionLabel('MULAI SKRINING'),
+                const SizedBox(height: 8),
+                _buildScreeningShortcuts(color),
+                const SizedBox(height: 24),
 
-  /// Build header
-  Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.all(AppDimensions.spacingM),
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back),
-            color: AppColors.primary,
-          ),
-          const SizedBox(width: AppDimensions.spacingS),
-          Expanded(
-            child: Text(
-              widget.profile.name,
-              style: AppTextStyles.h2.copyWith(color: AppColors.primary),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+                // Riwayat skrining
+                _buildSectionLabel('RIWAYAT SKRINING'),
+                const SizedBox(height: 8),
+                _isLoading
+                    ? const Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          AppColors.primary,
+                        ),
+                      ),
+                    )
+                    : _screeningHistory.isEmpty
+                    ? _buildEmptyHistory()
+                    : _buildHistoryList(),
+
+                const SizedBox(height: 32),
+
+                // Disclaimer privasi
+                _buildPrivacyNote(),
+              ]),
             ),
           ),
         ],
@@ -196,361 +152,495 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
     );
   }
 
-  /// Build profile info card
-  Widget _buildProfileCard() {
-    return SimpleCard(
+  Widget _buildHeader(Color color, bool isBoy) {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AppColors.primary, AppColors.secondary],
+        ),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(28),
+          bottomRight: Radius.circular(28),
+        ),
+      ),
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back_rounded,
+                      color: Colors.white,
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(Icons.edit_rounded, color: Colors.white),
+                    onPressed: _editProfile,
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.delete_outline_rounded,
+                      color: Colors.white,
+                    ),
+                    onPressed: _deleteProfile,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+
+              // Foto / Avatar
+              Container(
+                width: 76,
+                height: 76,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.25),
+                  borderRadius: BorderRadius.circular(22),
+                ),
+                child:
+                    _profile.photoPath != null
+                        ? ClipRRect(
+                          borderRadius: BorderRadius.circular(22),
+                          child: Image.file(
+                            File(_profile.photoPath!),
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                        : Icon(
+                          isBoy ? Icons.boy_rounded : Icons.girl_rounded,
+                          color: Colors.white,
+                          size: 46,
+                        ),
+              ),
+              const SizedBox(height: 12),
+
+              Text(
+                _profile.name,
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 4),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    _profile.ageDescription,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white.withValues(alpha: 0.9),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 3,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.22),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      _profile.genderDisplay,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoCard(Color color, Color bg) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Column(
         children: [
-          // Avatar
-          Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              color:
-                  widget.profile.gender == 'L'
-                      ? AppColors.info.withValues(alpha: 0.2)
-                      : Colors.pink.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(AppDimensions.radiusRound),
-            ),
-            child: Icon(
-              widget.profile.gender == 'L' ? Icons.boy : Icons.girl,
-              size: 60,
-              color:
-                  widget.profile.gender == 'L' ? AppColors.info : Colors.pink,
-            ),
-          ),
-          const SizedBox(height: AppDimensions.spacingL),
-
-          // Name
-          Text(
-            widget.profile.name,
-            style: AppTextStyles.h2,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: AppDimensions.spacingS),
-
-          // Divider
-          Divider(color: Colors.grey.withValues(alpha: 0.3)),
-          const SizedBox(height: AppDimensions.spacingM),
-
-          // Info rows
           _buildInfoRow(
-            Icons.cake_outlined,
-            'Usia',
-            widget.profile.ageDescription,
-          ),
-          const SizedBox(height: AppDimensions.spacingM),
-          _buildInfoRow(
-            widget.profile.gender == 'L' ? Icons.male : Icons.female,
-            'Jenis Kelamin',
-            widget.profile.genderDisplay,
-          ),
-          const SizedBox(height: AppDimensions.spacingM),
-          _buildInfoRow(
-            Icons.calendar_today_outlined,
+            Icons.cake_rounded,
             'Tanggal Lahir',
-            _formatDate(widget.profile.birthDate),
+            '${_profile.birthDate.day}/${_profile.birthDate.month}/${_profile.birthDate.year}',
+            color,
           ),
-          const SizedBox(height: AppDimensions.spacingM),
+          if (_profile.birthPlace != null &&
+              _profile.birthPlace!.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            _buildInfoRow(
+              Icons.location_on_rounded,
+              'Tempat Lahir',
+              _profile.birthPlace!,
+              color,
+            ),
+          ],
+          if (_profile.identityNumber != null &&
+              _profile.identityNumber!.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            _buildInfoRow(
+              Icons.badge_rounded,
+              'No. Identitas Anak',
+              _profile.identityNumber!,
+              color,
+            ),
+          ],
+          const SizedBox(height: 10),
           _buildInfoRow(
-            Icons.category_outlined,
+            Icons.child_care_rounded,
             'Kategori Materi',
-            '${widget.profile.materialCategory} Tahun',
+            '${_profile.materialCategory} Tahun',
+            color,
+          ),
+          const SizedBox(height: 12),
+          // Progress bar usia
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(
+              value: _profile.ageInMonths.clamp(0, 60) / 60,
+              backgroundColor: color.withValues(alpha: 0.15),
+              valueColor: AlwaysStoppedAnimation<Color>(color),
+              minHeight: 6,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              '${_profile.ageInMonths} dari 60 bulan (5 tahun)',
+              style: TextStyle(
+                fontSize: 11,
+                color: color.withValues(alpha: 0.7),
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 
-  /// Build info row
-  Widget _buildInfoRow(IconData icon, String label, String value) {
+  Widget _buildInfoRow(IconData icon, String label, String value, Color color) {
     return Row(
       children: [
-        Icon(icon, size: AppDimensions.iconM, color: AppColors.primary),
-        const SizedBox(width: AppDimensions.spacingM),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: AppTextStyles.caption.copyWith(
-                  color: AppColors.textSecondary,
-                ),
-              ),
-              const SizedBox(height: AppDimensions.spacingXS),
-              Text(
-                value,
-                style: AppTextStyles.body1.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
+        Icon(icon, size: 18, color: color),
+        const SizedBox(width: 10),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+        ),
+        const Spacer(),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textPrimary,
           ),
         ),
       ],
     );
   }
 
-  /// Build action buttons
-  Widget _buildActionButtons() {
-    return Row(
-      children: [
-        Expanded(
-          child: ElevatedButton.icon(
-            onPressed: _navigateToEdit,
-            icon: const Icon(Icons.edit),
-            label: const Text('Edit Profil'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(
-                vertical: AppDimensions.spacingM,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppDimensions.radiusL),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: AppDimensions.spacingM),
-        Expanded(
-          child: OutlinedButton.icon(
-            onPressed: _showDeleteDialog,
-            icon: const Icon(Icons.delete_outline),
-            label: const Text('Hapus'),
-            style: OutlinedButton.styleFrom(
-              foregroundColor: AppColors.danger,
-              side: const BorderSide(color: AppColors.danger),
-              padding: const EdgeInsets.symmetric(
-                vertical: AppDimensions.spacingM,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppDimensions.radiusL),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  Widget _buildScreeningShortcuts(Color color) {
+    final shortcuts = [
+      {
+        'label': 'KPSP',
+        'sub': 'Perkembangan',
+        'icon': Icons.fact_check_rounded,
+        'bg': const Color(0xFFFFF0ED),
+        'accent': AppColors.primary,
+      },
+      {
+        'label': 'Kalkulator Gizi',
+        'sub': 'Nutrisi',
+        'icon': Icons.restaurant_rounded,
+        'bg': const Color(0xFFEDFFF5),
+        'accent': AppColors.success,
+      },
+      {
+        'label': 'TDD',
+        'sub': 'Daya Dengar',
+        'icon': Icons.hearing_rounded,
+        'bg': const Color(0xFFEDF6FF),
+        'accent': AppColors.accentTeal,
+      },
+      {
+        'label': 'M-CHAT-R',
+        'sub': 'Autisme',
+        'icon': Icons.psychology_rounded,
+        'bg': const Color(0xFFF3EDFF),
+        'accent': AppColors.accentPurple,
+      },
+    ];
 
-  /// Build screening history section
-  Widget _buildScreeningHistorySection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(
-              Icons.history,
-              color: AppColors.primary,
-              size: AppDimensions.iconM,
-            ),
-            const SizedBox(width: AppDimensions.spacingS),
-            Text(
-              'Riwayat Skrining',
-              style: AppTextStyles.h3.copyWith(color: AppColors.primary),
-            ),
-            const Spacer(),
-            if (_screeningHistory.isNotEmpty)
-              Container(
+    return GridView.count(
+      crossAxisCount: 2,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      crossAxisSpacing: 10,
+      mainAxisSpacing: 10,
+      padding: EdgeInsets.zero,
+      childAspectRatio: 2.4,
+      children:
+          shortcuts.map((s) {
+            final accent = s['accent'] as Color;
+            return GestureDetector(
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Mulai ${s['label']} untuk ${_profile.name}'),
+                    duration: const Duration(seconds: 1),
+                  ),
+                );
+              },
+              child: Container(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: AppDimensions.spacingM,
-                  vertical: AppDimensions.spacingXS,
+                  horizontal: 12,
+                  vertical: 10,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(
-                    AppDimensions.radiusRound,
-                  ),
+                  color: s['bg'] as Color,
+                  borderRadius: BorderRadius.circular(14),
                 ),
-                child: Text(
-                  '${_screeningHistory.length} hasil',
-                  style: AppTextStyles.caption.copyWith(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: Row(
+                  children: [
+                    Icon(s['icon'] as IconData, color: accent, size: 20),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            s['label'] as String,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          Text(
+                            s['sub'] as String,
+                            style: TextStyle(fontSize: 10, color: accent),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
-          ],
-        ),
-        const SizedBox(height: AppDimensions.spacingM),
-        _isLoading
-            ? _buildLoadingState()
-            : _screeningHistory.isEmpty
-            ? _buildEmptyHistoryState()
-            : _buildHistoryList(),
-      ],
-    );
-  }
-
-  /// Build loading state
-  Widget _buildLoadingState() {
-    return const Center(
-      child: Padding(
-        padding: EdgeInsets.all(AppDimensions.spacingXL),
-        child: CircularProgressIndicator(color: AppColors.primary),
-      ),
-    );
-  }
-
-  /// Build empty history state
-  Widget _buildEmptyHistoryState() {
-    return SimpleCard(
-      child: Column(
-        children: [
-          Icon(Icons.assignment_outlined, size: 60, color: AppColors.textHint),
-          const SizedBox(height: AppDimensions.spacingM),
-          Text(
-            'Belum Ada Riwayat Skrining',
-            style: AppTextStyles.body1.copyWith(
-              color: AppColors.textSecondary,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: AppDimensions.spacingS),
-          Text(
-            'Lakukan skrining pertama dari menu Tools Skrining',
-            style: AppTextStyles.body2,
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Build history list
-  Widget _buildHistoryList() {
-    return Column(
-      children:
-          _screeningHistory.map((result) {
-            return _buildHistoryCard(result);
+            );
           }).toList(),
     );
   }
 
-  /// Build individual history card
-  Widget _buildHistoryCard(ScreeningResult result) {
-    Color statusColor;
-    switch (result.resultColorStatus) {
-      case 'success':
-        statusColor = AppColors.success;
-        break;
-      case 'warning':
-        statusColor = AppColors.warning;
-        break;
-      case 'danger':
-        statusColor = AppColors.danger;
-        break;
-      default:
-        statusColor = AppColors.info;
-    }
+  Widget _buildSectionLabel(String title) {
+    return Text(
+      title,
+      style: const TextStyle(
+        fontSize: 11,
+        fontWeight: FontWeight.w700,
+        color: AppColors.textSecondary,
+        letterSpacing: 1.2,
+      ),
+    );
+  }
 
-    return SimpleCard(
-      margin: const EdgeInsets.only(bottom: AppDimensions.spacingM),
-      child: Row(
-        children: [
-          // Icon
-          Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              color: statusColor.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-            ),
-            child: Center(
-              child: Text(
-                result.resultEmoji,
-                style: const TextStyle(fontSize: 24),
+  Widget _buildEmptyHistory() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.primaryLight,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: const Center(
+        child: Text(
+          'Belum ada riwayat skrining',
+          style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHistoryList() {
+    return Column(
+      children:
+          _screeningHistory.map((result) {
+            IconData icon;
+            Color itemColor;
+            String typeLabel;
+            switch (result.screeningType) {
+              case 'kpsp':
+                icon = Icons.fact_check_rounded;
+                itemColor = AppColors.accentTeal;
+                typeLabel = 'KPSP';
+                break;
+              case 'nutrition':
+                icon = Icons.restaurant_rounded;
+                itemColor = AppColors.success;
+                typeLabel = 'Kalkulator Gizi';
+                break;
+              case 'tdd':
+                icon = Icons.hearing_rounded;
+                itemColor = const Color(0xFF5B9BD5);
+                typeLabel = 'TDD';
+                break;
+              case 'mchat':
+                icon = Icons.psychology_rounded;
+                itemColor = AppColors.accentPurple;
+                typeLabel = 'M-CHAT-R';
+                break;
+              default:
+                icon = Icons.check_circle_rounded;
+                itemColor = AppColors.primary;
+                typeLabel = 'Skrining';
+            }
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: GestureDetector(
+                onTap:
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) =>
+                                ScreeningResultDetailScreen(result: result),
+                      ),
+                    ).then((deleted) {
+                      if (deleted == true) _loadScreeningHistory();
+                    }),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 14,
+                  ),
+                  decoration: BoxDecoration(
+                    color: itemColor.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: itemColor.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(icon, color: itemColor, size: 22),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              typeLabel,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              result.result,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: itemColor,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Text(
+                        result.formattedDate,
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: AppColors.textHint,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Icon(
+                        Icons.chevron_right_rounded,
+                        color: itemColor.withValues(alpha: 0.5),
+                        size: 16,
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ),
-          const SizedBox(width: AppDimensions.spacingM),
+            );
+          }).toList(),
+    );
+  }
 
-          // Info
+  Widget _buildPrivacyNote() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF5F5F5),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE0E0E0), width: 1),
+      ),
+      child: const Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.lock_outline_rounded,
+            size: 18,
+            color: AppColors.textSecondary,
+          ),
+          SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  result.screeningTypeDisplay,
-                  style: AppTextStyles.body1.copyWith(
-                    fontWeight: FontWeight.w600,
+                  'Data Tersimpan Lokal',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary,
                   ),
                 ),
-                const SizedBox(height: AppDimensions.spacingXS),
+                SizedBox(height: 4),
                 Text(
-                  result.result,
-                  style: AppTextStyles.body2.copyWith(
-                    color: statusColor,
-                    fontWeight: FontWeight.w600,
+                  'Semua data profil dan riwayat skrining hanya tersimpan di perangkat ini. '
+                  'Kami tidak mengumpulkan, mengunggah, atau membagikan data Anda ke server manapun. '
+                  'Aplikasi ini sepenuhnya bekerja secara offline.',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textSecondary,
+                    height: 1.5,
                   ),
-                ),
-                const SizedBox(height: AppDimensions.spacingXS),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.calendar_today,
-                      size: AppDimensions.iconXS,
-                      color: AppColors.textHint,
-                    ),
-                    const SizedBox(width: AppDimensions.spacingXS),
-                    Text(result.formattedDate, style: AppTextStyles.caption),
-                    const SizedBox(width: AppDimensions.spacingM),
-                    Icon(
-                      Icons.cake,
-                      size: AppDimensions.iconXS,
-                      color: AppColors.textHint,
-                    ),
-                    const SizedBox(width: AppDimensions.spacingXS),
-                    Text(result.ageDescription, style: AppTextStyles.caption),
-                  ],
                 ),
               ],
             ),
           ),
-
-          // Score (if available)
-          if (result.score != null)
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppDimensions.spacingM,
-                vertical: AppDimensions.spacingS,
-              ),
-              decoration: BoxDecoration(
-                color: statusColor.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-              ),
-              child: Text(
-                '${result.score}',
-                style: AppTextStyles.h4.copyWith(
-                  color: statusColor,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
         ],
       ),
     );
-  }
-
-  /// Format date
-  String _formatDate(DateTime date) {
-    final months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'Mei',
-      'Jun',
-      'Jul',
-      'Ags',
-      'Sep',
-      'Okt',
-      'Nov',
-      'Des',
-    ];
-    return '${date.day} ${months[date.month - 1]} ${date.year}';
   }
 }

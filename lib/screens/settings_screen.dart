@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/constants/colors.dart';
-import '../utils/constants/text_styles.dart';
-import '../utils/constants/dimensions.dart';
 import '../utils/constants/app_info.dart';
-import '../widgets/simple_card.dart';
 import 'settings/about_screen.dart';
 import 'settings/disclaimer_screen.dart';
 import 'settings/privacy_screen.dart';
@@ -12,228 +9,233 @@ import 'settings/references_screen.dart';
 import 'settings/credits_screen.dart';
 import 'settings/help_screen.dart';
 
-/// Settings Screen
-/// Screen pengaturan dengan menu list untuk:
-/// - Tentang Aplikasi
-/// - Disclaimer
-/// - Kebijakan Privasi
-/// - Syarat & Ketentuan
-/// - Sumber Referensi
-/// - Pembuat
-/// - Bantuan
-///
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [AppColors.gradientStart, AppColors.gradientEnd],
+      backgroundColor: Colors.white,
+      body: Column(
+        children: [
+          _buildHeader(),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(20, 24, 20, 40),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _sectionLabel('INFORMASI'),
+                  const SizedBox(height: 8),
+                  _buildItem(
+                    context,
+                    icon: Icons.info_outline_rounded,
+                    color: AppColors.primary,
+                    bg: const Color(0xFFFFF0ED),
+                    title: 'Tentang Aplikasi',
+                    subtitle: 'Informasi ${AppInfo.appName}',
+                    onTap:
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const AboutScreen(),
+                          ),
+                        ),
+                  ),
+                  _buildItem(
+                    context,
+                    icon: Icons.library_books_outlined,
+                    color: AppColors.accentTeal,
+                    bg: const Color(0xFFEDFAFF),
+                    title: 'Sumber Referensi',
+                    subtitle: 'IDAI, WHO, Permenkes',
+                    onTap:
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ReferencesScreen(),
+                          ),
+                        ),
+                  ),
+                  _buildItem(
+                    context,
+                    icon: Icons.groups_outlined,
+                    color: AppColors.accentPurple,
+                    bg: const Color(0xFFF3EDFF),
+                    title: 'Pembuat',
+                    subtitle: AppInfo.developerName,
+                    onTap:
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const CreditsScreen(),
+                          ),
+                        ),
+                  ),
+
+                  const SizedBox(height: 24),
+                  _sectionLabel('LEGAL'),
+                  const SizedBox(height: 8),
+                  _buildItem(
+                    context,
+                    icon: Icons.warning_amber_rounded,
+                    color: const Color(0xFFD4AC0D),
+                    bg: const Color(0xFFFFFBED),
+                    title: 'Disclaimer',
+                    subtitle: 'Ketentuan penggunaan aplikasi',
+                    onTap:
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const DisclaimerScreen(),
+                          ),
+                        ),
+                  ),
+                  _buildItem(
+                    context,
+                    icon: Icons.privacy_tip_outlined,
+                    color: AppColors.success,
+                    bg: const Color(0xFFEDFFF5),
+                    title: 'Kebijakan Privasi',
+                    subtitle: 'Perlindungan data pengguna',
+                    onTap:
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const PrivacyScreen(),
+                          ),
+                        ),
+                  ),
+                  _buildItem(
+                    context,
+                    icon: Icons.description_outlined,
+                    color: AppColors.accentTeal,
+                    bg: const Color(0xFFEDFAFF),
+                    title: 'Syarat & Ketentuan',
+                    subtitle: 'Ketentuan layanan aplikasi',
+                    onTap:
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const TermsScreen(),
+                          ),
+                        ),
+                  ),
+
+                  const SizedBox(height: 24),
+                  _sectionLabel('DUKUNGAN'),
+                  const SizedBox(height: 8),
+                  _buildItem(
+                    context,
+                    icon: Icons.help_outline_rounded,
+                    color: AppColors.accentPurple,
+                    bg: const Color(0xFFF3EDFF),
+                    title: 'Bantuan',
+                    subtitle: 'Panduan penggunaan aplikasi',
+                    onTap:
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const HelpScreen()),
+                        ),
+                  ),
+
+                  const SizedBox(height: 32),
+
+                  // App version footer
+                  Center(
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFFF0ED),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: const Icon(
+                            Icons.face_retouching_natural,
+                            color: AppColors.primary,
+                            size: 28,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          AppInfo.appName,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          'Versi ${AppInfo.appVersion}',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: AppColors.textHint,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AppColors.primary, AppColors.secondary],
         ),
-        child: SafeArea(
-          child: Column(
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(28),
+          bottomRight: Radius.circular(28),
+        ),
+      ),
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
+          child: Row(
             children: [
-              // Header
-              Padding(
-                padding: const EdgeInsets.all(AppDimensions.spacingL),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.settings,
-                      size: AppDimensions.iconL,
-                      color: AppColors.primary,
-                    ),
-                    const SizedBox(width: AppDimensions.spacingM),
-                    Text(
-                      'Pengaturan',
-                      style: AppTextStyles.h1.copyWith(
-                        color: AppColors.primary,
-                      ),
-                    ),
-                  ],
+              Container(
+                width: 42,
+                height: 42,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Icon(
+                  Icons.settings_rounded,
+                  color: Colors.white,
+                  size: 22,
                 ),
               ),
-
-              // Menu List
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppDimensions.spacingM,
+              const SizedBox(width: 14),
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Pengaturan',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                    ),
                   ),
-                  child: Column(
-                    children: [
-                      // About App
-                      _buildMenuItem(
-                        context: context,
-                        icon: Icons.info_outline,
-                        title: 'Tentang Aplikasi',
-                        subtitle: 'Informasi ${AppInfo.appName}',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const AboutScreen(),
-                            ),
-                          );
-                        },
-                      ),
-
-                      const SizedBox(height: AppDimensions.spacingM),
-
-                      // Disclaimer
-                      _buildMenuItem(
-                        context: context,
-                        icon: Icons.warning_amber_outlined,
-                        title: 'Disclaimer',
-                        subtitle: 'Ketentuan penggunaan aplikasi',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const DisclaimerScreen(),
-                            ),
-                          );
-                        },
-                      ),
-
-                      const SizedBox(height: AppDimensions.spacingM),
-
-                      // Privacy Policy
-                      _buildMenuItem(
-                        context: context,
-                        icon: Icons.privacy_tip_outlined,
-                        title: 'Kebijakan Privasi',
-                        subtitle: 'Perlindungan data pengguna',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const PrivacyScreen(),
-                            ),
-                          );
-                        },
-                      ),
-
-                      const SizedBox(height: AppDimensions.spacingM),
-
-                      // Terms & Conditions
-                      _buildMenuItem(
-                        context: context,
-                        icon: Icons.description_outlined,
-                        title: 'Syarat & Ketentuan',
-                        subtitle: 'Ketentuan layanan aplikasi',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const TermsScreen(),
-                            ),
-                          );
-                        },
-                      ),
-
-                      const SizedBox(height: AppDimensions.spacingM),
-
-                      // References
-                      _buildMenuItem(
-                        context: context,
-                        icon: Icons.library_books_outlined,
-                        title: 'Sumber Referensi',
-                        subtitle: 'IDAI, WHO, Permenkes',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ReferencesScreen(),
-                            ),
-                          );
-                        },
-                      ),
-
-                      const SizedBox(height: AppDimensions.spacingM),
-
-                      // Credits
-                      _buildMenuItem(
-                        context: context,
-                        icon: Icons.groups_outlined,
-                        title: 'Pembuat',
-                        subtitle: AppInfo.developerName,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const CreditsScreen(),
-                            ),
-                          );
-                        },
-                      ),
-
-                      const SizedBox(height: AppDimensions.spacingM),
-
-                      // Help
-                      _buildMenuItem(
-                        context: context,
-                        icon: Icons.help_outline,
-                        title: 'Bantuan',
-                        subtitle: 'Panduan penggunaan aplikasi',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const HelpScreen(),
-                            ),
-                          );
-                        },
-                      ),
-
-                      const SizedBox(height: AppDimensions.spacingXL),
-
-                      // App Version
-                      SimpleCard(
-                        padding: const EdgeInsets.all(AppDimensions.spacingM),
-                        child: Column(
-                          children: [
-                            Icon(
-                              Icons.child_care,
-                              size: AppDimensions.iconL,
-                              color: AppColors.primary,
-                            ),
-                            const SizedBox(height: AppDimensions.spacingS),
-                            Text(
-                              AppInfo.appName,
-                              style: AppTextStyles.h3.copyWith(
-                                color: AppColors.primary,
-                              ),
-                            ),
-                            const SizedBox(height: AppDimensions.spacingXS),
-                            Text(
-                              'Versi ${AppInfo.appVersion}',
-                              style: AppTextStyles.body2.copyWith(
-                                color: AppColors.textSecondary,
-                              ),
-                            ),
-                            const SizedBox(height: AppDimensions.spacingXS),
-                            Text(
-                              AppInfo.appDescription,
-                              style: AppTextStyles.caption.copyWith(
-                                color: AppColors.textHint,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(height: AppDimensions.spacingXL),
-                    ],
+                  Text(
+                    'Informasi & preferensi aplikasi',
+                    style: TextStyle(fontSize: 13, color: Colors.white70),
                   ),
-                ),
+                ],
               ),
             ],
           ),
@@ -242,57 +244,77 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuItem({
-    required BuildContext context,
+  Widget _sectionLabel(String title) => Text(
+    title,
+    style: const TextStyle(
+      fontSize: 11,
+      fontWeight: FontWeight.w700,
+      color: AppColors.textSecondary,
+      letterSpacing: 1.2,
+    ),
+  );
+
+  Widget _buildItem(
+    BuildContext context, {
     required IconData icon,
+    required Color color,
+    required Color bg,
     required String title,
     required String subtitle,
     required VoidCallback onTap,
   }) {
-    return SimpleCard(
+    return GestureDetector(
       onTap: onTap,
-      child: Row(
-        children: [
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(AppDimensions.radiusM),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: const Color(0xFFF0F0F0), width: 1),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: bg,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: color, size: 20),
             ),
-            child: Icon(
-              icon,
-              color: AppColors.primary,
-              size: AppDimensions.iconM,
-            ),
-          ),
-          const SizedBox(width: AppDimensions.spacingM),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: AppTextStyles.h4.copyWith(
-                    color: AppColors.textPrimary,
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textPrimary,
+                    ),
                   ),
-                ),
-                const SizedBox(height: AppDimensions.spacingXS),
-                Text(
-                  subtitle,
-                  style: AppTextStyles.body2.copyWith(
-                    color: AppColors.textSecondary,
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textSecondary,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Icon(
-            Icons.arrow_forward_ios,
-            color: AppColors.textHint,
-            size: AppDimensions.iconS,
-          ),
-        ],
+            Icon(
+              Icons.chevron_right_rounded,
+              color: AppColors.textHint.withValues(alpha: 0.6),
+              size: 20,
+            ),
+          ],
+        ),
       ),
     );
   }

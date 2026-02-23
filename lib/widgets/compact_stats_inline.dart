@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../utils/constants/colors.dart';
 
 /// Compact Stats Inline
 /// Stats minimalis inline di bawah greeting
@@ -32,7 +31,7 @@ class CompactStatsInline extends StatelessWidget {
         ),
         _buildDivider(),
         _buildStatItem(
-          icon: Icons.child_care_rounded,
+          icon: Icons.face_retouching_natural,
           count: childProfilesCount,
           label: 'Anak',
         ),
@@ -48,24 +47,18 @@ class CompactStatsInline extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 16, color: AppColors.primary.withValues(alpha: 0.7)),
+        Icon(icon, size: 16, color: Colors.white70),
         const SizedBox(width: 4),
         Text(
           '$count',
           style: const TextStyle(
             fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
           ),
         ),
         const SizedBox(width: 2),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: AppColors.textSecondary.withValues(alpha: 0.8),
-          ),
-        ),
+        Text(label, style: TextStyle(fontSize: 12, color: Colors.white70)),
       ],
     );
   }
@@ -77,7 +70,7 @@ class CompactStatsInline extends StatelessWidget {
         width: 4,
         height: 4,
         decoration: BoxDecoration(
-          color: AppColors.textHint.withValues(alpha: 0.3),
+          color: Colors.white30,
           shape: BoxShape.circle,
         ),
       ),

@@ -1,21 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../utils/constants/colors.dart';
-import '../../utils/constants/dimensions.dart';
-import '../../utils/constants/text_styles.dart';
-import '../../utils/constants/app_info.dart';
 import '../../services/database_service.dart';
 import '../../models/child_profile.dart';
-import '../../widgets/simple_card.dart';
 
-/// Add Profile Screen
-/// Form untuk menambah profil anak baru
-///
-/// Features:
-/// - Input: Nama, Tanggal Lahir, Jenis Kelamin
-/// - Validasi form
-/// - Date picker untuk tanggal lahir
-/// - Gender selection (Laki-laki/Perempuan)
-/// - Save to database
 class AddProfileScreen extends StatefulWidget {
   const AddProfileScreen({super.key});
 
@@ -28,8 +16,8 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
   final _nameController = TextEditingController();
   final DatabaseService _dbService = DatabaseService();
 
-  DateTime? _selectedDate;
-  String _selectedGender = 'L'; // Default: Laki-laki
+  DateTime _selectedDate = DateTime(DateTime.now().year - 1);
+  String _selectedGender = 'L';
   bool _isSaving = false;
 
   @override
@@ -38,80 +26,114 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
     super.dispose();
   }
 
-  /// Show date picker
-  Future<void> _selectDate() async {
-    final DateTime? picked = await showDatePicker(
+  Future<void> _pickDate() async {
+    DateTime tempDate = _selectedDate;
+    await showModalBottomSheet(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime.now(),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: AppColors.primary,
-              onPrimary: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder:
+          (context) => Container(
+            height: 320,
+            padding: const EdgeInsets.only(top: 12),
+            child: Column(
+              children: [
+                Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text(
+                          'Batal',
+                          style: TextStyle(color: AppColors.textSecondary),
+                        ),
+                      ),
+                      const Text(
+                        'Tanggal Lahir',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          setState(() => _selectedDate = tempDate);
+                          Navigator.pop(context);
+                        },
+                        child: const Text(
+                          'Pilih',
+                          style: TextStyle(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Divider(height: 1),
+                Expanded(
+                  child: CupertinoDatePicker(
+                    mode: CupertinoDatePickerMode.date,
+                    initialDateTime: _selectedDate,
+                    minimumDate: DateTime.now().subtract(
+                      const Duration(days: 365 * 10),
+                    ),
+                    maximumDate: DateTime.now(),
+                    onDateTimeChanged: (date) => tempDate = date,
+                  ),
+                ),
+              ],
             ),
           ),
-          child: child!,
-        );
-      },
     );
-
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-      });
-    }
   }
 
-  /// Validate and save profile
   Future<void> _saveProfile() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-
-    if (_selectedDate == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Pilih tanggal lahir anak')));
-      return;
-    }
-
+    if (!_formKey.currentState!.validate()) return;
     setState(() => _isSaving = true);
-
     try {
       final profile = ChildProfile(
         name: _nameController.text.trim(),
-        birthDate: _selectedDate!,
+        birthDate: _selectedDate,
         gender: _selectedGender,
       );
-
       await _dbService.insertChild(profile.toMap());
-
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Profil berhasil ditambahkan! âœ…'),
+            content: Text('Profil berhasil ditambahkan!'),
             backgroundColor: AppColors.success,
+            duration: Duration(seconds: 2),
           ),
         );
-        Navigator.pop(context, true); // Return true to indicate success
+        Navigator.pop(context, true);
       }
     } catch (e) {
       setState(() => _isSaving = false);
-      if (mounted) {
+      if (mounted)
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: $e'),
+            content: Text('Error: \$e'),
             backgroundColor: AppColors.danger,
           ),
         );
-      }
     }
   }
 
-  /// Format date for display
   String _formatDate(DateTime date) {
     final months = [
       'Jan',
@@ -133,173 +155,255 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [AppColors.gradientStart, AppColors.gradientEnd],
-          ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              // Header
-              _buildHeader(),
-
-              // Form
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(AppDimensions.spacingM),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+      backgroundColor: const Color(0xFFF8F8F8),
+      body: Column(
+        children: [
+          // Header
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [AppColors.primary, AppColors.secondary],
+              ),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(28),
+                bottomRight: Radius.circular(28),
+              ),
+            ),
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 8, 16, 32),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back_rounded,
+                        color: Colors.white,
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildInfoCard(),
-                        const SizedBox(height: AppDimensions.spacingL),
-                        _buildNameField(),
-                        const SizedBox(height: AppDimensions.spacingM),
-                        _buildDateField(),
-                        const SizedBox(height: AppDimensions.spacingM),
-                        _buildGenderField(),
-                        const SizedBox(height: AppDimensions.spacingXL),
-                        _buildSaveButton(),
+                        Text(
+                          'Tambah Profil Anak',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          'Isi data anak dengan benar',
+                          style: TextStyle(fontSize: 12, color: Colors.white70),
+                        ),
                       ],
                     ),
-                  ),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
-        ),
-      ),
-    );
-  }
 
-  /// Build header
-  Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.all(AppDimensions.spacingM),
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back),
-            color: AppColors.primary,
-          ),
-          const SizedBox(width: AppDimensions.spacingS),
-          Text(
-            'Tambah Profil Anak',
-            style: AppTextStyles.h2.copyWith(color: AppColors.primary),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Build info card
-  Widget _buildInfoCard() {
-    return SimpleCard(
-      tintColor: AppColors.info.withValues(alpha: 0.1),
-      child: Row(
-        children: [
-          Icon(
-            Icons.info_outline,
-            color: AppColors.info,
-            size: AppDimensions.iconL,
-          ),
-          const SizedBox(width: AppDimensions.spacingM),
+          // Form
           Expanded(
-            child: Text(
-              'Data ini akan digunakan untuk menghitung usia anak dan rekomendasi skrining',
-              style: AppTextStyles.body2,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: 4),
 
-  /// Build name field
-  Widget _buildNameField() {
-    return SimpleCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Nama Anak', style: AppTextStyles.label),
-          const SizedBox(height: AppDimensions.spacingS),
-          TextFormField(
-            controller: _nameController,
-            decoration: InputDecoration(
-              hintText: 'Masukkan nama anak',
-              hintStyle: AppTextStyles.body2.copyWith(
-                color: AppColors.textHint,
-              ),
-              filled: true,
-              fillColor: Colors.white.withValues(alpha: 0.5),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-                borderSide: BorderSide.none,
-              ),
-              contentPadding: const EdgeInsets.all(AppDimensions.spacingM),
-            ),
-            style: AppTextStyles.body1,
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return 'Nama tidak boleh kosong';
-              }
-              if (value.trim().length < 2) {
-                return 'Nama minimal 2 karakter';
-              }
-              if (value.trim().length > 50) {
-                return 'Nama maksimal 50 karakter';
-              }
-              return null;
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Build date field
-  Widget _buildDateField() {
-    return SimpleCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Tanggal Lahir', style: AppTextStyles.label),
-          const SizedBox(height: AppDimensions.spacingS),
-          InkWell(
-            onTap: _selectDate,
-            borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-            child: Container(
-              padding: const EdgeInsets.all(AppDimensions.spacingM),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.5),
-                borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.calendar_today,
-                    color: AppColors.primary,
-                    size: AppDimensions.iconM,
-                  ),
-                  const SizedBox(width: AppDimensions.spacingM),
-                  Text(
-                    _selectedDate == null
-                        ? 'Pilih tanggal lahir'
-                        : _formatDate(_selectedDate!),
-                    style: AppTextStyles.body1.copyWith(
-                      color:
-                          _selectedDate == null
-                              ? AppColors.textHint
-                              : AppColors.textPrimary,
+                    // Info card
+                    Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: AppColors.info.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(
+                          color: AppColors.info.withValues(alpha: 0.2),
+                        ),
+                      ),
+                      child: const Row(
+                        children: [
+                          Icon(
+                            Icons.info_outline_rounded,
+                            color: AppColors.accentTeal,
+                            size: 20,
+                          ),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              'Data ini akan digunakan untuk menghitung usia anak dan rekomendasi skrining',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: AppColors.textSecondary,
+                                height: 1.4,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+
+                    const SizedBox(height: 20),
+
+                    // Nama
+                    _sectionLabel('Nama Anak'),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: _nameController,
+                      decoration: InputDecoration(
+                        hintText: 'Masukkan nama lengkap anak',
+                        hintStyle: const TextStyle(
+                          color: AppColors.textHint,
+                          fontSize: 14,
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(14),
+                          borderSide: BorderSide.none,
+                        ),
+                        prefixIcon: const Icon(
+                          Icons.child_care_rounded,
+                          color: AppColors.primary,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
+                      ),
+                      validator: (v) {
+                        if (v == null || v.trim().isEmpty)
+                          return 'Nama tidak boleh kosong';
+                        if (v.trim().length < 2)
+                          return 'Nama minimal 2 karakter';
+                        return null;
+                      },
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    // Tanggal lahir
+                    _sectionLabel('Tanggal Lahir'),
+                    const SizedBox(height: 8),
+                    GestureDetector(
+                      onTap: _pickDate,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.calendar_month_rounded,
+                              color: AppColors.primary,
+                              size: 22,
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              _formatDate(_selectedDate),
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                            const Spacer(),
+                            const Icon(
+                              Icons.chevron_right_rounded,
+                              color: AppColors.textHint,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    // Jenis kelamin
+                    _sectionLabel('Jenis Kelamin'),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _genderCard(
+                            'L',
+                            'Laki-laki',
+                            Icons.boy_rounded,
+                            AppColors.accentTeal,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _genderCard(
+                            'P',
+                            'Perempuan',
+                            Icons.girl_rounded,
+                            const Color(0xFFE0679A),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 32),
+
+                    // Tombol simpan
+                    GestureDetector(
+                      onTap: _isSaving ? null : _saveProfile,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [AppColors.primary, AppColors.secondary],
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Center(
+                          child:
+                              _isSaving
+                                  ? const SizedBox(
+                                    width: 22,
+                                    height: 22,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                  : const Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.save_rounded,
+                                        color: Colors.white,
+                                        size: 18,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'Simpan Profil',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -308,60 +412,25 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
     );
   }
 
-  /// Build gender field
-  Widget _buildGenderField() {
-    return SimpleCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Jenis Kelamin', style: AppTextStyles.label),
-          const SizedBox(height: AppDimensions.spacingS),
-          Row(
-            children: [
-              Expanded(
-                child: _buildGenderOption(
-                  'L',
-                  'Laki-laki',
-                  Icons.boy,
-                  AppColors.info,
-                ),
-              ),
-              const SizedBox(width: AppDimensions.spacingM),
-              Expanded(
-                child: _buildGenderOption(
-                  'P',
-                  'Perempuan',
-                  Icons.girl,
-                  Colors.pink,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _sectionLabel(String label) => Text(
+    label,
+    style: const TextStyle(
+      fontSize: 13,
+      fontWeight: FontWeight.w700,
+      color: AppColors.textPrimary,
+    ),
+  );
 
-  /// Build gender option button
-  Widget _buildGenderOption(
-    String value,
-    String label,
-    IconData icon,
-    Color color,
-  ) {
+  Widget _genderCard(String value, String label, IconData icon, Color color) {
     final isSelected = _selectedGender == value;
-
-    return InkWell(
+    return GestureDetector(
       onTap: () => setState(() => _selectedGender = value),
-      borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-      child: Container(
-        padding: const EdgeInsets.all(AppDimensions.spacingM),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color:
-              isSelected
-                  ? color.withValues(alpha: 0.2)
-                  : Colors.white.withValues(alpha: 0.3),
-          borderRadius: BorderRadius.circular(AppDimensions.radiusM),
+          color: isSelected ? color.withValues(alpha: 0.12) : Colors.white,
+          borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color: isSelected ? color : Colors.transparent,
             width: 2,
@@ -372,46 +441,20 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
             Icon(
               icon,
               color: isSelected ? color : AppColors.textHint,
-              size: AppDimensions.iconXL,
+              size: 36,
             ),
-            const SizedBox(height: AppDimensions.spacingS),
+            const SizedBox(height: 6),
             Text(
               label,
-              style: AppTextStyles.body2.copyWith(
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
                 color: isSelected ? color : AppColors.textSecondary,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),
           ],
         ),
       ),
-    );
-  }
-
-  /// Build save button
-  Widget _buildSaveButton() {
-    return ElevatedButton(
-      onPressed: _isSaving ? null : _saveProfile,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: AppDimensions.spacingM),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppDimensions.radiusL),
-        ),
-        elevation: 0,
-      ),
-      child:
-          _isSaving
-              ? const SizedBox(
-                height: 20,
-                width: 20,
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                  strokeWidth: 2,
-                ),
-              )
-              : Text('Simpan Profil', style: AppTextStyles.button),
     );
   }
 }

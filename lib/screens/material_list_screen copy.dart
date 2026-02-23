@@ -131,14 +131,10 @@ class _MaterialListScreenState extends State<MaterialListScreen> {
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
           child: Row(
             children: [
-              if (Navigator.canPop(context))
-                IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back_rounded,
-                    color: Colors.white,
-                  ),
-                  onPressed: () => Navigator.pop(context),
-                ),
+              IconButton(
+                icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+                onPressed: () => Navigator.pop(context),
+              ),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

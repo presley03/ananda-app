@@ -40,13 +40,13 @@ class AppInfo {
   static const String buildNumber = '1';
 
   /// Release date
-  static const String releaseDate = '2025-12-14';
+  static const String releaseDate = '2026-02-24';
 
   /// Release year
   static const String releaseYear = '2025';
 
   /// Last update date
-  static const String lastUpdate = '2025-12-14';
+  static const String lastUpdate = '2026-02-24';
 
   // ============================================
   // DATABASE INFO
@@ -58,7 +58,7 @@ class AppInfo {
   /// Database version (increment saat schema changes)
   /// v1: Initial schema
   /// v2: Added user_profile table
-  static const int databaseVersion = 2; // UPDATED!
+  static const int databaseVersion = 3; // UPDATED!
 
   // ============================================
   // SUPPORT & CONTACT
@@ -90,7 +90,8 @@ class AppInfo {
   // ============================================
 
   /// Developer name
-  static const String developerName = '[Nama Tim Developer]';
+  static const String developerName =
+      'Noordiati, MPH & Presley F Felly, S.I.Kom';
 
   /// Developer website
   static const String developerWebsite = 'https://example.com';
@@ -99,14 +100,14 @@ class AppInfo {
   static const String developerEmail = 'dev@example.com';
 
   /// Organization/Institution
-  static const String organization = '[Nama Institusi/Lembaga]';
+  static const String organization = 'Poltekkes Kemenkes Palangka Raya';
 
   // ============================================
   // LEGAL
   // ============================================
 
   /// Copyright text
-  static const String copyright = '© 2025 $organization. All Rights Reserved.';
+  static const String copyright = '@ 2026 $organization. All Rights Reserved.';
 
   /// License type
   static const String license = 'Proprietary';
@@ -349,7 +350,7 @@ class AppInfo {
   /// Get copyright text with year
   static String getCopyrightText() {
     final year = DateTime.now().year;
-    return '© $year $organization. All Rights Reserved.';
+    return '@ $year $organization. All Rights Reserved.';
   }
 
   /// Check if feature is enabled

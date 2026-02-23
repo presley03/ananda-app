@@ -51,7 +51,11 @@ class CustomBottomNavigationBar extends StatelessWidget {
         children: [
           _buildNavItem(icon: Icons.home, label: 'Beranda', index: 0),
           _buildNavItem(icon: Icons.book, label: 'Materi', index: 1),
-          _buildNavItem(icon: Icons.child_care, label: 'Profil', index: 2),
+          _buildNavItem(
+            icon: Icons.face_retouching_natural,
+            label: 'Profil',
+            index: 2,
+          ),
           _buildNavItem(icon: Icons.settings, label: 'Pengaturan', index: 3),
         ],
       ),

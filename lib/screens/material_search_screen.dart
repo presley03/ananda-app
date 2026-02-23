@@ -3,16 +3,8 @@ import 'dart:async';
 import '../models/material.dart' as model;
 import '../services/database_service.dart';
 import '../utils/constants/colors.dart';
-import '../utils/constants/dimensions.dart';
-import '../widgets/simple_card.dart';
 import 'material_detail_screen.dart';
 
-/// Material Search Screen
-/// Screen untuk mencari materi edukatif dengan fitur:
-/// - Real-time search
-/// - Filter by kategori & usia
-/// - Highlight keyword
-/// - Empty state & loading state
 class MaterialSearchScreen extends StatefulWidget {
   const MaterialSearchScreen({super.key});
 
@@ -22,34 +14,45 @@ class MaterialSearchScreen extends StatefulWidget {
 
 class _MaterialSearchScreenState extends State<MaterialSearchScreen> {
   final TextEditingController _searchController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
   final DatabaseService _db = DatabaseService();
 
   List<model.Material> _searchResults = [];
   List<model.Material> _allMaterials = [];
   bool _isLoading = false;
   bool _hasSearched = false;
-
-  // Filter state
   String? _selectedCategory;
-  String? _selectedSubcategory;
-
   Timer? _debounce;
+
+  // Palette warna selang-seling — sama dengan material_list_item
+  static const List<List<Color>> _palette = [
+    [Color(0xFFFFF0ED), Color(0xFFFF6B6B)],
+    [Color(0xFFEDF6FF), Color(0xFF5B9BD5)],
+    [Color(0xFFFFFBED), Color(0xFFD4AC0D)],
+    [Color(0xFFEDFFF5), Color(0xFF4CAF82)],
+    [Color(0xFFFFF3ED), Color(0xFFFF8C42)],
+    [Color(0xFFF3EDFF), Color(0xFF9B72CF)],
+  ];
 
   @override
   void initState() {
     super.initState();
     _loadAllMaterials();
     _searchController.addListener(_onSearchChanged);
+    // Auto focus keyboard saat masuk screen
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+    });
   }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _focusNode.dispose();
     _debounce?.cancel();
     super.dispose();
   }
 
-  /// Load all materials for filtering
   Future<void> _loadAllMaterials() async {
     final db = await _db.database;
     final maps = await db.query('materials');
@@ -58,21 +61,14 @@ class _MaterialSearchScreenState extends State<MaterialSearchScreen> {
     });
   }
 
-  /// Handle search text changes with debounce
   void _onSearchChanged() {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(const Duration(milliseconds: 300), () {
-      _performSearch();
-    });
+    _debounce = Timer(const Duration(milliseconds: 300), _performSearch);
   }
 
-  /// Perform search
   Future<void> _performSearch() async {
     final query = _searchController.text.trim();
-
-    if (query.isEmpty &&
-        _selectedCategory == null &&
-        _selectedSubcategory == null) {
+    if (query.isEmpty && _selectedCategory == null) {
       setState(() {
         _searchResults = [];
         _hasSearched = false;
@@ -85,26 +81,12 @@ class _MaterialSearchScreenState extends State<MaterialSearchScreen> {
       _hasSearched = true;
     });
 
-    // Filter materials
     List<model.Material> results = _allMaterials;
-
-    // Filter by keyword
     if (query.isNotEmpty) {
-      results =
-          results.where((material) {
-            return material.matchesKeyword(query);
-          }).toList();
+      results = results.where((m) => m.matchesKeyword(query)).toList();
     }
-
-    // Filter by category
     if (_selectedCategory != null) {
       results = results.where((m) => m.category == _selectedCategory).toList();
-    }
-
-    // Filter by subcategory
-    if (_selectedSubcategory != null) {
-      results =
-          results.where((m) => m.subcategory == _selectedSubcategory).toList();
     }
 
     setState(() {
@@ -113,51 +95,160 @@ class _MaterialSearchScreenState extends State<MaterialSearchScreen> {
     });
   }
 
-  /// Clear all filters
-  void _clearFilters() {
+  void _clearSearch() {
     setState(() {
       _selectedCategory = null;
-      _selectedSubcategory = null;
       _searchController.clear();
       _searchResults = [];
       _hasSearched = false;
     });
+    _focusNode.requestFocus();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [AppColors.gradientStart, AppColors.gradientEnd],
-          ),
+      backgroundColor: Colors.white,
+      body: Column(
+        children: [
+          _buildHeader(),
+          _buildCategoryChips(),
+          if (_hasSearched && !_isLoading)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              child: Row(
+                children: [
+                  Text(
+                    'Ditemukan ${_searchResults.length} materi',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textSecondary,
+                      letterSpacing: 0.3,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          Expanded(child: _buildBody()),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AppColors.primary, AppColors.secondary],
         ),
-        child: SafeArea(
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(28),
+          bottomRight: Radius.circular(28),
+        ),
+      ),
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header with back button
-              _buildHeader(),
+              // Back + title
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back_rounded,
+                      color: Colors.white,
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  const Text(
+                    'Cari Materi',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const Spacer(),
+                  if (_hasSearched)
+                    GestureDetector(
+                      onTap: _clearSearch,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Text(
+                          'Reset',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 8),
 
               // Search bar
-              _buildSearchBar(),
-
-              // Filters + Results (wrapped in Expanded untuk scrollable)
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      _buildFilters(),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height - 280,
-                        child: _buildResults(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Container(
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: TextField(
+                    controller: _searchController,
+                    focusNode: _focusNode,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      color: AppColors.textPrimary,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: 'Cari materi, topik, kata kunci...',
+                      hintStyle: TextStyle(
+                        fontSize: 14,
+                        color: AppColors.textHint.withValues(alpha: 0.7),
                       ),
-                    ],
+                      prefixIcon: const Icon(
+                        Icons.search_rounded,
+                        color: AppColors.primary,
+                        size: 20,
+                      ),
+                      suffixIcon:
+                          _searchController.text.isNotEmpty
+                              ? IconButton(
+                                icon: const Icon(
+                                  Icons.close_rounded,
+                                  color: AppColors.textHint,
+                                  size: 18,
+                                ),
+                                onPressed: () {
+                                  _searchController.clear();
+                                  _performSearch();
+                                },
+                              )
+                              : null,
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
                   ),
                 ),
               ),
+              const SizedBox(height: 4),
             ],
           ),
         ),
@@ -165,359 +256,169 @@ class _MaterialSearchScreenState extends State<MaterialSearchScreen> {
     );
   }
 
-  /// Build header
-  Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.all(AppDimensions.spacingM),
-      child: Row(
-        children: [
-          // Back button
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              padding: const EdgeInsets.all(AppDimensions.spacingS),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.9),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.1),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: const Icon(
-                Icons.arrow_back_rounded,
-                color: AppColors.primary,
-                size: 24,
-              ),
-            ),
-          ),
-
-          const SizedBox(width: AppDimensions.spacingM),
-
-          // Title
-          const Expanded(
-            child: Text(
-              'Cari Materi',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
-              ),
-            ),
-          ),
-
-          // Clear filters button
-          if (_hasSearched)
-            GestureDetector(
-              onTap: _clearFilters,
-              child: Container(
+  Widget _buildCategoryChips() {
+    final categories = ['0-1 Tahun', '1-2 Tahun', '2-5 Tahun'];
+    final values = ['0-1', '1-2', '2-5'];
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: SizedBox(
+        height: 36,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          itemCount: categories.length,
+          separatorBuilder: (_, __) => const SizedBox(width: 8),
+          itemBuilder: (context, index) {
+            final isSelected = _selectedCategory == values[index];
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  _selectedCategory = isSelected ? null : values[index];
+                });
+                _performSearch();
+              },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
                 padding: const EdgeInsets.symmetric(
-                  horizontal: AppDimensions.spacingM,
-                  vertical: AppDimensions.spacingS,
+                  horizontal: 16,
+                  vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.danger.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
+                  color: isSelected ? AppColors.primary : Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color:
+                        isSelected
+                            ? AppColors.primary
+                            : const Color(0xFFE0E0E0),
+                    width: 1.5,
+                  ),
                 ),
-                child: const Row(
-                  children: [
-                    Icon(
-                      Icons.clear_rounded,
-                      color: AppColors.danger,
-                      size: 18,
-                    ),
-                    SizedBox(width: 4),
-                    Text(
-                      'Reset',
-                      style: TextStyle(
-                        color: AppColors.danger,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  categories[index],
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: isSelected ? Colors.white : AppColors.textSecondary,
+                  ),
                 ),
               ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  /// Build search bar
-  Widget _buildSearchBar() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppDimensions.spacingM),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.primary.withValues(alpha: 0.1),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: TextField(
-          controller: _searchController,
-          autofocus: true,
-          decoration: InputDecoration(
-            hintText: 'Cari materi, nutrisi, perkembangan...',
-            hintStyle: const TextStyle(color: AppColors.textHint, fontSize: 14),
-            prefixIcon: const Icon(
-              Icons.search_rounded,
-              color: AppColors.primary,
-              size: 24,
-            ),
-            suffixIcon:
-                _searchController.text.isNotEmpty
-                    ? IconButton(
-                      icon: const Icon(
-                        Icons.clear_rounded,
-                        color: AppColors.textSecondary,
-                        size: 20,
-                      ),
-                      onPressed: () {
-                        _searchController.clear();
-                      },
-                    )
-                    : null,
-            border: InputBorder.none,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: AppDimensions.spacingM,
-              vertical: AppDimensions.spacingM,
-            ),
-          ),
-          style: const TextStyle(fontSize: 14, color: AppColors.textPrimary),
+            );
+          },
         ),
       ),
     );
   }
 
-  /// Build filters (category & subcategory chips) - COMPACT VERSION
-  Widget _buildFilters() {
-    return Container(
-      margin: const EdgeInsets.symmetric(
-        horizontal: AppDimensions.spacingM,
-        vertical: AppDimensions.spacingS,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Category filter
-          const Text(
-            'Usia:',
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textSecondary,
-            ),
-          ),
-          const SizedBox(height: 6),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                _buildFilterChip('Semua', null, true),
-                _buildFilterChip('0-1 Tahun', '0-1', true),
-                _buildFilterChip('1-2 Tahun', '1-2', true),
-                _buildFilterChip('2-5 Tahun', '2-5', true),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: AppDimensions.spacingS),
-
-          // Subcategory filter
-          const Text(
-            'Kategori:',
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textSecondary,
-            ),
-          ),
-          const SizedBox(height: 6),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                _buildFilterChip('Semua', null, false),
-                _buildFilterChip('Nutrisi', 'Nutrisi', false),
-                _buildFilterChip('Pertumbuhan', 'Pertumbuhan', false),
-                _buildFilterChip('Perkembangan', 'Perkembangan', false),
-                _buildFilterChip('Stimulasi', 'Stimulasi', false),
-                _buildFilterChip('Perawatan', 'Perawatan', false),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Build filter chip
-  Widget _buildFilterChip(String label, String? value, bool isCategory) {
-    final isSelected =
-        isCategory ? _selectedCategory == value : _selectedSubcategory == value;
-
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          if (isCategory) {
-            _selectedCategory = _selectedCategory == value ? null : value;
-          } else {
-            _selectedSubcategory = _selectedSubcategory == value ? null : value;
-          }
-        });
-        _performSearch();
-      },
-      child: Container(
-        margin: const EdgeInsets.only(right: AppDimensions.spacingS),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color:
-              isSelected
-                  ? AppColors.primary
-                  : Colors.white.withValues(alpha: 0.8),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color:
-                isSelected
-                    ? AppColors.primary
-                    : AppColors.primary.withValues(alpha: 0.3),
-            width: 1.5,
-          ),
-          boxShadow:
-              isSelected
-                  ? [
-                    BoxShadow(
-                      color: AppColors.primary.withValues(alpha: 0.3),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ]
-                  : null,
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-            color: isSelected ? Colors.white : AppColors.textPrimary,
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// Build results
-  Widget _buildResults() {
+  Widget _buildBody() {
     if (_isLoading) {
       return const Center(
-        child: CircularProgressIndicator(color: AppColors.primary),
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+        ),
       );
     }
 
     if (!_hasSearched) {
       return _buildEmptyState(
         icon: Icons.search_rounded,
-        title: 'Mulai Pencarian',
-        subtitle: 'Ketik kata kunci atau pilih filter',
+        title: 'Cari Materi',
+        subtitle: 'Ketik kata kunci untuk mulai pencarian',
       );
     }
 
     if (_searchResults.isEmpty) {
       return _buildEmptyState(
         icon: Icons.search_off_rounded,
-        title: 'Tidak Ada Hasil',
-        subtitle: 'Coba kata kunci lain',
+        title: 'Tidak Ditemukan',
+        subtitle: 'Coba gunakan kata kunci yang berbeda',
       );
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Results count
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppDimensions.spacingM,
-            vertical: AppDimensions.spacingS,
-          ),
-          child: Text(
-            'Ditemukan ${_searchResults.length} materi',
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textSecondary,
-            ),
-          ),
-        ),
-
-        // Results list
-        Expanded(
-          child: ListView.builder(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppDimensions.spacingM,
-              vertical: AppDimensions.spacingS,
-            ),
-            itemCount: _searchResults.length,
-            itemBuilder: (context, index) {
-              return _buildResultCard(_searchResults[index]);
-            },
-          ),
-        ),
-      ],
+    return ListView.separated(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      itemCount: _searchResults.length,
+      separatorBuilder: (_, __) => const SizedBox(height: 10),
+      itemBuilder: (context, index) {
+        return _buildResultCard(_searchResults[index], index);
+      },
     );
   }
 
-  /// Build empty state - COMPACT VERSION
-  Widget _buildEmptyState({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-  }) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppDimensions.spacingL),
+  Widget _buildResultCard(model.Material material, int index) {
+    final colors = _palette[index % _palette.length];
+    final bg = colors[0];
+    final accent = colors[1];
+
+    return GestureDetector(
+      onTap:
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MaterialDetailScreen(material: material),
+            ),
+          ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: bg,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: const EdgeInsets.all(AppDimensions.spacingL),
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                icon,
-                size: 48,
-                color: AppColors.primary.withValues(alpha: 0.5),
-              ),
+            Row(
+              children: [
+                _buildBadge(material.categoryDisplay, accent),
+                const SizedBox(width: 8),
+                Text(
+                  material.subcategoryDisplay,
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: accent,
+                  ),
+                ),
+                const Spacer(),
+                Icon(
+                  Icons.access_time_rounded,
+                  size: 12,
+                  color: accent.withValues(alpha: 0.7),
+                ),
+                const SizedBox(width: 3),
+                Text(
+                  '${material.estimatedReadingTime} mnt',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: accent.withValues(alpha: 0.8),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: AppDimensions.spacingM),
+            const SizedBox(height: 7),
             Text(
-              title,
+              material.title,
               style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
                 color: AppColors.textPrimary,
+                height: 1.35,
               ),
-              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 5),
             Text(
-              subtitle,
-              style: const TextStyle(
-                fontSize: 13,
-                color: AppColors.textSecondary,
+              material.contentPreview,
+              style: TextStyle(
+                fontSize: 12,
+                color: AppColors.textSecondary.withValues(alpha: 0.8),
+                height: 1.4,
               ),
-              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
@@ -525,160 +426,62 @@ class _MaterialSearchScreenState extends State<MaterialSearchScreen> {
     );
   }
 
-  /// Build result card
-  Widget _buildResultCard(model.Material material) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MaterialDetailScreen(material: material),
-          ),
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.only(bottom: AppDimensions.spacingM),
-        child: SimpleCard(
-          child: Padding(
-            padding: const EdgeInsets.all(AppDimensions.spacingM),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Category & subcategory tags
-                Row(
-                  children: [
-                    // Age category
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppDimensions.spacingS,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: _getCategoryColor(material.category),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        material.categoryDisplay,
-                        style: const TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(width: AppDimensions.spacingS),
-
-                    // Subcategory
-                    Text(
-                      material.subcategoryDisplay,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-
-                    const Spacer(),
-
-                    // Reading time
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.access_time_rounded,
-                          size: 14,
-                          color: AppColors.textHint,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          '${material.estimatedReadingTime} mnt',
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: AppColors.textHint,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: AppDimensions.spacingM),
-
-                // Title
-                Text(
-                  material.title,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
-                    height: 1.3,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-
-                const SizedBox(height: AppDimensions.spacingS),
-
-                // Content preview
-                Text(
-                  material.contentPreview,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: AppColors.textSecondary,
-                    height: 1.4,
-                  ),
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
-
-                const SizedBox(height: AppDimensions.spacingM),
-
-                // Tags
-                if (material.tagList.isNotEmpty)
-                  Wrap(
-                    spacing: AppDimensions.spacingS,
-                    runSpacing: AppDimensions.spacingS,
-                    children:
-                        material.tagList.take(3).map((tag) {
-                          return Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppDimensions.spacingS,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.primary.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Text(
-                              tag,
-                              style: const TextStyle(
-                                fontSize: 11,
-                                color: AppColors.primary,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                  ),
-              ],
-            ),
-          ),
+  Widget _buildBadge(String text, Color accent) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(
+        color: accent.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w700,
+          color: accent,
         ),
       ),
     );
   }
 
-  /// Get category color
-  Color _getCategoryColor(String category) {
-    switch (category) {
-      case '0-1':
-        return const Color(0xFF42A5F5); // Blue
-      case '1-2':
-        return const Color(0xFF66BB6A); // Green
-      case '2-5':
-        return const Color(0xFFFFB74D); // Orange
-      default:
-        return AppColors.primary;
-    }
+  Widget _buildEmptyState({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+  }) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              color: AppColors.primaryLight,
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: Icon(icon, size: 40, color: AppColors.primary),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: AppColors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            subtitle,
+            style: const TextStyle(
+              fontSize: 13,
+              color: AppColors.textSecondary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
   }
 }

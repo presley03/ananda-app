@@ -1,5 +1,5 @@
 name: ananda_app
-description: "A new Flutter project."
+description: "Ananda — Aplikasi monitoring tumbuh kembang anak usia 0-5 tahun. Dilengkapi dengan tools skrining perkembangan (KPSP, TDD, M-CHAT-R), kalkulator status gizi berbasis standar WHO, dan materi edukasi lengkap untuk orang tua. Dirancang untuk digunakan secara offline, cocok untuk orang tua, tenaga kesehatan, dan kader Posyandu di seluruh Indonesia."
 publish_to: 'none'
 
 version: 1.0.0+1
@@ -10,17 +10,27 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  # UI & Icons
   cupertino_icons: ^1.0.8
+  google_fonts: ^6.1.0
+
+  # State management
   provider: ^6.1.1
+
+  # Database & Storage
   sqflite: ^2.3.0
   path: ^1.8.3
   path_provider: ^2.1.1
+  shared_preferences: ^2.2.2
+
+  # Notifications & Timezone
   flutter_local_notifications: ^16.3.0
   timezone: ^0.9.2
+
+  # Utilities
   intl: ^0.18.1
-  shared_preferences: ^2.2.2
   image_picker: ^1.0.7
-  google_fonts: ^6.1.0  # Added for beautiful typography
 
 dev_dependencies:
   flutter_test:
@@ -30,7 +40,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # Assets - UPDATED untuk include JSON materials
   assets:
     - assets/images/
     - lib/data/json/

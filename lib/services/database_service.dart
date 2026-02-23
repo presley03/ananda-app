@@ -54,6 +54,8 @@ class DatabaseService {
         birth_date TEXT NOT NULL,
         gender TEXT CHECK(gender IN ('L', 'P')),
         photo_path TEXT,
+        birth_place TEXT,
+        identity_number TEXT,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP,
         updated_at TEXT DEFAULT CURRENT_TIMESTAMP
       )
@@ -194,16 +196,16 @@ class DatabaseService {
       'CREATE INDEX idx_bookmarks_material ON bookmarks(material_id)',
     );
 
-    print('✅ Database created successfully (v${AppInfo.databaseVersion})');
+    print('âœ… Database created successfully (v${AppInfo.databaseVersion})');
   }
 
   /// Handle database upgrades
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    print('⚠️ Database upgrade from v$oldVersion to v$newVersion');
+    print('âš ï¸ Database upgrade from v$oldVersion to v$newVersion');
 
     // Migration from v1 to v2: Add user_profile table
     if (oldVersion < 2) {
-      print('📝 Adding user_profile table...');
+      print('ðŸ“ Adding user_profile table...');
 
       await db.execute('''
         CREATE TABLE IF NOT EXISTS user_profile (
@@ -223,11 +225,14 @@ class DatabaseService {
         'value': '0',
       }, conflictAlgorithm: ConflictAlgorithm.replace);
 
-      print('✅ user_profile table added successfully');
+      print('âœ… user_profile table added successfully');
     }
 
-    // Future migrations will go here
-    // if (oldVersion < 3) { ... }
+    // Migration v2 -> v3: Add birth_place and identity_number to children
+    if (oldVersion < 3) {
+      await db.execute('ALTER TABLE children ADD COLUMN birth_place TEXT');
+      await db.execute('ALTER TABLE children ADD COLUMN identity_number TEXT');
+    }
   }
 
   // ==================== CHILDREN OPERATIONS ====================
@@ -622,7 +627,7 @@ class DatabaseService {
     final path = join(documentsDirectory.path, AppInfo.databaseName);
     await databaseFactory.deleteDatabase(path);
     _database = null;
-    print('🗑️ Database deleted');
+    print('ðŸ—‘ï¸ Database deleted');
   }
 
   /// Get database statistics

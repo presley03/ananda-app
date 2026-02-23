@@ -1,32 +1,16 @@
-/// File: material_detail_screen.dart
-/// Path: lib/screens/material_detail_screen.dart
-/// Description: Screen untuk menampilkan detail lengkap materi edukatif
-///
-/// Features:
-/// - Full content display
-/// - Bookmark toggle
-/// - Share functionality
-/// - Reading time estimate
-/// - Back navigation
 library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../models/material.dart' as model;
-import '../widgets/simple_card.dart';
 import '../widgets/formatted_material_content.dart';
 import '../utils/constants/colors.dart';
 import '../utils/constants/text_styles.dart';
 import '../utils/constants/dimensions.dart';
 
 class MaterialDetailScreen extends StatefulWidget {
-  /// Material data to display
   final model.Material material;
-
-  /// Initial bookmark state
   final bool isBookmarked;
-
-  /// Callback when bookmark toggled
   final VoidCallback? onBookmarkToggle;
 
   const MaterialDetailScreen({
@@ -52,233 +36,201 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [AppColors.gradientStart, AppColors.gradientEnd],
+      // Background putih — artikel menyatu dengan layar
+      backgroundColor: Colors.white,
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          // ── HEADER ──────────────────────────────────
+          SliverToBoxAdapter(child: _buildHeader()),
+
+          // ── ARTIKEL CONTENT ─────────────────────────
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(24, 24, 24, 100),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate([
+                // Meta info
+                _buildMetaInfo(),
+                const SizedBox(height: 28),
+
+                // Konten artikel — terbuka, tidak dalam kotak
+                _buildContent(),
+                const SizedBox(height: 24),
+
+                // Tags
+                if (widget.material.tagList.isNotEmpty) _buildTags(),
+              ]),
+            ),
           ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              // Custom AppBar
-              _buildAppBar(),
-
-              // Scrollable Content
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(AppDimensions.spacingM),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Category & Subcategory Badges
-                      _buildBadges(),
-
-                      const SizedBox(height: AppDimensions.spacingM),
-
-                      // Title
-                      _buildTitle(),
-
-                      const SizedBox(height: AppDimensions.spacingM),
-
-                      // Meta info (reading time, date)
-                      _buildMetaInfo(),
-
-                      const SizedBox(height: AppDimensions.spacingL),
-
-                      // Content
-                      _buildContent(),
-
-                      const SizedBox(height: AppDimensions.spacingXL),
-
-                      // Tags (if available)
-                      if (widget.material.tagList.isNotEmpty) _buildTags(),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+        ],
       ),
-
-      // Share FAB
       floatingActionButton: _buildShareFAB(),
     );
   }
 
-  /// Build custom app bar
-  Widget _buildAppBar() {
+  Widget _buildHeader() {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppDimensions.spacingM,
-        vertical: AppDimensions.spacingS,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AppColors.primary, AppColors.secondary],
+        ),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(28),
+          bottomRight: Radius.circular(28),
+        ),
       ),
-      child: Row(
-        children: [
-          // Back button
-          IconButton(
-            icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
-            onPressed: () => Navigator.pop(context),
-          ),
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Back + Bookmark row
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back_rounded,
+                      color: Colors.white,
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    icon: Icon(
+                      _isBookmarked
+                          ? Icons.bookmark_rounded
+                          : Icons.bookmark_border_rounded,
+                      color: Colors.white,
+                    ),
+                    onPressed: _toggleBookmark,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
 
-          const Spacer(),
+              // Badges
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Wrap(
+                  spacing: 8,
+                  children: [
+                    _buildBadge(widget.material.categoryDisplay),
+                    _buildBadge(widget.material.subcategoryDisplay),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
 
-          // Bookmark button
-          IconButton(
-            icon: Icon(
-              _isBookmarked ? Icons.bookmark : Icons.bookmark_border_rounded,
-              color:
-                  _isBookmarked ? AppColors.secondary : AppColors.textPrimary,
-            ),
-            onPressed: _toggleBookmark,
+              // Judul artikel di dalam header
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  widget.material.title,
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                    height: 1.35,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 
-  /// Build category and subcategory badges
-  Widget _buildBadges() {
-    return Wrap(
-      spacing: AppDimensions.spacingS,
-      runSpacing: AppDimensions.spacingS,
-      children: [
-        // Category badge
-        Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppDimensions.spacingM,
-            vertical: AppDimensions.spacingS,
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-            border: Border.all(
-              color: AppColors.primary.withValues(alpha: 0.3),
-              width: 1.5,
-            ),
-          ),
-          child: Text(
-            widget.material.categoryDisplay,
-            style: AppTextStyles.label.copyWith(
-              color: AppColors.primary,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
+  Widget _buildBadge(String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.22),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: Colors.white,
         ),
+      ),
+    );
+  }
 
-        // Subcategory badge
-        Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppDimensions.spacingM,
-            vertical: AppDimensions.spacingS,
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.secondary.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-            border: Border.all(
-              color: AppColors.secondary.withValues(alpha: 0.3),
-              width: 1.5,
-            ),
-          ),
-          child: Text(
-            widget.material.subcategoryDisplay,
-            style: AppTextStyles.label.copyWith(
-              color: AppColors.secondary,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
+  // Meta info — waktu baca & tanggal, tanpa kotak
+  Widget _buildMetaInfo() {
+    return Row(
+      children: [
+        Icon(Icons.access_time_rounded, size: 15, color: AppColors.textHint),
+        const SizedBox(width: 5),
+        Text(
+          '${widget.material.estimatedReadingTime} menit baca',
+          style: AppTextStyles.caption,
         ),
+        if (widget.material.createdAt != null) ...[
+          const SizedBox(width: 16),
+          Icon(
+            Icons.calendar_today_rounded,
+            size: 15,
+            color: AppColors.textHint,
+          ),
+          const SizedBox(width: 5),
+          Text(
+            _formatDate(widget.material.createdAt!),
+            style: AppTextStyles.caption,
+          ),
+        ],
       ],
     );
   }
 
-  /// Build title
-  Widget _buildTitle() {
-    return Text(
-      widget.material.title,
-      style: AppTextStyles.h2.copyWith(fontSize: 26, height: 1.3),
-    );
-  }
-
-  /// Build meta information
-  Widget _buildMetaInfo() {
-    return SimpleCard(
-      padding: const EdgeInsets.all(AppDimensions.spacingM),
-      child: Row(
-        children: [
-          // Reading time
-          const Icon(
-            Icons.access_time_rounded,
-            size: AppDimensions.iconS,
-            color: AppColors.textSecondary,
-          ),
-          const SizedBox(width: AppDimensions.spacingXS),
-          Text(
-            '${widget.material.estimatedReadingTime} menit baca',
-            style: AppTextStyles.body2,
-          ),
-
-          const SizedBox(width: AppDimensions.spacingL),
-
-          // Date (if available)
-          if (widget.material.createdAt != null) ...[
-            const Icon(
-              Icons.calendar_today_rounded,
-              size: AppDimensions.iconS,
-              color: AppColors.textSecondary,
-            ),
-            const SizedBox(width: AppDimensions.spacingXS),
-            Text(
-              _formatDate(widget.material.createdAt!),
-              style: AppTextStyles.body2,
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  /// Build content
+  // Konten — langsung di layar, tidak dalam card
   Widget _buildContent() {
-    return SimpleCard(
-      tintColor: _getCategoryTintColor(),
-      padding: const EdgeInsets.all(AppDimensions.spacingL),
-      child: FormattedMaterialContent(
-        content: widget.material.content,
-        baseStyle: AppTextStyles.body1.copyWith(height: 1.7, fontSize: 15),
+    return FormattedMaterialContent(
+      content: widget.material.content,
+      baseStyle: const TextStyle(
+        fontSize: 15,
+        height: 1.75,
+        color: AppColors.textPrimary,
       ),
     );
   }
 
-  /// Build tags
   Widget _buildTags() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Divider(color: Colors.grey.shade200, thickness: 1),
+        const SizedBox(height: 12),
         const Text('Tags:', style: AppTextStyles.label),
-        const SizedBox(height: AppDimensions.spacingS),
+        const SizedBox(height: 8),
         Wrap(
-          spacing: AppDimensions.spacingS,
-          runSpacing: AppDimensions.spacingS,
+          spacing: 8,
+          runSpacing: 8,
           children:
               widget.material.tagList.map((tag) {
                 return Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: AppDimensions.spacingM,
-                    vertical: AppDimensions.spacingXS,
+                    horizontal: 12,
+                    vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.glassWhite,
-                    borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-                    border: Border.all(color: AppColors.glassBorder, width: 1),
+                    color: AppColors.primaryLight,
+                    borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
                     tag,
-                    style: AppTextStyles.caption.copyWith(
-                      color: AppColors.textSecondary,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 );
@@ -289,12 +241,12 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
     );
   }
 
-  /// Build share FAB
   Widget _buildShareFAB() {
     return FloatingActionButton.extended(
       onPressed: _shareContent,
       backgroundColor: AppColors.primary,
-      icon: const Icon(Icons.share, color: Colors.white),
+      elevation: 4,
+      icon: const Icon(Icons.share_rounded, color: Colors.white),
       label: const Text(
         'Bagikan',
         style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
@@ -302,16 +254,9 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
     );
   }
 
-  /// Toggle bookmark
   void _toggleBookmark() {
-    setState(() {
-      _isBookmarked = !_isBookmarked;
-    });
-
-    // Callback to parent
+    setState(() => _isBookmarked = !_isBookmarked);
     widget.onBookmarkToggle?.call();
-
-    // Show feedback
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -324,24 +269,13 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
     );
   }
 
-  /// Share content
   void _shareContent() {
-    // Copy to clipboard
     Clipboard.setData(
       ClipboardData(
-        text: '''
-${widget.material.title}
-
-${widget.material.content}
-
----
-Sumber: Aplikasi Ananda
-Kategori: ${widget.material.categoryDisplay}
-${widget.material.subcategoryDisplay}
-''',
+        text:
+            '${widget.material.title}\n\n${widget.material.content}\n\n---\nSumber: Aplikasi Ananda',
       ),
     );
-
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Konten telah disalin ke clipboard!'),
@@ -349,14 +283,10 @@ ${widget.material.subcategoryDisplay}
         backgroundColor: AppColors.success,
       ),
     );
-
-    // TODO: Implement native share dialog
-    // Share.share(content) - requires share_plus package
   }
 
-  /// Format date to readable string
   String _formatDate(DateTime date) {
-    final months = [
+    const months = [
       'Jan',
       'Feb',
       'Mar',
@@ -370,21 +300,6 @@ ${widget.material.subcategoryDisplay}
       'Nov',
       'Des',
     ];
-
     return '${date.day} ${months[date.month - 1]} ${date.year}';
-  }
-
-  /// Get category tint color
-  Color _getCategoryTintColor() {
-    switch (widget.material.category) {
-      case '0-1':
-        return AppColors.category01Tint;
-      case '1-2':
-        return AppColors.category12Tint;
-      case '2-5':
-        return AppColors.category25Tint;
-      default:
-        return AppColors.glassWhite;
-    }
   }
 }

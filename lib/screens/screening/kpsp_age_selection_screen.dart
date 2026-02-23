@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
 import '../../utils/constants/colors.dart';
-import '../../utils/constants/dimensions.dart';
-import '../../utils/constants/text_styles.dart';
 import '../../utils/helpers/kpsp_data_loader.dart';
+import '../../services/database_service.dart';
+import '../../models/child_profile.dart';
 import 'kpsp_questions_screen.dart';
 
-/// KPSP Age Selection Screen
-/// Screen untuk memilih umur anak sebelum mulai KPSP
-/// 16 pilihan umur: 3, 6, 9, 12, 15, 18, 21, 24, 30, 36, 42, 48, 54, 60, 66, 72 bulan
 class KpspAgeSelectionScreen extends StatefulWidget {
-  const KpspAgeSelectionScreen({super.key});
+  final ChildProfile? child;
+  const KpspAgeSelectionScreen({super.key, this.child});
 
   @override
   State<KpspAgeSelectionScreen> createState() => _KpspAgeSelectionScreenState();
 }
 
 class _KpspAgeSelectionScreenState extends State<KpspAgeSelectionScreen> {
-  // List umur yang tersedia (dalam bulan)
-  static const List<int> availableAges = [
+  static const List<int> _ages = [
     3,
     6,
     9,
@@ -36,327 +33,412 @@ class _KpspAgeSelectionScreenState extends State<KpspAgeSelectionScreen> {
     72,
   ];
 
-  // Track which ages have data available
-  Map<int, bool> _dataAvailability = {};
-  bool _isLoading = true;
+  final DatabaseService _db = DatabaseService();
+  List<ChildProfile> _children = [];
+  ChildProfile? _selectedChild;
+  int? _selectedAge;
+  bool _isLoading = false;
+  bool _loadingChildren = true;
 
   @override
   void initState() {
     super.initState();
-    _checkDataAvailability();
+    _loadChildren();
   }
 
-  // Check data availability for all ages
-  Future<void> _checkDataAvailability() async {
-    final Map<int, bool> availability = {};
-
-    for (int age in availableAges) {
-      availability[age] = await KpspDataLoader.isDataAvailable(age);
-    }
-
-    if (mounted) {
+  Future<void> _loadChildren() async {
+    try {
+      final maps = await _db.getAllChildren();
+      final children = maps.map((m) => ChildProfile.fromMap(m)).toList();
       setState(() {
-        _dataAvailability = availability;
-        _isLoading = false;
+        _children = children;
+        if (widget.child != null) {
+          _selectedChild = widget.child;
+        } else if (children.isNotEmpty) {
+          _selectedChild = children.first;
+        }
+        if (_selectedChild != null) {
+          _selectedAge = _nearestAge(_selectedChild!.ageInMonths);
+        }
+        _loadingChildren = false;
       });
+    } catch (e) {
+      setState(() => _loadingChildren = false);
     }
   }
 
-  // Convert bulan ke display text
-  String _getAgeDisplay(int months) {
-    if (months < 12) {
-      return '$months Bulan';
-    } else if (months == 12) {
-      return '1 Tahun';
-    } else {
-      final years = months ~/ 12;
-      final remainingMonths = months % 12;
-      if (remainingMonths == 0) {
-        return '$years Tahun';
-      } else {
-        return '$years Tahun $remainingMonths Bulan';
+  int _nearestAge(int ageInMonths) {
+    for (int i = _ages.length - 1; i >= 0; i--) {
+      if (ageInMonths >= _ages[i]) return _ages[i];
+    }
+    return _ages.first;
+  }
+
+  static const List<List<int>> _childPalettes = [
+    [0xFFFFF0ED, 0xFFFF6B6B],
+    [0xFFEDF6FF, 0xFF5B9BD5],
+    [0xFFFFFBED, 0xFFD4AC0D],
+    [0xFFEDFFF5, 0xFF4CAF82],
+    [0xFFF3EDFF, 0xFF9B72CF],
+    [0xFFFFEDF5, 0xFFE0679A],
+  ];
+
+  Color _childBg(int index) =>
+      Color(_childPalettes[index % _childPalettes.length][0]);
+  Color _childAccent(int index) =>
+      Color(_childPalettes[index % _childPalettes.length][1]);
+
+  Color get _activeAccent {
+    if (_selectedChild == null) return const Color(0xFFFF6B6B);
+    final idx = _children.indexOf(_selectedChild!);
+    return _childAccent(idx < 0 ? 0 : idx);
+  }
+
+  Color get _activeBg {
+    if (_selectedChild == null) return const Color(0xFFFFF0ED);
+    final idx = _children.indexOf(_selectedChild!);
+    return _childBg(idx < 0 ? 0 : idx);
+  }
+
+  String _ageLabel(int months) {
+    if (months < 12) return '$months Bulan';
+    final y = months ~/ 12;
+    final m = months % 12;
+    if (m == 0) return '$y Tahun';
+    return '$y Thn $m Bln';
+  }
+
+  Future<void> _startScreening() async {
+    if (_selectedAge == null) return;
+    setState(() => _isLoading = true);
+    try {
+      final questions = await KpspDataLoader.loadQuestions(_selectedAge!);
+      if (questions == null || questions.isEmpty) {
+        setState(() => _isLoading = false);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Data pertanyaan tidak ditemukan')),
+          );
+        }
+        return;
       }
-    }
-  }
-
-  // Handle age selection
-  Future<void> _onAgeSelected(int ageMonths) async {
-    final hasData = _dataAvailability[ageMonths] ?? false;
-
-    if (!hasData) {
-      // Show message: data belum tersedia
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Data KPSP untuk ${_getAgeDisplay(ageMonths)} belum tersedia',
+      if (mounted) {
+        setState(() => _isLoading = false);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) => KpspQuestionsScreen(
+                  ageMonths: _selectedAge!,
+                  questions: questions,
+                  child: _selectedChild,
+                ),
           ),
-          backgroundColor: AppColors.warning,
-          duration: Duration(seconds: 2),
-        ),
-      );
-      return;
+        );
+      }
+    } catch (e) {
+      setState(() => _isLoading = false);
     }
-
-    // Show loading
-    if (!mounted) return;
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder:
-          (context) => Center(
-            child: CircularProgressIndicator(color: AppColors.primary),
-          ),
-    );
-
-    // Load questions from JSON
-    final questions = await KpspDataLoader.loadQuestions(ageMonths);
-
-    // Hide loading
-    if (!mounted) return;
-    Navigator.pop(context);
-
-    if (questions == null || questions.isEmpty) {
-      // Error loading
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Gagal memuat data KPSP'),
-          backgroundColor: AppColors.danger,
-        ),
-      );
-      return;
-    }
-
-    // Navigate to questions screen
-    if (!mounted) return;
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder:
-            (context) =>
-                KpspQuestionsScreen(ageMonths: ageMonths, questions: questions),
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [AppColors.gradientStart, AppColors.gradientEnd],
-          ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              // Header
-              Padding(
-                padding: EdgeInsets.all(AppDimensions.spacingM),
-                child: Row(
-                  children: [
-                    IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: Icon(Icons.arrow_back),
-                      color: AppColors.textPrimary,
-                    ),
-                    SizedBox(width: AppDimensions.spacingS),
-                    Expanded(
+      backgroundColor: Colors.white,
+      body: Column(
+        children: [
+          _buildHeader(),
+          Expanded(
+            child:
+                _loadingChildren
+                    ? const Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          AppColors.primary,
+                        ),
+                      ),
+                    )
+                    : SingleChildScrollView(
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('KPSP Screening', style: AppTextStyles.h2),
-                          SizedBox(height: AppDimensions.spacingXS),
+                          if (_children.isNotEmpty) ...[
+                            _buildSectionLabel('PROFIL ANAK'),
+                            const SizedBox(height: 8),
+                            _buildChildSelector(),
+                            const SizedBox(height: 24),
+                          ],
+                          _buildSectionLabel('KATEGORI USIA KPSP'),
+                          const SizedBox(height: 4),
                           Text(
-                            'Pilih umur anak Anda',
-                            style: AppTextStyles.body2.copyWith(
+                            _selectedChild != null
+                                ? 'Terdeteksi: ${_selectedChild!.ageDescription}. Pilih kategori yang sesuai.'
+                                : 'Pilih kategori usia yang mendekati usia anak saat ini.',
+                            style: const TextStyle(
+                              fontSize: 13,
                               color: AppColors.textSecondary,
                             ),
                           ),
+                          const SizedBox(height: 12),
+                          _buildAgeGrid(),
+                          const SizedBox(height: 16),
                         ],
                       ),
                     ),
-                  ],
+          ),
+
+          // TOMBOL MULAI - fixed bottom
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+            child: GestureDetector(
+              onTap:
+                  (_selectedAge == null || _isLoading) ? null : _startScreening,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                decoration: BoxDecoration(
+                  gradient:
+                      _selectedAge != null
+                          ? LinearGradient(
+                            colors: [
+                              _activeAccent,
+                              _activeAccent.withValues(alpha: 0.75),
+                            ],
+                          )
+                          : null,
+                  color: _selectedAge == null ? const Color(0xFFE0E0E0) : null,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Center(
+                  child:
+                      _isLoading
+                          ? const SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                          : Text(
+                            _selectedAge == null
+                                ? 'Pilih usia terlebih dahulu'
+                                : 'Mulai Skrining KPSP',
+                            style: TextStyle(
+                              color:
+                                  _selectedAge == null
+                                      ? AppColors.textHint
+                                      : Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                 ),
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-              SizedBox(height: AppDimensions.spacingL),
-
-              // Info card
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppDimensions.spacingM,
-                ),
-                child: Container(
-                  padding: EdgeInsets.all(AppDimensions.spacingM),
-                  decoration: BoxDecoration(
-                    color: AppColors.info.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-                    border: Border.all(
-                      color: AppColors.info.withValues(alpha: 0.3),
+  Widget _buildHeader() {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AppColors.primary, AppColors.secondary],
+        ),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(28),
+          bottomRight: Radius.circular(28),
+        ),
+      ),
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(8, 16, 20, 32),
+          child: Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+                onPressed: () => Navigator.pop(context),
+              ),
+              const SizedBox(width: 4),
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'KPSP',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
                     ),
                   ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.info_outline,
-                        color: AppColors.info,
-                        size: AppDimensions.iconM,
-                      ),
-                      SizedBox(width: AppDimensions.spacingM),
-                      Expanded(
-                        child: Text(
-                          'Pilih umur yang paling mendekati umur anak Anda saat ini',
-                          style: AppTextStyles.body2.copyWith(
-                            color: AppColors.textPrimary,
-                          ),
-                        ),
-                      ),
-                    ],
+                  Text(
+                    'Kuesioner Pra Skrining Perkembangan',
+                    style: TextStyle(fontSize: 12, color: Colors.white70),
                   ),
-                ),
+                ],
               ),
-
-              SizedBox(height: AppDimensions.spacingL),
-
-              // Grid umur
-              Expanded(
-                child:
-                    _isLoading
-                        ? Center(
-                          child: CircularProgressIndicator(
-                            color: AppColors.primary,
-                          ),
-                        )
-                        : GridView.builder(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: AppDimensions.spacingM,
-                          ),
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio: 2.5,
-                                crossAxisSpacing: AppDimensions.spacingM,
-                                mainAxisSpacing: AppDimensions.spacingM,
-                              ),
-                          itemCount: availableAges.length,
-                          itemBuilder: (context, index) {
-                            final ageMonths = availableAges[index];
-                            final hasData =
-                                _dataAvailability[ageMonths] ?? false;
-
-                            return _AgeCard(
-                              ageMonths: ageMonths,
-                              ageDisplay: _getAgeDisplay(ageMonths),
-                              hasData: hasData,
-                              onTap: () => _onAgeSelected(ageMonths),
-                            );
-                          },
-                        ),
-              ),
-
-              SizedBox(height: AppDimensions.spacingM),
             ],
           ),
         ),
       ),
     );
   }
-}
 
-/// Age Card Widget
-class _AgeCard extends StatelessWidget {
-  final int ageMonths;
-  final String ageDisplay;
-  final bool hasData;
-  final VoidCallback onTap;
+  Widget _buildChildSelector() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children:
+            _children.asMap().entries.map((entry) {
+              final index = entry.key;
+              final child = entry.value;
+              final isSelected = _selectedChild?.id == child.id;
+              final isBoy = child.gender == 'L';
+              final accent = _childAccent(index);
+              final bg = _childBg(index);
+              return GestureDetector(
+                onTap:
+                    () => setState(() {
+                      _selectedChild = child;
+                      _selectedAge = _nearestAge(child.ageInMonths);
+                    }),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  margin: const EdgeInsets.only(right: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isSelected ? bg : const Color(0xFFF8F8F8),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(
+                      color: isSelected ? accent : Colors.transparent,
+                      width: 1.5,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        isBoy ? Icons.boy_rounded : Icons.girl_rounded,
+                        color: isSelected ? accent : AppColors.textHint,
+                        size: 22,
+                      ),
+                      const SizedBox(width: 8),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            child.name,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                              color:
+                                  isSelected
+                                      ? AppColors.textPrimary
+                                      : AppColors.textSecondary,
+                            ),
+                          ),
+                          Text(
+                            child.ageDescription,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: isSelected ? accent : AppColors.textHint,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+      ),
+    );
+  }
 
-  const _AgeCard({
-    required this.ageMonths,
-    required this.ageDisplay,
-    required this.hasData,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-        child: Container(
-          decoration: BoxDecoration(
-            color:
-                hasData
-                    ? AppColors.glassWhite
-                    : AppColors.glassWhite.withValues(alpha: 0.5),
-            borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-            border: Border.all(
-              color:
-                  hasData
-                      ? AppColors.glassBorder
-                      : AppColors.glassBorder.withValues(alpha: 0.5),
-              width: 1.5,
-            ),
-          ),
-          child: Stack(
-            children: [
-              Center(
+  Widget _buildAgeGrid() {
+    final accent = _activeAccent;
+    final bg = _activeBg;
+    return GridView.count(
+      crossAxisCount: 4,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      crossAxisSpacing: 8,
+      mainAxisSpacing: 8,
+      childAspectRatio: 1.5,
+      padding: EdgeInsets.zero,
+      children:
+          _ages.map((age) {
+            final isSelected = _selectedAge == age;
+            final isRecommended =
+                _selectedChild != null &&
+                _nearestAge(_selectedChild!.ageInMonths) == age;
+            return GestureDetector(
+              onTap: () => setState(() => _selectedAge = age),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 150),
+                decoration: BoxDecoration(
+                  color:
+                      isSelected
+                          ? accent
+                          : isRecommended
+                          ? bg
+                          : const Color(0xFFF8F8F8),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color:
+                        isSelected
+                            ? accent
+                            : isRecommended
+                            ? accent.withValues(alpha: 0.4)
+                            : Colors.transparent,
+                    width: 1.5,
+                  ),
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.child_care,
-                      color: hasData ? AppColors.primary : AppColors.textHint,
-                      size: AppDimensions.iconM,
-                    ),
-                    SizedBox(height: AppDimensions.spacingS),
+                    if (isRecommended && !isSelected)
+                      Text('*', style: TextStyle(fontSize: 10, color: accent)),
                     Text(
-                      ageDisplay,
-                      style: AppTextStyles.h4.copyWith(
-                        color:
-                            hasData
-                                ? AppColors.textPrimary
-                                : AppColors.textHint,
-                      ),
+                      _ageLabel(age),
                       textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color:
+                            isSelected
+                                ? Colors.white
+                                : isRecommended
+                                ? accent
+                                : AppColors.textSecondary,
+                      ),
                     ),
                   ],
                 ),
               ),
-              if (!hasData)
-                Positioned(
-                  top: 4,
-                  right: 4,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppDimensions.spacingXS,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.warning,
-                      borderRadius: BorderRadius.circular(
-                        AppDimensions.radiusS,
-                      ),
-                    ),
-                    child: Text(
-                      'Soon',
-                      style: AppTextStyles.caption.copyWith(
-                        color: Colors.white,
-                        fontSize: 8,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ),
+            );
+          }).toList(),
+    );
+  }
+
+  Widget _buildSectionLabel(String title) {
+    return Text(
+      title,
+      style: const TextStyle(
+        fontSize: 11,
+        fontWeight: FontWeight.w700,
+        color: AppColors.textSecondary,
+        letterSpacing: 1.2,
       ),
     );
   }

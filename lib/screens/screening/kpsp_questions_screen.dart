@@ -1,415 +1,433 @@
 import 'package:flutter/material.dart';
 import '../../utils/constants/colors.dart';
-import '../../utils/constants/dimensions.dart';
-import '../../utils/constants/text_styles.dart';
 import '../../models/kpsp_question.dart';
+import '../../models/child_profile.dart';
 import 'kpsp_result_screen.dart';
 
-/// KPSP Questions Screen
-/// Screen untuk menjawab 10 pertanyaan KPSP
-/// Setiap pertanyaan dijawab dengan Ya (1 poin) atau Tidak (0 poin)
 class KpspQuestionsScreen extends StatefulWidget {
   final int ageMonths;
   final List<KpspQuestion> questions;
+  final ChildProfile? child;
 
   const KpspQuestionsScreen({
     super.key,
     required this.ageMonths,
     required this.questions,
+    this.child,
   });
 
   @override
   State<KpspQuestionsScreen> createState() => _KpspQuestionsScreenState();
 }
 
-class _KpspQuestionsScreenState extends State<KpspQuestionsScreen> {
-  // Menyimpan jawaban (null = belum dijawab, true = Ya, false = Tidak)
+class _KpspQuestionsScreenState extends State<KpspQuestionsScreen>
+    with TickerProviderStateMixin {
   final List<bool?> _answers = List.filled(10, null);
+  int _currentIndex = 0;
+  late AnimationController _slideController;
+  late Animation<Offset> _slideAnimation;
+  bool _isAnimating = false;
 
-  // Index pertanyaan yang sedang ditampilkan
-  int _currentQuestionIndex = 0;
+  KpspQuestion get _current => widget.questions[_currentIndex];
+  int get _total => widget.questions.length;
+  bool get _isLast => _currentIndex == _total - 1;
 
-  // Get current question
-  KpspQuestion get _currentQuestion => widget.questions[_currentQuestionIndex];
-
-  // Check if current question is answered
-  bool get _isCurrentQuestionAnswered =>
-      _answers[_currentQuestionIndex] != null;
-
-  // Check if all questions are answered
-  bool get _allQuestionsAnswered => !_answers.contains(null);
-
-  // Calculate score (jumlah jawaban "Ya")
-  int get _score {
-    return _answers.where((answer) => answer == true).length;
+  @override
+  void initState() {
+    super.initState();
+    _slideController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 280),
+    );
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(1, 0),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _slideController, curve: Curves.easeOut));
+    _slideController.forward();
   }
 
-  // Answer current question
-  void _answerQuestion(bool answer) {
+  @override
+  void dispose() {
+    _slideController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _answer(bool value) async {
+    if (_isAnimating) return;
     setState(() {
-      _answers[_currentQuestionIndex] = answer;
+      _answers[_currentIndex] = value;
+      _isAnimating = true;
     });
-  }
-
-  // Go to next question
-  void _nextQuestion() {
-    if (_currentQuestionIndex < widget.questions.length - 1) {
-      setState(() {
-        _currentQuestionIndex++;
-      });
-    }
-  }
-
-  // Go to previous question
-  void _previousQuestion() {
-    if (_currentQuestionIndex > 0) {
-      setState(() {
-        _currentQuestionIndex--;
-      });
-    }
-  }
-
-  // Finish and show result
-  void _finish() {
-    if (!_allQuestionsAnswered) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Mohon jawab semua pertanyaan terlebih dahulu'),
-          backgroundColor: AppColors.warning,
-        ),
-      );
+    await Future.delayed(const Duration(milliseconds: 350));
+    if (_isLast) {
+      _goToResult();
       return;
     }
+    _slideController.reset();
+    setState(() {
+      _currentIndex++;
+      _isAnimating = false;
+    });
+    _slideController.forward();
+  }
 
-    // Navigate to result screen
-    Navigator.push(
+  void _goBack() {
+    if (_currentIndex == 0) {
+      Navigator.pop(context);
+      return;
+    }
+    _slideController.reset();
+    setState(() {
+      _currentIndex--;
+      _isAnimating = false;
+    });
+    _slideController.forward();
+  }
+
+  void _goToResult() {
+    final score = _answers.where((a) => a == true).length;
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder:
             (context) => KpspResultScreen(
               ageMonths: widget.ageMonths,
-              score: _score,
-              totalQuestions: widget.questions.length,
+              score: score,
+              totalQuestions: _total,
+              child: widget.child,
             ),
       ),
     );
   }
 
-  // Get age display
-  String _getAgeDisplay() {
-    final months = widget.ageMonths;
-    if (months < 12) {
-      return '$months Bulan';
-    } else {
-      final years = months ~/ 12;
-      final remainingMonths = months % 12;
-      if (remainingMonths == 0) {
-        return '$years Tahun';
-      } else {
-        return '$years Tahun $remainingMonths Bulan';
-      }
+  Color _aspectColor(String aspect) {
+    switch (aspect.toLowerCase()) {
+      case 'motorik kasar':
+        return const Color(0xFFFF6B6B);
+      case 'motorik halus':
+        return const Color(0xFF5B9BD5);
+      case 'bicara & bahasa':
+      case 'bicara dan bahasa':
+        return AppColors.accentPurple;
+      default:
+        return AppColors.success;
+    }
+  }
+
+  IconData _aspectIcon(String aspect) {
+    switch (aspect.toLowerCase()) {
+      case 'motorik kasar':
+        return Icons.directions_run_rounded;
+      case 'motorik halus':
+        return Icons.pan_tool_rounded;
+      case 'bicara & bahasa':
+      case 'bicara dan bahasa':
+        return Icons.record_voice_over_rounded;
+      default:
+        return Icons.people_rounded;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final color = _aspectColor(_current.aspect);
+    final progress = (_currentIndex + 1) / _total;
+    final currentAnswer = _answers[_currentIndex];
+
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [AppColors.gradientStart, AppColors.gradientEnd],
-          ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              // Header
-              _buildHeader(),
-
-              // Progress indicator
-              _buildProgressIndicator(),
-
-              SizedBox(height: AppDimensions.spacingL),
-
-              // Question card
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppDimensions.spacingM,
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // ── HEADER ──────────────────────────────
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 8, 16, 0),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back_rounded),
+                    color: AppColors.textPrimary,
+                    onPressed: _goBack,
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'KPSP ${_current.ageDisplay}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                        Text(
+                          'Pertanyaan ${_currentIndex + 1} dari $_total',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
                     ),
-                    child: _buildQuestionCard(),
                   ),
-                ),
+                  Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: color.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Center(
+                      child: Text(
+                        '${_currentIndex + 1}',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          color: color,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-
-              // Navigation buttons
-              _buildNavigationButtons(),
-
-              SizedBox(height: AppDimensions.spacingM),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Padding(
-      padding: EdgeInsets.all(AppDimensions.spacingM),
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: Icon(Icons.arrow_back),
-            color: AppColors.textPrimary,
-          ),
-          SizedBox(width: AppDimensions.spacingS),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('KPSP ${_getAgeDisplay()}', style: AppTextStyles.h3),
-                SizedBox(height: AppDimensions.spacingXS),
-                Text(
-                  'Pertanyaan ${_currentQuestionIndex + 1} dari ${widget.questions.length}',
-                  style: AppTextStyles.body2.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-              ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildProgressIndicator() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: AppDimensions.spacingM),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Progress',
-                style: AppTextStyles.caption.copyWith(
-                  color: AppColors.textSecondary,
-                ),
-              ),
-              Text(
-                '${_answers.where((a) => a != null).length}/${widget.questions.length} dijawab',
-                style: AppTextStyles.caption.copyWith(
-                  color: AppColors.textSecondary,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: AppDimensions.spacingS),
-          LinearProgressIndicator(
-            value: (_currentQuestionIndex + 1) / widget.questions.length,
-            backgroundColor: AppColors.glassWhite,
-            valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-            minHeight: 6,
-            borderRadius: BorderRadius.circular(AppDimensions.radiusS),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildQuestionCard() {
-    return Container(
-      padding: EdgeInsets.all(AppDimensions.spacingL),
-      decoration: BoxDecoration(
-        color: AppColors.glassWhite,
-        borderRadius: BorderRadius.circular(AppDimensions.radiusL),
-        border: Border.all(color: AppColors.glassBorder, width: 1.5),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Question number and aspect
-          Row(
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppDimensions.spacingM,
-                  vertical: AppDimensions.spacingS,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusS),
-                ),
-                child: Text(
-                  'No. ${_currentQuestion.questionNumber}',
-                  style: AppTextStyles.label.copyWith(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(width: AppDimensions.spacingS),
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppDimensions.spacingM,
-                    vertical: AppDimensions.spacingS,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.secondary.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(AppDimensions.radiusS),
-                  ),
-                  child: Text(
-                    _currentQuestion.aspectDisplay,
-                    style: AppTextStyles.caption.copyWith(
-                      color: AppColors.textPrimary,
+            // ── PROGRESS BAR ─────────────────────────
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+              child: Column(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: LinearProgressIndicator(
+                      value: progress,
+                      backgroundColor: const Color(0xFFEEEEEE),
+                      valueColor: AlwaysStoppedAnimation<Color>(color),
+                      minHeight: 6,
                     ),
                   ),
-                ),
+                  const SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '${_answers.where((a) => a != null).length} dijawab',
+                        style: TextStyle(fontSize: 11, color: color),
+                      ),
+                      Text(
+                        '${_total - _answers.where((a) => a != null).length} tersisa',
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: AppColors.textHint,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
 
-          SizedBox(height: AppDimensions.spacingL),
-
-          // Question text
-          Text(_currentQuestion.questionText, style: AppTextStyles.h4),
-
-          SizedBox(height: AppDimensions.spacingXL),
-
-          // Answer buttons
-          Row(
-            children: [
-              // Ya button
-              Expanded(
-                child: _AnswerButton(
-                  label: 'Ya',
-                  isSelected: _answers[_currentQuestionIndex] == true,
-                  color: AppColors.success,
-                  onTap: () => _answerQuestion(true),
-                ),
-              ),
-              SizedBox(width: AppDimensions.spacingM),
-              // Tidak button
-              Expanded(
-                child: _AnswerButton(
-                  label: 'Tidak',
-                  isSelected: _answers[_currentQuestionIndex] == false,
-                  color: AppColors.danger,
-                  onTap: () => _answerQuestion(false),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNavigationButtons() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: AppDimensions.spacingM),
-      child: Row(
-        children: [
-          // Previous button
-          if (_currentQuestionIndex > 0)
+            // ── PERTANYAAN (di tengah area) ──────────
             Expanded(
-              child: OutlinedButton.icon(
-                onPressed: _previousQuestion,
-                icon: Icon(Icons.arrow_back),
-                label: Text('Sebelumnya'),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColors.primary,
-                  side: BorderSide(color: AppColors.primary),
-                  padding: EdgeInsets.symmetric(
-                    vertical: AppDimensions.spacingM,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+                child: SlideTransition(
+                  position: _slideAnimation,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Badge aspek
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: color.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              _aspectIcon(_current.aspect),
+                              color: color,
+                              size: 16,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              _current.aspect,
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                color: color,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // Teks pertanyaan
+                      Text(
+                        _current.questionText,
+                        style: const TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textPrimary,
+                          height: 1.55,
+                        ),
+                      ),
+
+                      // Jawaban sebelumnya
+                      if (currentAnswer != null) ...[
+                        const SizedBox(height: 24),
+                        Center(
+                          child: AnimatedOpacity(
+                            opacity: 1,
+                            duration: const Duration(milliseconds: 300),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color:
+                                    currentAnswer == true
+                                        ? AppColors.success.withValues(
+                                          alpha: 0.1,
+                                        )
+                                        : AppColors.danger.withValues(
+                                          alpha: 0.1,
+                                        ),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                currentAnswer == true
+                                    ? '✓ Sudah dijawab: Ya'
+                                    : '✗ Sudah dijawab: Tidak',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color:
+                                      currentAnswer == true
+                                          ? AppColors.success
+                                          : AppColors.danger,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
               ),
             ),
 
-          if (_currentQuestionIndex > 0)
-            SizedBox(width: AppDimensions.spacingM),
-
-          // Next/Finish button
-          Expanded(
-            flex: _currentQuestionIndex > 0 ? 1 : 1,
-            child: ElevatedButton.icon(
-              onPressed:
-                  _isCurrentQuestionAnswered
-                      ? (_currentQuestionIndex == widget.questions.length - 1
-                          ? _finish
-                          : _nextQuestion)
-                      : null,
-              icon: Icon(
-                _currentQuestionIndex == widget.questions.length - 1
-                    ? Icons.check
-                    : Icons.arrow_forward,
-              ),
-              label: Text(
-                _currentQuestionIndex == widget.questions.length - 1
-                    ? 'Selesai'
-                    : 'Selanjutnya',
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
-                disabledBackgroundColor: AppColors.textHint,
-                padding: EdgeInsets.symmetric(vertical: AppDimensions.spacingM),
+            // ── TOMBOL JAWABAN (tetap di bawah) ──────
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => _answer(false),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 150),
+                        padding: const EdgeInsets.symmetric(vertical: 18),
+                        decoration: BoxDecoration(
+                          color:
+                              currentAnswer == false
+                                  ? AppColors.danger.withValues(alpha: 0.12)
+                                  : const Color(0xFFF8F8F8),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color:
+                                currentAnswer == false
+                                    ? AppColors.danger
+                                    : Colors.transparent,
+                            width: 2,
+                          ),
+                        ),
+                        child: const Column(
+                          children: [
+                            Text('✕', style: TextStyle(fontSize: 22)),
+                            SizedBox(height: 4),
+                            Text(
+                              'Tidak',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.danger,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => _answer(true),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 150),
+                        padding: const EdgeInsets.symmetric(vertical: 18),
+                        decoration: BoxDecoration(
+                          color:
+                              currentAnswer == true
+                                  ? AppColors.success.withValues(alpha: 0.12)
+                                  : const Color(0xFFF8F8F8),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color:
+                                currentAnswer == true
+                                    ? AppColors.success
+                                    : Colors.transparent,
+                            width: 2,
+                          ),
+                        ),
+                        child: const Column(
+                          children: [
+                            Text('✓', style: TextStyle(fontSize: 22)),
+                            SizedBox(height: 4),
+                            Text(
+                              'Ya',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.success,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
-/// Answer Button Widget
-class _AnswerButton extends StatelessWidget {
-  final String label;
-  final bool isSelected;
-  final Color color;
-  final VoidCallback onTap;
-
-  const _AnswerButton({
-    required this.label,
-    required this.isSelected,
-    required this.color,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: AppDimensions.spacingL),
-          decoration: BoxDecoration(
-            color: isSelected ? color : AppColors.glassWhite,
-            borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-            border: Border.all(
-              color: isSelected ? color : AppColors.glassBorder,
-              width: 2,
-            ),
-          ),
-          child: Center(
-            child: Text(
-              label,
-              style: AppTextStyles.h3.copyWith(
-                color: isSelected ? Colors.white : AppColors.textPrimary,
-                fontWeight: FontWeight.bold,
+            // Hint text
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Center(
+                child: Text(
+                  _isLast
+                      ? 'Jawab untuk melihat hasil'
+                      : 'Pilih jawaban untuk lanjut otomatis',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textHint,
+                  ),
+                ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );
