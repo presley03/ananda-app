@@ -1,0 +1,86 @@
+PROPRIETARY SOFTWARE LICENSE
+
+Copyright (c) 2026 Poltekkes Kemenkes Palangka Raya
+Dikembangkan oleh: Noordiati, MPH & Presley F Felly, S.I.Kom
+
+Semua hak dilindungi undang-undang.
+
+===============================================================================
+SYARAT DAN KETENTUAN PENGGUNAAN
+===============================================================================
+
+1. DEFINISI
+   "Perangkat Lunak" mengacu pada aplikasi Ananda, termasuk seluruh kode sumber,
+   kode objek, dokumentasi, aset, dan materi terkait lainnya.
+
+   "Pemegang Hak Cipta" mengacu pada Poltekkes Kemenkes Palangka Raya beserta
+   tim pengembang yang tercantum di atas.
+
+2. HAK YANG DIBERIKAN
+   Pemegang Hak Cipta memberikan izin terbatas, non-eksklusif, dan tidak dapat
+   dipindahtangankan kepada pengguna akhir untuk:
+   - Menginstal dan menjalankan Perangkat Lunak pada perangkat pribadi
+   - Menggunakan Perangkat Lunak untuk tujuan non-komersial
+
+3. LARANGAN
+   Tanpa izin tertulis dari Pemegang Hak Cipta, dilarang untuk:
+   a. Mendistribusikan, menjual, menyewakan, atau mentransfer Perangkat Lunak
+      kepada pihak ketiga
+   b. Memodifikasi, mengadaptasi, menerjemahkan, atau membuat karya turunan
+      berdasarkan Perangkat Lunak
+   c. Melakukan rekayasa balik (reverse engineering), dekompilasi, atau
+      disassembly terhadap Perangkat Lunak
+   d. Menghapus atau mengubah pemberitahuan hak cipta, merek dagang, atau
+      atribusi lainnya dalam Perangkat Lunak
+   e. Menggunakan Perangkat Lunak untuk tujuan komersial tanpa perjanjian
+      lisensi terpisah
+
+4. KONTEN DAN DATA ILMIAH
+   Seluruh konten edukatif, data skrining, tabel referensi WHO, dan materi
+   ilmiah lainnya yang terdapat dalam Perangkat Lunak dikembangkan berdasarkan
+   pedoman resmi Kementerian Kesehatan RI dan World Health Organization (WHO).
+   Penggunaan konten tersebut harus sesuai dengan ketentuan sumber aslinya.
+
+5. PENAFIAN GARANSI
+   PERANGKAT LUNAK INI DISEDIAKAN "SEBAGAIMANA ADANYA" (AS IS) TANPA GARANSI
+   APAPUN, BAIK TERSURAT MAUPUN TERSIRAT, TERMASUK NAMUN TIDAK TERBATAS PADA
+   GARANSI KELAYAKAN JUAL DAN KESESUAIAN UNTUK TUJUAN TERTENTU.
+
+6. BATASAN TANGGUNG JAWAB
+   DALAM KEADAAN APAPUN, PEMEGANG HAK CIPTA TIDAK BERTANGGUNG JAWAB ATAS
+   KERUGIAN LANGSUNG, TIDAK LANGSUNG, INSIDENTAL, KHUSUS, ATAU KONSEKUENSIAL
+   YANG TIMBUL DARI PENGGUNAAN ATAU KETIDAKMAMPUAN MENGGUNAKAN PERANGKAT LUNAK.
+
+   APLIKASI INI ADALAH ALAT BANTU SKRINING DAN TIDAK DIMAKSUDKAN SEBAGAI
+   PENGGANTI DIAGNOSIS MEDIS PROFESIONAL.
+
+7. HUKUM YANG BERLAKU
+   Perjanjian ini diatur oleh hukum Republik Indonesia.
+
+8. KONTAK
+   Untuk pertanyaan mengenai lisensi ini, hubungi:
+   Poltekkes Kemenkes Palangka Raya
+   Email: support@example.com
+
+===============================================================================
+THIRD-PARTY ACKNOWLEDGMENTS
+===============================================================================
+
+Perangkat Lunak ini menggunakan komponen open source berikut:
+
+- Flutter (BSD 3-Clause License) — https://flutter.dev
+- sqflite (MIT License) — https://pub.dev/packages/sqflite
+- provider (MIT License) — https://pub.dev/packages/provider
+- google_fonts (Apache License 2.0) — https://pub.dev/packages/google_fonts
+- flutter_local_notifications (BSD 3-Clause) — https://pub.dev/packages/flutter_local_notifications
+- intl (BSD 3-Clause License) — https://pub.dev/packages/intl
+- shared_preferences (BSD 3-Clause) — https://pub.dev/packages/shared_preferences
+- path_provider (BSD 3-Clause) — https://pub.dev/packages/path_provider
+
+Data referensi pertumbuhan anak berdasarkan:
+- WHO Child Growth Standards (© World Health Organization, 2006)
+- Pedoman Kemenkes RI (© Kementerian Kesehatan Republik Indonesia)
+
+===============================================================================
+
+© 2026 Poltekkes Kemenkes Palangka Raya. All Rights Reserved.
