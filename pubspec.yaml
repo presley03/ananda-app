@@ -31,6 +31,7 @@ dependencies:
   # Utilities
   intl: ^0.18.1
   image_picker: ^1.0.7
+  photo_view: ^0.15.0
 
 dev_dependencies:
   flutter_test:
@@ -42,6 +43,28 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/materials/0-1/imunisasi/
+    - assets/images/materials/0-1/mpasi/
+    - assets/images/materials/0-1/nutrisi/
+    - assets/images/materials/0-1/penyakit/
+    - assets/images/materials/0-1/perawatan/
+    - assets/images/materials/0-1/perkembangan/
+    - assets/images/materials/0-1/pertumbuhan/
+    - assets/images/materials/1-2/nutrisi/
+    - assets/images/materials/1-2/penyakit/
+    - assets/images/materials/1-2/perawatan/
+    - assets/images/materials/1-2/perkembangan/
+    - assets/images/materials/1-2/permainan/
+    - assets/images/materials/1-2/pertumbuhan/
+    - assets/images/materials/1-2/stimulasi/
+    - assets/images/materials/2-5/nutrisi/
+    - assets/images/materials/2-5/penyakit/
+    - assets/images/materials/2-5/perawatan/
+    - assets/images/materials/2-5/perkembangan/
+    - assets/images/materials/2-5/permainan/
+    - assets/images/materials/2-5/pertumbuhan/
+    - assets/images/materials/2-5/stimulasi/
+    - assets/images/materials/2-5/pencegahan/
     - lib/data/json/
     - lib/data/json/materials/0-1/
     - lib/data/json/materials/1-2/

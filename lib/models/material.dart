@@ -1,6 +1,6 @@
 /// Material Model
 /// Model untuk data materi edukatif
-/// 
+///
 /// Fields:
 /// - id: Primary key
 /// - category: Kategori usia ('0-1', '1-2', '2-5')
@@ -14,6 +14,7 @@ class Material {
   final String category;
   final String subcategory;
   final String title;
+  final String? image;
   final String content;
   final String? tags;
   final DateTime? createdAt;
@@ -23,6 +24,7 @@ class Material {
     required this.category,
     required this.subcategory,
     required this.title,
+    this.image,
     required this.content,
     this.tags,
     this.createdAt,
@@ -35,11 +37,13 @@ class Material {
       category: map['category'] as String,
       subcategory: map['subcategory'] as String,
       title: map['title'] as String,
+      image: map['image'] as String?,
       content: map['content'] as String,
       tags: map['tags'] as String?,
-      createdAt: map['created_at'] != null
-          ? DateTime.parse(map['created_at'] as String)
-          : null,
+      createdAt:
+          map['created_at'] != null
+              ? DateTime.parse(map['created_at'] as String)
+              : null,
     );
   }
 
@@ -50,9 +54,11 @@ class Material {
       'category': category,
       'subcategory': subcategory,
       'title': title,
+      'image': image,
       'content': content,
       'tags': tags,
-      'created_at': createdAt?.toIso8601String() ?? DateTime.now().toIso8601String(),
+      'created_at':
+          createdAt?.toIso8601String() ?? DateTime.now().toIso8601String(),
     };
   }
 
@@ -104,8 +110,9 @@ class Material {
 
   /// Get content preview (first 100 characters)
   String get contentPreview {
-    if (content.length <= 100) return content;
-    return '${content.substring(0, 100)}...';
+    final cleaned = content.replaceAll('**', '');
+    if (cleaned.length <= 100) return cleaned;
+    return '${cleaned.substring(0, 100)}...';
   }
 
   /// Get estimated reading time in minutes
@@ -122,6 +129,7 @@ class Material {
     String? category,
     String? subcategory,
     String? title,
+    String? image,
     String? content,
     String? tags,
     DateTime? createdAt,
@@ -131,6 +139,7 @@ class Material {
       category: category ?? this.category,
       subcategory: subcategory ?? this.subcategory,
       title: title ?? this.title,
+      image: image ?? this.image,
       content: content ?? this.content,
       tags: tags ?? this.tags,
       createdAt: createdAt ?? this.createdAt,

@@ -58,7 +58,9 @@ class AppInfo {
   /// Database version (increment saat schema changes)
   /// v1: Initial schema
   /// v2: Added user_profile table
-  static const int databaseVersion = 3; // UPDATED!
+  /// v3: Added birth_place and identity_number to children
+  /// v4: Added image column to materials
+  static const int databaseVersion = 4;
 
   // ============================================
   // SUPPORT & CONTACT

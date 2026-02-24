@@ -5,11 +5,13 @@ import '../widgets/recent_activity_list.dart';
 import '../services/database_service.dart';
 import '../models/user_profile.dart';
 import '../models/child_profile.dart';
+import '../models/material.dart' as model;
 import 'screening/kpsp_age_selection_screen.dart';
 import 'screening/nutrition_input_screen.dart';
 import 'screening/tdd_age_selection_screen.dart';
 import 'screening/mchat_age_selection_screen.dart';
 import 'material_list_screen.dart';
+import 'material_detail_screen.dart';
 import 'material_search_screen.dart';
 import 'user_profile_form_screen.dart';
 import 'user_profile_view_screen.dart';
@@ -254,7 +256,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // â”€â”€ HEADER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // HEADER
   Widget _buildHeader() {
     return Container(
       decoration: const BoxDecoration(
@@ -407,7 +409,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // â”€â”€ CHILD CAROUSEL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // CHILD CAROUSEL
   Widget _buildChildCarousel() {
     return Column(
       children: [
@@ -458,7 +460,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // â”€â”€ CHILD CARD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // CHILD CARD
   Widget _buildChildCard(ChildProfile child) {
     final isBoy = child.gender == 'L';
     final color = isBoy ? AppColors.accentTeal : const Color(0xFFE0679A);
@@ -588,7 +590,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // â”€â”€ REKOMENDASI â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // REKOMENDASI
   Widget _buildRecommendations() {
     const palette = [
       [Color(0xFFFFF0ED), Color(0xFFFF6B6B)],
@@ -598,71 +600,128 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       children: List.generate(_recommendedMaterials.length, (i) {
         final mat = _recommendedMaterials[i];
-        final bg = palette[i % palette.length][0];
         final accent = palette[i % palette.length][1];
         final title = mat['title'] as String;
         final subcat = mat['subcategory'] as String? ?? '';
+        final image = mat['image'] as String? ?? '';
+
         return Padding(
-          padding: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.only(bottom: 10),
           child: GestureDetector(
-            onTap:
-                () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder:
-                        (context) => MaterialListScreen(
-                          initialCategory: _activeChild!.materialCategory,
-                        ),
-                  ),
+            onTap: () {
+              final material = model.Material.fromMap(mat);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) => MaterialDetailScreen(
+                        material: material,
+                        isBookmarked: false,
+                        onBookmarkToggle: () {},
+                      ),
                 ),
+              );
+            },
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              height: 110,
               decoration: BoxDecoration(
-                color: bg,
                 borderRadius: BorderRadius.circular(16),
+                color: const Color(0xFFF5F5F5),
               ),
+              clipBehavior: Clip.hardEdge,
               child: Row(
                 children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: accent.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(Icons.article_rounded, color: accent, size: 22),
+                  // Gambar di kiri
+                  SizedBox(
+                    width: 110,
+                    height: 110,
+                    child:
+                        image.isNotEmpty
+                            ? Image.asset(
+                              image,
+                              fit: BoxFit.cover,
+                              errorBuilder:
+                                  (_, __, ___) => Container(
+                                    color: accent.withValues(alpha: 0.15),
+                                    child: Icon(
+                                      Icons.image_rounded,
+                                      color: accent,
+                                      size: 32,
+                                    ),
+                                  ),
+                            )
+                            : Container(
+                              color: accent.withValues(alpha: 0.15),
+                              child: Icon(
+                                Icons.article_rounded,
+                                color: accent,
+                                size: 32,
+                              ),
+                            ),
                   ),
-                  const SizedBox(width: 14),
+                  // Konten di kanan
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.textPrimary,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 12,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 3,
+                            ),
+                            decoration: BoxDecoration(
+                              color: accent.withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              subcat,
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w700,
+                                color: accent,
+                              ),
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          subcat,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: accent,
-                            fontWeight: FontWeight.w600,
+                          const SizedBox(height: 6),
+                          Text(
+                            title,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textPrimary,
+                              height: 1.3,
+                            ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 6),
+                          Row(
+                            children: [
+                              Text(
+                                'Baca selengkapnya',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: accent,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(width: 2),
+                              Icon(
+                                Icons.arrow_forward_rounded,
+                                size: 11,
+                                color: accent,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Icon(
-                    Icons.chevron_right_rounded,
-                    color: accent.withValues(alpha: 0.6),
-                    size: 20,
                   ),
                 ],
               ),
@@ -673,7 +732,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // â”€â”€ SECTION LABEL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // SECTION LABEL
   Widget _buildSectionLabel(String title) {
     return Text(
       title,
@@ -686,9 +745,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // â”€â”€ MATERI CARDS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // MATERI CARDS
 
-  // â”€â”€ SCREENING CARDS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // SCREENING CARDS
   Widget _buildScreeningCards() {
     final items = [
       {
@@ -761,7 +820,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // â”€â”€ GENERIC SIMPLE CARD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // GENERIC SIMPLE CARD
   Widget _buildSimpleCard({
     required Color bg,
     required Color accent,

@@ -51,6 +51,13 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
               delegate: SliverChildListDelegate([
                 // Meta info
                 _buildMetaInfo(),
+                const SizedBox(height: 20),
+
+                // Gambar ilustrasi (jika ada)
+                if (widget.material.image != null &&
+                    widget.material.image!.isNotEmpty)
+                  _buildImage(),
+
                 const SizedBox(height: 28),
 
                 // Konten artikel — terbuka, tidak dalam kotak
@@ -188,6 +195,23 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
           ),
         ],
       ],
+    );
+  }
+
+  // Gambar ilustrasi materi
+  Widget _buildImage() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Image.asset(
+          widget.material.image!,
+          width: double.infinity,
+          height: 200,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) => const SizedBox.shrink(),
+        ),
+      ),
     );
   }
 

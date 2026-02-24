@@ -84,6 +84,7 @@ class DatabaseService {
         category TEXT NOT NULL,
         subcategory TEXT NOT NULL,
         title TEXT NOT NULL,
+        image TEXT,
         content TEXT NOT NULL,
         tags TEXT,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP
@@ -232,6 +233,11 @@ class DatabaseService {
     if (oldVersion < 3) {
       await db.execute('ALTER TABLE children ADD COLUMN birth_place TEXT');
       await db.execute('ALTER TABLE children ADD COLUMN identity_number TEXT');
+    }
+
+    // Migration v3 -> v4: Add image column to materials
+    if (oldVersion < 4) {
+      await db.execute('ALTER TABLE materials ADD COLUMN image TEXT');
     }
   }
 
