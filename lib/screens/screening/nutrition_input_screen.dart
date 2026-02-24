@@ -326,11 +326,13 @@ class _NutritionInputScreenState extends State<NutritionInputScreen> {
                                 ),
                               ],
                               validator: (v) {
-                                if (v == null || v.isEmpty)
+                                if (v == null || v.isEmpty) {
                                   return 'Berat badan harus diisi';
+                                }
                                 final w = double.tryParse(v);
-                                if (w == null || w <= 0 || w > 50)
+                                if (w == null || w <= 0 || w > 50) {
                                   return 'Berat tidak valid (1-50 kg)';
+                                }
                                 return null;
                               },
                             ),
@@ -362,11 +364,13 @@ class _NutritionInputScreenState extends State<NutritionInputScreen> {
                                 ),
                               ],
                               validator: (v) {
-                                if (v == null || v.isEmpty)
+                                if (v == null || v.isEmpty) {
                                   return 'Tinggi badan harus diisi';
+                                }
                                 final h = double.tryParse(v);
-                                if (h == null || h < 40 || h > 130)
+                                if (h == null || h < 40 || h > 130) {
                                   return 'Tinggi tidak valid (40-130 cm)';
+                                }
                                 return null;
                               },
                             ),

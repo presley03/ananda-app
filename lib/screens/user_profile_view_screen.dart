@@ -97,7 +97,7 @@ class UserProfileViewScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
-                        '${profile.role}',
+                        profile.role,
                         style: const TextStyle(
                           fontSize: 13,
                           color: Colors.white,

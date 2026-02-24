@@ -124,13 +124,14 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
       }
     } catch (e) {
       setState(() => _isSaving = false);
-      if (mounted)
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error: \$e'),
             backgroundColor: AppColors.danger,
           ),
         );
+      }
     }
   }
 
@@ -279,10 +280,12 @@ class _AddProfileScreenState extends State<AddProfileScreen> {
                         ),
                       ),
                       validator: (v) {
-                        if (v == null || v.trim().isEmpty)
+                        if (v == null || v.trim().isEmpty) {
                           return 'Nama tidak boleh kosong';
-                        if (v.trim().length < 2)
+                        }
+                        if (v.trim().length < 2) {
                           return 'Nama minimal 2 karakter';
+                        }
                         return null;
                       },
                     ),

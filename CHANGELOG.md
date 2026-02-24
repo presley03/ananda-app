@@ -6,6 +6,30 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), dan p
 
 ---
 
+## [1.0.1] — 2026-02-25
+
+### 🔧 Perbaikan (Audit Pra-Rilis)
+
+#### Bug Kritis
+- **Fix bookmark terhapus** — `MaterialListScreen` sebelumnya memanggil `clearAndRepopulate()` setiap kali halaman dibuka, sehingga seluruh bookmark pengguna terhapus secara otomatis. Diganti dengan `populateAll()` yang hanya mengisi database jika masih kosong
+- **Fix tahun rilis** — `AppInfo.releaseYear` dikoreksi dari `'2025'` menjadi `'2026'`
+
+#### Pembersihan Kode
+- Hapus semua `print()` statements dari kode produksi (19 lokasi di 5 file)
+- Hapus `library;` bare yang tidak diperlukan dari 4 file
+- Hapus unused import `material_list_screen.dart` di `home_screen.dart`
+- Ganti `withOpacity()` yang deprecated dengan `withValues(alpha:)` di `disclaimer_dialog.dart`
+- Hapus unnecessary string interpolation di `user_profile_view_screen.dart`
+- Tambah curly braces pada semua `if` statement tanpa blok (13 lokasi di 5 file)
+- Perbaiki dangling library doc comment di `app_info.dart` dan `populate_materials.dart`
+- Perbaiki angle bracket di doc comment `tdd_data_loader.dart`
+
+#### Navigasi
+- Implementasi navigasi tombol "Baca Selengkapnya" di `DisclaimerDialog` ke `DisclaimerScreen`
+- Daftarkan route `/disclaimer` di `main.dart`
+
+---
+
 ## [1.0.0] — 2026-02-24
 
 ### 🎉 Initial Release
@@ -36,4 +60,4 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), dan p
 
 ---
 
-*Dikembangkan oleh Noordiati, MPH & Presley F Felly, S.I.Kom — Poltekkes Kemenkes Palangka Raya*
+*Dikembangkan oleh Noordiati, SST, MPH & Presley F Felly, S.I.Kom — Poltekkes Kemenkes Palangka Raya*

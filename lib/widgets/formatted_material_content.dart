@@ -123,8 +123,9 @@ class FormattedMaterialContent extends StatelessWidget {
       if (_isHeader(line)) {
         String headerText = line.trim();
         if (headerText.startsWith('**')) headerText = headerText.substring(2);
-        if (headerText.endsWith('**'))
+        if (headerText.endsWith('**')) {
           headerText = headerText.substring(0, headerText.length - 2);
+        }
 
         widgets.add(
           Padding(

@@ -10,7 +10,6 @@ import 'screening/kpsp_age_selection_screen.dart';
 import 'screening/nutrition_input_screen.dart';
 import 'screening/tdd_age_selection_screen.dart';
 import 'screening/mchat_age_selection_screen.dart';
-import 'material_list_screen.dart';
 import 'material_detail_screen.dart';
 import 'material_search_screen.dart';
 import 'user_profile_form_screen.dart';
@@ -64,14 +63,15 @@ class _HomeScreenState extends State<HomeScreen> {
       final profile = await _db.getUserProfile();
       final hour = DateTime.now().hour;
       String timeGreet;
-      if (hour < 12)
+      if (hour < 12) {
         timeGreet = 'Selamat pagi';
-      else if (hour < 15)
+      } else if (hour < 15) {
         timeGreet = 'Selamat siang';
-      else if (hour < 18)
+      } else if (hour < 18) {
         timeGreet = 'Selamat sore';
-      else
+      } else {
         timeGreet = 'Selamat malam';
+      }
       final role = profile?.role ?? '';
       final greeting = role.isNotEmpty ? '$timeGreet, $role:' : '$timeGreet,';
       setState(() {

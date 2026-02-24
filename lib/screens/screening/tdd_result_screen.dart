@@ -87,7 +87,7 @@ class _TddResultScreenState extends State<TddResultScreen>
         _isSaved = true;
         _isSaving = false;
       });
-      if (mounted)
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Hasil berhasil disimpan ke profil anak!'),
@@ -95,6 +95,7 @@ class _TddResultScreenState extends State<TddResultScreen>
             duration: Duration(seconds: 3),
           ),
         );
+      }
     } catch (_) {
       setState(() => _isSaving = false);
     }

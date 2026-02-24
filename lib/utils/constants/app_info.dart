@@ -1,6 +1,6 @@
-/// File: app_info.dart
-/// Path: lib/utils/constants/app_info.dart
-/// Description: App metadata constants untuk Ananda app
+// File: app_info.dart
+// Path: lib/utils/constants/app_info.dart
+// Description: App metadata constants untuk Ananda app
 
 class AppInfo {
   // Prevent instantiation
@@ -43,7 +43,7 @@ class AppInfo {
   static const String releaseDate = '2026-02-24';
 
   /// Release year
-  static const String releaseYear = '2025';
+  static const String releaseYear = '2026';
 
   /// Last update date
   static const String lastUpdate = '2026-02-24';

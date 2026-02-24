@@ -19,7 +19,6 @@ class MchatDataLoader {
 
       return jsonList.map((json) => MchatQuestion.fromMap(json)).toList();
     } catch (e) {
-      print('Error loading M-CHAT-R questions: $e');
       return null;
     }
   }

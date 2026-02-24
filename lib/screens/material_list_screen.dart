@@ -1,5 +1,3 @@
-library;
-
 import 'package:flutter/material.dart';
 import '../models/material.dart' as model;
 import '../widgets/material_list_item.dart';
@@ -41,7 +39,7 @@ class _MaterialListScreenState extends State<MaterialListScreen> {
     if (_isInitialized) return;
     setState(() => _isLoading = true);
     try {
-      await _populator.clearAndRepopulate();
+      await _populator.populateAll();
       await _loadMaterials();
       await _loadBookmarks();
       setState(() => _isInitialized = true);

@@ -1,5 +1,3 @@
-library;
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../models/material.dart' as model;

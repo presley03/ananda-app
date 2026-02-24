@@ -90,7 +90,7 @@ class _DisclaimerDialogState extends State<DisclaimerDialog> {
           borderRadius: BorderRadius.circular(AppDimensions.radiusL),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.black.withValues(alpha: 0.2),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -103,7 +103,7 @@ class _DisclaimerDialogState extends State<DisclaimerDialog> {
             Container(
               padding: const EdgeInsets.all(AppDimensions.spacingL),
               decoration: BoxDecoration(
-                color: AppColors.warning.withOpacity(0.1),
+                color: AppColors.warning.withValues(alpha: 0.1),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(AppDimensions.radiusL),
                   topRight: Radius.circular(AppDimensions.radiusL),
@@ -165,16 +165,8 @@ class _DisclaimerDialogState extends State<DisclaimerDialog> {
                     // Read more link
                     InkWell(
                       onTap: () {
-                        // Navigate to full disclaimer page
-                        // TODO: Implement navigation to disclaimer_screen.dart
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Halaman disclaimer lengkap akan tersedia di Settings',
-                            ),
-                            duration: Duration(seconds: 2),
-                          ),
-                        );
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, '/disclaimer');
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(

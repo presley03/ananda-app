@@ -21,11 +21,11 @@ Sebelum mulai, pastikan Anda memiliki:
 # 1. Fork repositori ini ke akun GitHub Anda
 
 # 2. Clone fork Anda
-git clone https://github.com/YOUR_USERNAME/ananda_app.git
+git clone https://github.com/presley03/ananda_app.git
 cd ananda_app
 
 # 3. Tambahkan upstream remote
-git remote add upstream https://github.com/ORIGINAL_REPO/ananda_app.git
+git remote add upstream https://github.com/presley03/ananda_app.git
 
 # 4. Install dependencies
 flutter pub get
@@ -109,9 +109,9 @@ docs: perbarui panduan instalasi di README
 - Setiap file harus memiliki header komentar:
 
 ```dart
-/// File: nama_file.dart
-/// Path: lib/path/to/nama_file.dart
-/// Description: Deskripsi singkat fungsi file ini
+// File: nama_file.dart
+// Path: lib/path/to/nama_file.dart
+// Description: Deskripsi singkat fungsi file ini
 ```
 
 ### Desain & UI
@@ -201,7 +201,7 @@ Gunakan **GitHub Issues** dengan label `enhancement`. Jelaskan:
 
 Untuk pertanyaan yang tidak cocok menjadi Issue:
 
-- **Email:** support@example.com
+- **Email:** borneomediatama@gmail.com
 - **Institusi:** Poltekkes Kemenkes Palangka Raya
 
 ---

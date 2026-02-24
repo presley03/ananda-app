@@ -97,7 +97,6 @@ Skrining risiko **Autism Spectrum Disorder (ASD)** pada anak usia **16–30 bula
 - Kelola **multiple profil anak** dalam satu perangkat
 - Riwayat skrining tersimpan otomatis per anak
 - **Auto-fill usia** berdasarkan tanggal lahir
-- Pengingat jadwal skrining berkala
 
 ---
 
@@ -117,8 +116,6 @@ Skrining risiko **Autism Spectrum Disorder (ASD)** pada anak usia **16–30 bula
 |---|---|
 | Framework | Flutter 3.x (Dart) |
 | Database | SQLite via `sqflite` |
-| State Management | Provider |
-| Notifikasi | flutter_local_notifications |
 | Fonts | Google Fonts |
 | Storage | SharedPreferences + SQLite |
 | Mode Operasi | 100% Offline |
@@ -147,7 +144,7 @@ Skrining risiko **Autism Spectrum Disorder (ASD)** pada anak usia **16–30 bula
 
 ```bash
 # 1. Clone repositori
-git clone https://github.com/your-username/ananda_app.git
+git clone https://github.com/presley03/ananda_app.git
 cd ananda_app
 
 # 2. Install dependencies
@@ -222,7 +219,7 @@ Dikembangkan oleh:
 
 | Nama | Peran |
 |---|---|
-| **Noordiati, MPH** | Project Lead & Content Expert |
+| **Noordiati, SST, MPH** | Project Lead & Content Expert |
 | **Presley F Felly, S.I.Kom** | Lead Developer |
 
 **Institusi:** Poltekkes Kemenkes Palangka Raya  

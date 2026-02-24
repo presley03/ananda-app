@@ -29,7 +29,6 @@ class KpspDataLoader {
     } catch (e) {
       // File tidak ditemukan atau error parsing
       // ignore: avoid_print
-      print('Error loading KPSP data for $ageMonths months: $e');
       return null;
     }
   }

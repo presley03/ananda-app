@@ -196,18 +196,12 @@ class DatabaseService {
     await db.execute(
       'CREATE INDEX idx_bookmarks_material ON bookmarks(material_id)',
     );
-
-    print('âœ… Database created successfully (v${AppInfo.databaseVersion})');
   }
 
   /// Handle database upgrades
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    print('âš ï¸ Database upgrade from v$oldVersion to v$newVersion');
-
     // Migration from v1 to v2: Add user_profile table
     if (oldVersion < 2) {
-      print('ðŸ“ Adding user_profile table...');
-
       await db.execute('''
         CREATE TABLE IF NOT EXISTS user_profile (
           id INTEGER PRIMARY KEY CHECK(id = 1),
@@ -225,8 +219,6 @@ class DatabaseService {
         'key': 'user_profile_completed',
         'value': '0',
       }, conflictAlgorithm: ConflictAlgorithm.replace);
-
-      print('âœ… user_profile table added successfully');
     }
 
     // Migration v2 -> v3: Add birth_place and identity_number to children
@@ -633,7 +625,6 @@ class DatabaseService {
     final path = join(documentsDirectory.path, AppInfo.databaseName);
     await databaseFactory.deleteDatabase(path);
     _database = null;
-    print('ðŸ—‘ï¸ Database deleted');
   }
 
   /// Get database statistics

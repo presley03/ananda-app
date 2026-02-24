@@ -1,5 +1,3 @@
-library;
-
 import 'package:flutter/material.dart';
 import '../models/material.dart' as model;
 import '../utils/constants/colors.dart';

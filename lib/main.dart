@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'screens/splash_screen.dart';
 import 'screens/main_navigation.dart';
+import 'screens/settings/disclaimer_screen.dart';
 import 'utils/constants/colors.dart';
 
 void main() {
@@ -120,6 +121,10 @@ class AnandaApp extends StatelessWidget {
             return MaterialPageRoute(
               builder: (context) => const MainNavigation(),
               settings: settings,
+            );
+          case '/disclaimer':
+            return MaterialPageRoute(
+              builder: (context) => const DisclaimerScreen(),
             );
           default:
             return MaterialPageRoute(

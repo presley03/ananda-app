@@ -24,8 +24,7 @@ class TddDataLoader {
       final List<dynamic> jsonList = json.decode(jsonString);
 
       return jsonList.map((json) => TddQuestion.fromMap(json)).toList();
-    } catch (e) {
-      print('Error loading TDD questions for age $ageRange: $e');
+    } catch (_) {
       return null;
     }
   }
@@ -79,8 +78,8 @@ class TddDataLoader {
     }
   }
 
-  /// Get all TDD questions grouped by age range
-  /// Returns Map<ageRange, List<TddQuestion>>
+  /// Get all TDD questions grouped by age range.
+  /// Returns `Map<ageRange, List<TddQuestion>>`
   static Future<Map<String, List<TddQuestion>>> loadAllQuestions() async {
     final Map<String, List<TddQuestion>> allQuestions = {};
     final availableRanges = await getAvailableAgeRanges();
