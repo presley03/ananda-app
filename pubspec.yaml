@@ -70,5 +70,7 @@ flutter:
     - lib/data/json/materials/1-2/
     - lib/data/json/materials/2-5/
     - lib/data/json/screening/kpsp/
+    - assets/images/screening/kpsp/66_months/
+    - assets/images/screening/kpsp/72_months/
     - lib/data/json/screening/tdd/
     - lib/data/json/screening/mchat/

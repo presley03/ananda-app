@@ -4,7 +4,7 @@
     "question_number": 1,
     "question_text": "Jangan menunjuk, membantu atau memberitahukan, katakan pada anak: Tunjukkan segi empat merah, Tunjukkan segi empat kuning, Tunjukkan segi empat biru, Tunjukkan segi empat hijau. Dapatkah anak menunjuk keempat warna itu dengan benar?",
     "aspect": "Bicara & Bahasa",
-    "image_path": "assets/images/screening/kpsp/72_months/baby-boy.png"
+    "image_path": "assets/images/screening/kpsp/72_months/kpsp_72_q1.webp"
   },
   {
     "age_months": 72,
@@ -25,7 +25,7 @@
     "question_number": 4,
     "question_text": "Suruh anak menggambar di tempat kosong yang tersedia. Katakan padanya: Buatlah gambar orang!. Jangan memberi perintah lebih dari itu. Jangan bertanya pada anak, biarkan ia menggambar anak bila ada bagian yang belum tergambar. Dalam gambar ini, hitunglah berapa bagian tubuh yang tergambar. Untuk bagian tubuh yang berpasangan seperti mata, telinga, lengan dan kaki, setiap pasang dinilai satu bagian. Dapatkah anak menggambarkan sedikitnya 3 bagian tubuh?",
     "aspect": "Motorik Halus",
-    "image_path": null
+    "image_path": "assets/images/screening/kpsp/72_months/kpsp_72_q4.webp"
   },
   {
     "age_months": 72,
@@ -60,7 +60,7 @@
     "question_number": 9,
     "question_text": "Jangan membantu, ajarkan dan jangan memberitahu nama gambar ini, suruh anak menggambarkan seperti contoh ini di kertas kosong yang tersedia. Berikan 3 kali kesempatan. Apakah anak dapat menggambar seperti contoh ini?",
     "aspect": "Motorik Halus",
-    "image_path": "assets/images/screening/kpsp/72_months/baby-boy.png"
+    "image_path": "assets/images/screening/kpsp/72_months/kpsp_72_q9.webp"
   },
   {
     "age_months": 72,

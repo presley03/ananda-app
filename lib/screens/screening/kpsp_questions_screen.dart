@@ -271,6 +271,21 @@ class _KpspQuestionsScreenState extends State<KpspQuestionsScreen>
 
                       const SizedBox(height: 20),
 
+                      // Gambar ilustrasi (jika ada)
+                      if (_current.imagePath != null) ...[
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.asset(
+                            _current.imagePath!,
+                            width: double.infinity,
+                            fit: BoxFit.contain,
+                            errorBuilder:
+                                (_, __, ___) => const SizedBox.shrink(),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
+
                       // Teks pertanyaan
                       Text(
                         _current.questionText,
