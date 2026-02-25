@@ -24,7 +24,7 @@ class GlassCard extends StatelessWidget {
   final double? height;
   
   const GlassCard({
-    Key? key,
+    super.key,
     required this.child,
     this.tintColor,
     this.borderRadius,
@@ -33,7 +33,7 @@ class GlassCard extends StatelessWidget {
     this.onTap,
     this.width,
     this.height,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,7 @@ class GlassCard extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: AppDimensions.elevationM,
             offset: const Offset(0, 2),
           ),

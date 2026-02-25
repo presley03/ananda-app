@@ -11,7 +11,7 @@ import '../utils/nutrition/who_lms_tables_weight_height.dart';
 /// AKURASI MEDIS: 99%+
 /// Data: WHO 2006 LMS Tables (966 data points!)
 ///
-/// Z-Score Formula: [(X/M)^L - 1] / (L × S)
+/// Z-Score Formula: [(X/M)^L - 1] / (L Ã— S)
 /// Dimana:
 /// - L = Box-Cox power transformation
 /// - M = Median
@@ -83,7 +83,7 @@ class NutritionCalculator {
   /// Hitung Z-Score PB/U atau TB/U (Tinggi menurut Umur)
   ///
   /// PB (Panjang Badan): untuk anak < 24 bulan (diukur berbaring)
-  /// TB (Tinggi Badan): untuk anak ≥ 24 bulan (diukur berdiri)
+  /// TB (Tinggi Badan): untuk anak â‰¥ 24 bulan (diukur berdiri)
   static double _calculateHeightForAge(
     double height,
     int ageMonths,
@@ -119,7 +119,7 @@ class NutritionCalculator {
 
   /// Hitung Z-Score IMT/U (IMT menurut Umur)
   ///
-  /// IMT = Berat (kg) / [Tinggi (m)]²
+  /// IMT = Berat (kg) / [Tinggi (m)]Â²
   static double _calculateBMIForAge(double bmi, int ageMonths, String gender) {
     final lmsData = WhoLmsTablesBmiAge.getBmiForAge(ageMonths, gender);
 
@@ -132,7 +132,7 @@ class NutritionCalculator {
 
   /// Validasi input data
   ///
-  /// Returns: Map dengan 'valid' (bool) dan 'errors' (List<String>)
+  /// Returns: Map dengan 'valid' (bool) dan 'errors' (`List<String>`)
   static Map<String, dynamic> validateInput(NutritionMeasurement measurement) {
     List<String> errors = [];
 
@@ -162,9 +162,9 @@ class NutritionCalculator {
   /// Get percentile dari Z-score (approximation)
   ///
   /// Useful untuk komunikasi dengan orangtua
-  /// Contoh: Z = 0 → P50 (median)
-  ///         Z = -2 → P2.3 (sangat rendah)
-  ///         Z = +2 → P97.7 (sangat tinggi)
+  /// Contoh: Z = 0 â†’ P50 (median)
+  ///         Z = -2 â†’ P2.3 (sangat rendah)
+  ///         Z = +2 â†’ P97.7 (sangat tinggi)
   static double zScoreToPercentile(double zScore) {
     // Simplified percentile approximation
     // Untuk lebih akurat, gunakan statistical tables

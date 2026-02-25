@@ -1,13 +1,13 @@
 # Kebijakan Privasi — Ananda
 
-**Terakhir diperbarui:** 24 Februari 2026  
+**Terakhir diperbarui:** 26 Februari 2026  
 **Berlaku sejak:** 24 Februari 2026
 
 ---
 
 ## 1. Pendahuluan
 
-Selamat datang di **Ananda** ("Aplikasi", "kami"). Aplikasi ini dikembangkan oleh **Poltekkes Kemenkes Palangka Raya** sebagai alat bantu pemantauan tumbuh kembang anak.
+Selamat datang di **Ananda** ("Aplikasi", "kami"). Aplikasi ini dikembangkan oleh **Borneo Mediatama** bekerja sama dengan **Poltekkes Kemenkes Palangka Raya** sebagai alat bantu pemantauan tumbuh kembang anak.
 
 Kebijakan Privasi ini menjelaskan bagaimana Aplikasi menangani informasi Anda. Dengan menggunakan Aplikasi, Anda menyetujui ketentuan yang tercantum dalam dokumen ini.
 
@@ -22,7 +22,7 @@ Aplikasi mengumpulkan data berikut yang Anda masukkan secara langsung:
 - **Data Profil Anak** — nama, tanggal lahir, jenis kelamin, foto (opsional)
 - **Data Pengukuran** — berat badan, tinggi badan, lingkar kepala
 - **Hasil Skrining** — jawaban dan hasil dari KPSP, TDD, M-CHAT-R
-- **Preferensi Pengguna** — pengaturan notifikasi dan preferensi tampilan
+- **Preferensi Pengguna** — pengaturan dan preferensi tampilan
 
 ### 2.2 Informasi yang TIDAK Dikumpulkan
 
@@ -79,17 +79,9 @@ Aplikasi ini beroperasi sepenuhnya **offline** dan tidak memiliki kemampuan untu
 
 ## 6. Izin Aplikasi
 
-Aplikasi memerlukan izin berikut:
+Aplikasi ini **tidak memerlukan izin khusus** untuk berjalan. Pemilihan foto profil anak menggunakan system photo picker bawaan Android yang tidak memerlukan izin akses galeri.
 
-| Izin | Tujuan |
-|---|---|
-| `RECEIVE_BOOT_COMPLETED` | Memulihkan pengingat jadwal setelah perangkat restart |
-| `POST_NOTIFICATIONS` | Menampilkan notifikasi pengingat skrining |
-| `READ_MEDIA_IMAGES` / `READ_EXTERNAL_STORAGE` | Memilih foto profil anak (opsional) |
-| `SCHEDULE_EXACT_ALARM` | Menjadwalkan pengingat pada waktu yang tepat |
-| `VIBRATE` | Getaran untuk notifikasi |
-
-Aplikasi **tidak** memerlukan izin: kamera, lokasi, kontak, mikrofon, atau akses internet.
+Aplikasi **tidak** memerlukan izin: kamera, lokasi, kontak, mikrofon, penyimpanan eksternal, atau akses internet.
 
 ---
 
@@ -132,9 +124,8 @@ Penggunaan Aplikasi setelah pembaruan dianggap sebagai persetujuan terhadap peru
 
 Jika Anda memiliki pertanyaan atau kekhawatiran mengenai Kebijakan Privasi ini, hubungi kami:
 
-**Poltekkes Kemenkes Palangka Raya**  
-Email: support@example.com  
-Website: https://example.com
+**Borneo Mediatama**  
+Email: borneomediatama@gmail.com
 
 ---
 
@@ -144,4 +135,4 @@ Ananda adalah **alat bantu skrining**, bukan alat diagnosis medis. Hasil yang di
 
 ---
 
-*© 2026 Poltekkes Kemenkes Palangka Raya. Semua hak dilindungi.*
+*© 2026 Borneo Mediatama. Semua hak dilindungi.*

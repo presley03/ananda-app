@@ -83,13 +83,14 @@ class _UserProfileFormScreenState extends State<UserProfileFormScreen> {
         Navigator.pop(context, true);
       }
     } catch (e) {
-      if (mounted)
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Gagal: $e'),
             backgroundColor: AppColors.danger,
           ),
         );
+      }
     } finally {
       setState(() => _isLoading = false);
     }

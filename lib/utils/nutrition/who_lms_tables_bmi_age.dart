@@ -3,10 +3,9 @@ import 'who_lms_data.dart';
 /// WHO Child Growth Standards - BMI-FOR-AGE (IMT/U)
 /// Indeks Massa Tubuh menurut Umur
 /// IMT = Berat (kg) / [Tinggi (m)]²
-/// 
+///
 /// Source: WHO (2006) https://www.who.int/tools/child-growth-standards
 class WhoLmsTablesBmiAge {
-  
   // ============================================================================
   // BMI-FOR-AGE (IMT/U) - BOYS (Laki-laki)
   // Unit: kg/m²
@@ -146,7 +145,7 @@ class WhoLmsTablesBmiAge {
   /// Get BMI-for-age reference data
   static WhoLmsData? getBmiForAge(int ageMonths, String gender) {
     if (ageMonths < 0 || ageMonths > 60) return null;
-    
+
     if (gender == 'L') {
       return bmiForAgeBoys[ageMonths];
     } else {
