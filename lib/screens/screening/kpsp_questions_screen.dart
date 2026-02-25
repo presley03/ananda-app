@@ -228,116 +228,133 @@ class _KpspQuestionsScreenState extends State<KpspQuestionsScreen>
               ),
             ),
 
-            // ── PERTANYAAN (di tengah area) ──────────
+            // ── PERTANYAAN (center jika pendek, scrollable jika panjang) ──
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
                 child: SlideTransition(
                   position: _slideAnimation,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Badge aspek
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: color.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              _aspectIcon(_current.aspect),
-                              color: color,
-                              size: 16,
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              _current.aspect,
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w700,
-                                color: color,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(height: 20),
-
-                      // Gambar ilustrasi (jika ada)
-                      if (_current.imagePath != null) ...[
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.asset(
-                            _current.imagePath!,
-                            width: double.infinity,
-                            fit: BoxFit.contain,
-                            errorBuilder:
-                                (_, __, ___) => const SizedBox.shrink(),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return SingleChildScrollView(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight: constraints.maxHeight,
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                      ],
-
-                      // Teks pertanyaan
-                      Text(
-                        _current.questionText,
-                        style: const TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.textPrimary,
-                          height: 1.55,
-                        ),
-                      ),
-
-                      // Jawaban sebelumnya
-                      if (currentAnswer != null) ...[
-                        const SizedBox(height: 24),
-                        Center(
-                          child: AnimatedOpacity(
-                            opacity: 1,
-                            duration: const Duration(milliseconds: 300),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                                vertical: 8,
-                              ),
-                              decoration: BoxDecoration(
-                                color:
-                                    currentAnswer == true
-                                        ? AppColors.success.withValues(
-                                          alpha: 0.1,
-                                        )
-                                        : AppColors.danger.withValues(
-                                          alpha: 0.1,
+                          child: IntrinsicHeight(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Badge aspek
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 6,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: color.withValues(alpha: 0.12),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        _aspectIcon(_current.aspect),
+                                        color: color,
+                                        size: 16,
+                                      ),
+                                      const SizedBox(width: 6),
+                                      Text(
+                                        _current.aspect,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w700,
+                                          color: color,
                                         ),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(
-                                currentAnswer == true
-                                    ? '✓ Sudah dijawab: Ya'
-                                    : '✗ Sudah dijawab: Tidak',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                  color:
-                                      currentAnswer == true
-                                          ? AppColors.success
-                                          : AppColors.danger,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
+
+                                const SizedBox(height: 20),
+
+                                // Gambar ilustrasi (jika ada)
+                                if (_current.imagePath != null) ...[
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.asset(
+                                      _current.imagePath!,
+                                      width: double.infinity,
+                                      fit: BoxFit.contain,
+                                      errorBuilder:
+                                          (_, __, ___) =>
+                                              const SizedBox.shrink(),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                ],
+
+                                // Teks pertanyaan
+                                Text(
+                                  _current.questionText,
+                                  style: const TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.textPrimary,
+                                    height: 1.55,
+                                  ),
+                                ),
+
+                                // Jawaban sebelumnya
+                                if (currentAnswer != null) ...[
+                                  const SizedBox(height: 24),
+                                  Center(
+                                    child: AnimatedOpacity(
+                                      opacity: 1,
+                                      duration: const Duration(
+                                        milliseconds: 300,
+                                      ),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 20,
+                                          vertical: 8,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color:
+                                              currentAnswer == true
+                                                  ? AppColors.success
+                                                      .withValues(alpha: 0.1)
+                                                  : AppColors.danger.withValues(
+                                                    alpha: 0.1,
+                                                  ),
+                                          borderRadius: BorderRadius.circular(
+                                            20,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          currentAnswer == true
+                                              ? '✓ Sudah dijawab: Ya'
+                                              : '✗ Sudah dijawab: Tidak',
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600,
+                                            color:
+                                                currentAnswer == true
+                                                    ? AppColors.success
+                                                    : AppColors.danger,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ],
                             ),
                           ),
                         ),
-                      ],
-                    ],
+                      );
+                    },
                   ),
                 ),
               ),

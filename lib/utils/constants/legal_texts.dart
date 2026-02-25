@@ -140,6 +140,25 @@ TEKNOLOGI:
 • Database: SQLite
 • Platform: Android
 
+ASET VISUAL:
+Gambar ilustrasi pada aplikasi
+ini dibuat menggunakan teknologi kecerdasan
+buatan (AI Image Generation) dengan model:
+• DALL-E by OpenAI
+  Platform: ChatGPT (openai.com)
+  Digunakan untuk: Generasi gambar ilustrasi 
+  berdasarkan prompt yang dirancang sedemikian rupa oleh tim pengembang.
+
+• Nano Banana by Google
+  Platform: Gemini
+  Digunakan untuk: Generasi gambar ilustrasi
+  berdasarkan prompt yang dirancang sedemikian rupa oleh tim pengembang.
+
+Seluruh prompt dirancang dan dikurasi oleh
+tim pengembang Ananda. Gambar digunakan
+semata-mata untuk keperluan edukasi dan
+tidak diperjualbelikan.
+
 LISENSI:
 Aplikasi ini dikembangkan untuk tujuan edukasi
 dan kepentingan masyarakat.

@@ -96,10 +96,10 @@ class AppInfo {
       'Noordiati, MPH & Presley F Felly, S.I.Kom';
 
   /// Developer website
-  static const String developerWebsite = 'https://example.com';
+  static const String developerWebsite = 'https://fluentadigital.com';
 
   /// Developer email
-  static const String developerEmail = 'dev@example.com';
+  static const String developerEmail = 'noordiatinu2ng@gmail.com';
 
   /// Organization/Institution
   static const String organization = 'Poltekkes Kemenkes Palangka Raya';
