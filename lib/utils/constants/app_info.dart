@@ -34,10 +34,10 @@ class AppInfo {
   static const String appVersion = '1.0.0';
 
   /// Version code (for Android build number)
-  static const int versionCode = 1;
+  static const int versionCode = 3;
 
   /// Build number
-  static const String buildNumber = '1';
+  static const String buildNumber = '3';
 
   /// Release date
   static const String releaseDate = '2026-02-24';
@@ -46,7 +46,7 @@ class AppInfo {
   static const String releaseYear = '2026';
 
   /// Last update date
-  static const String lastUpdate = '2026-02-24';
+  static const String lastUpdate = '2026-02-26';
 
   // ============================================
   // DATABASE INFO
@@ -67,19 +67,20 @@ class AppInfo {
   // ============================================
 
   /// Support email
-  static const String supportEmail = 'support@example.com';
+  static const String supportEmail = 'borneomediatama@gmail.com';
 
   /// Website URL
-  static const String websiteUrl = 'https://example.com';
+  static const String websiteUrl = '';
 
-  /// Privacy policy URL (jika ada web version)
-  static const String privacyPolicyUrl = 'https://example.com/privacy';
+  /// Privacy policy URL
+  static const String privacyPolicyUrl =
+      'https://raw.githubusercontent.com/presley03/ananda-app/main/PRIVACY_POLICY.md';
 
-  /// Terms of use URL (jika ada web version)
-  static const String termsOfUseUrl = 'https://example.com/terms';
+  /// Terms of use URL
+  static const String termsOfUseUrl = '';
 
   /// Instagram handle
-  static const String instagram = '@ananda.app';
+  static const String instagram = '';
 
   /// Facebook page (optional)
   static const String facebook = '';
@@ -96,20 +97,20 @@ class AppInfo {
       'Noordiati, MPH & Presley F Felly, S.I.Kom';
 
   /// Developer website
-  static const String developerWebsite = 'https://fluentadigital.com';
+  static const String developerWebsite = '';
 
   /// Developer email
-  static const String developerEmail = 'noordiatinu2ng@gmail.com';
+  static const String developerEmail = 'borneomediatama@gmail.com';
 
   /// Organization/Institution
-  static const String organization = 'Poltekkes Kemenkes Palangka Raya';
+  static const String organization = 'Borneo Mediatama';
 
   // ============================================
   // LEGAL
   // ============================================
 
   /// Copyright text
-  static const String copyright = '@ 2026 $organization. All Rights Reserved.';
+  static const String copyright = '© 2026 $organization. All Rights Reserved.';
 
   /// License type
   static const String license = 'Proprietary';
@@ -117,8 +118,6 @@ class AppInfo {
   // ============================================
   // FEATURE FLAGS
   // ============================================
-
-  /// Enable/disable features for testing or phased rollout
 
   /// Enable dark mode (future feature)
   static const bool enableDarkMode = false;
@@ -204,19 +203,16 @@ class AppInfo {
   // AGE CATEGORIES
   // ============================================
 
-  /// Age category codes
   static const String category01 = '0-1';
   static const String category12 = '1-2';
   static const String category25 = '2-5';
 
-  /// Age category names
   static const Map<String, String> categoryNames = {
     category01: '0-1 Tahun',
     category12: '1-2 Tahun',
     category25: '2-5 Tahun',
   };
 
-  /// Get category name by code
   static String getCategoryName(String code) {
     return categoryNames[code] ?? 'Unknown';
   }
@@ -230,7 +226,6 @@ class AppInfo {
   static const String screeningTDD = 'TDD';
   static const String screeningMCHAT = 'MCHAT';
 
-  /// Screening type full names
   static const Map<String, String> screeningNames = {
     screeningKPSP: 'Kuesioner Pra Skrining Perkembangan',
     screeningGizi: 'Status Gizi',
@@ -238,7 +233,6 @@ class AppInfo {
     screeningMCHAT: 'M-CHAT-R (Skrining Autisme)',
   };
 
-  /// Get screening name by type
   static String getScreeningName(String type) {
     return screeningNames[type] ?? 'Unknown';
   }
@@ -253,7 +247,6 @@ class AppInfo {
   static const String subcategoryStimulasi = 'Stimulasi';
   static const String subcategoryPerawatan = 'Perawatan';
 
-  /// Material subcategories list
   static const List<String> materialSubcategories = [
     subcategoryPertumbuhan,
     subcategoryPerkembangan,
@@ -269,13 +262,11 @@ class AppInfo {
   static const String genderMale = 'L';
   static const String genderFemale = 'P';
 
-  /// Gender labels
   static const Map<String, String> genderLabels = {
     genderMale: 'Laki-laki',
     genderFemale: 'Perempuan',
   };
 
-  /// Get gender label
   static String getGenderLabel(String code) {
     return genderLabels[code] ?? 'Unknown';
   }
@@ -284,78 +275,46 @@ class AppInfo {
   // REMINDER SETTINGS
   // ============================================
 
-  /// Days before target date to send reminder
   static const int reminderDaysBefore = 3;
-
-  /// Reminder notification time (hour)
   static const int reminderHour = 9;
-
-  /// Reminder notification time (minute)
   static const int reminderMinute = 0;
 
   // ============================================
   // UI CONSTANTS
   // ============================================
 
-  /// Default page padding
   static const double pagePadding = 16.0;
-
-  /// Default card elevation
   static const double cardElevation = 4.0;
-
-  /// Default border radius
   static const double borderRadius = 16.0;
-
-  /// Bottom navigation height
   static const double bottomNavHeight = 60.0;
-
-  /// Search bar height
   static const double searchBarHeight = 50.0;
 
   // ============================================
   // VALIDATION CONSTANTS
   // ============================================
 
-  /// Min name length
   static const int minNameLength = 2;
-
-  /// Max name length
   static const int maxNameLength = 50;
-
-  /// Min weight (kg)
   static const double minWeight = 1.0;
-
-  /// Max weight (kg)
   static const double maxWeight = 100.0;
-
-  /// Min height (cm)
   static const double minHeight = 30.0;
-
-  /// Max height (cm)
   static const double maxHeight = 200.0;
-
-  /// Min age (months)
   static const int minAge = 0;
-
-  /// Max age (months)
   static const int maxAge = 72;
 
   // ============================================
   // HELPER METHODS
   // ============================================
 
-  /// Get full app info string
   static String getAppInfoString() {
     return '$appName v$appVersion ($buildNumber)';
   }
 
-  /// Get copyright text with year
   static String getCopyrightText() {
     final year = DateTime.now().year;
-    return '@ $year $organization. All Rights Reserved.';
+    return '© $year $organization. All Rights Reserved.';
   }
 
-  /// Check if feature is enabled
   static bool isFeatureEnabled(String feature) {
     switch (feature) {
       case 'dark_mode':

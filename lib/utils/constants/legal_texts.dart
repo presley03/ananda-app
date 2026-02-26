@@ -43,7 +43,6 @@ Aplikasi ini menyimpan data berikut secara lokal di perangkat Anda:
 - Hasil skrining perkembangan
 - Bookmark materi edukasi
 - Pengaturan aplikasi
-- Jadwal reminder
 
 PENYIMPANAN DATA:
 - Semua data disimpan 100% di perangkat Anda (offline)
@@ -52,7 +51,7 @@ PENYIMPANAN DATA:
 - Tidak ada tracking atau analytics
 
 KEAMANAN DATA:
-- Data tersimpan dalam database lokal terenkripsi (SQLite)
+- Data tersimpan dalam database lokal (SQLite)
 - Akses data hanya melalui aplikasi
 - Backup data menjadi tanggung jawab pengguna
 
@@ -66,7 +65,7 @@ Kami dapat memperbarui kebijakan ini sewaktu-waktu. Perubahan akan ditampilkan d
 
 KONTAK:
 Jika ada pertanyaan tentang privasi, hubungi:
-Email: support@ananda.app
+Email: borneomediatama@gmail.com
 ''';
 
   // TERMS OF SERVICE
@@ -118,13 +117,11 @@ Versi 1.0.0 | 2026
 
 PENGGAGAS IDE:
 Noordiati, SST, MPH
-Dosen Poltekkes Kemenkes Palangka Raya
+Dosen Poltekkes Kemenkes Palangkaraya
 
 PENGEMBANG APLIKASI:
 Presley F Felly, S.I.Kom
-
-INSTITUSI:
-Poltekkes Kemenkes Palangka Raya
+Borneo Mediatama
 
 ACKNOWLEDGMENTS:
 Terima kasih kepada:
@@ -163,7 +160,7 @@ LISENSI:
 Aplikasi ini dikembangkan untuk tujuan edukasi
 dan kepentingan masyarakat.
 
-Copyright © 2026 Poltekkes Kemenkes Palangka Raya
+Copyright © 2026 Borneo Mediatama
 All Rights Reserved.
 ''';
 
@@ -228,17 +225,14 @@ INSTRUMEN SKRINING:
 11. Robins, D.L., et al. (2014).
     Validation of the Modified Checklist for
     Autism in Toddlers, Revised with Follow-Up
-    (M-CHAT-R/F). Pediatrics, 133(1), 37–45.
+    (M-CHAT-R/F). Pediatrics, 133(1), 37-45.
 
 JURNAL ILMIAH:
 
 12. Sari Pediatri — Jurnal Ilmiah Ikatan
     Dokter Anak Indonesia. Jakarta: IDAI.
 
-13. Jurnal Kesehatan Ibu dan Anak.
-    Poltekkes Kemenkes Yogyakarta.
-
-14. Indonesian Journal of Pediatrics
+13. Indonesian Journal of Pediatrics
     and Perinatology. Jakarta.
 
 Terakhir diperbarui: 2026
@@ -307,7 +301,7 @@ Q: Aplikasi perlu internet?
 A: Tidak, aplikasi 100% offline setelah diinstall.
 
 Butuh bantuan lebih lanjut?
-Email: support@ananda.app
+Email: borneomediatama@gmail.com
 ''';
 
   // ABOUT APP
@@ -348,8 +342,8 @@ Mendukung tumbuh kembang optimal anak Indonesia melalui edukasi dan deteksi dini
 MISI:
 Memberikan akses mudah ke informasi dan tools skrining perkembangan anak yang valid dan terpercaya.
 
-Dikembangkan dengan Dengan penuh dedikasi untuk anak-anak Indonesia.
+Dikembangkan dengan penuh dedikasi untuk anak-anak Indonesia.
 
-Copyright © 2026 Tim Ananda
+Copyright © 2026 Borneo Mediatama
 ''';
 }
