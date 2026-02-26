@@ -7,7 +7,7 @@
 
 ## 1. Pendahuluan
 
-Selamat datang di **Ananda** ("Aplikasi", "kami"). Aplikasi ini dikembangkan oleh **Borneo Mediatama** bekerja sama dengan **Poltekkes Kemenkes Palangka Raya** sebagai alat bantu pemantauan tumbuh kembang anak.
+Selamat datang di **Ananda** ("Aplikasi", "kami"). Aplikasi ini dikembangkan oleh **Borneo Mediatama** sebagai alat bantu pemantauan tumbuh kembang anak usia 0-5 tahun.
 
 Kebijakan Privasi ini menjelaskan bagaimana Aplikasi menangani informasi Anda. Dengan menggunakan Aplikasi, Anda menyetujui ketentuan yang tercantum dalam dokumen ini.
 
@@ -63,7 +63,7 @@ Data yang tersimpan di Aplikasi digunakan **semata-mata** untuk:
 
 - Menampilkan profil dan riwayat skrining anak
 - Menghitung hasil skrining dan status gizi
-- Menampilkan pengingat jadwal skrining
+- Menampilkan informasi tumbuh kembang anak
 
 Data tidak digunakan untuk tujuan periklanan, penelitian pihak ketiga, atau tujuan komersial apapun.
 
