@@ -167,7 +167,7 @@ class _ProfileListScreenState extends State<ProfileListScreen> {
               borderRadius: BorderRadius.circular(24),
             ),
             child: const Icon(
-              Icons.child_care_outlined,
+              Icons.face_retouching_natural,
               size: 40,
               color: AppColors.primary,
             ),

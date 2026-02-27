@@ -28,8 +28,10 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+
     return Container(
-      height: 64,
+      height: 64 + bottomPadding,
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.9),
         border: Border(
@@ -46,23 +48,33 @@ class CustomBottomNavigationBar extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildNavItem(icon: Icons.home, label: 'Home', index: 0),
-          _buildNavItem(icon: Icons.book, label: 'Read', index: 1),
-          _buildNavItem(
-            icon: Icons.face_retouching_natural,
-            label: 'Profil',
-            index: 2,
-          ),
-          _buildNavItem(icon: Icons.settings, label: 'Settings', index: 3),
-        ],
+      child: Padding(
+        padding: EdgeInsets.only(bottom: bottomPadding),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildNavItem(context, icon: Icons.home, label: 'Home', index: 0),
+            _buildNavItem(context, icon: Icons.book, label: 'Read', index: 1),
+            _buildNavItem(
+              context,
+              icon: Icons.face_retouching_natural,
+              label: 'Profile',
+              index: 2,
+            ),
+            _buildNavItem(
+              context,
+              icon: Icons.settings,
+              label: 'Settings',
+              index: 3,
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildNavItem({
+  Widget _buildNavItem(
+    BuildContext context, {
     required IconData icon,
     required String label,
     required int index,

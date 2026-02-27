@@ -118,6 +118,7 @@ Versi 1.0.0 | 2026
 PENGGAGAS IDE:
 Noordiati, SST, MPH
 Dosen Poltekkes Kemenkes Palangkaraya
+noordiatinu2ng@gmail.com
 
 PENGEMBANG APLIKASI:
 Presley F Felly, S.I.Kom
