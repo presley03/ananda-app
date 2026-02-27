@@ -359,7 +359,12 @@ class _MchatAgeSelectionScreenState extends State<MchatAgeSelectionScreen> {
 
           // TOMBOL MULAI - fixed di bawah
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+            padding: EdgeInsets.fromLTRB(
+              20,
+              8,
+              20,
+              24 + MediaQuery.of(context).padding.bottom,
+            ),
             child: SizedBox(
               width: double.infinity,
               child: GestureDetector(

@@ -190,7 +190,12 @@ class _KpspAgeSelectionScreenState extends State<KpspAgeSelectionScreen> {
 
           // TOMBOL MULAI - fixed bottom
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+            padding: EdgeInsets.fromLTRB(
+              20,
+              8,
+              20,
+              24 + MediaQuery.of(context).padding.bottom,
+            ),
             child: GestureDetector(
               onTap:
                   (_selectedAge == null || _isLoading) ? null : _startScreening,

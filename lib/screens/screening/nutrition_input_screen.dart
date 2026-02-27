@@ -454,7 +454,12 @@ class _NutritionInputScreenState extends State<NutritionInputScreen> {
 
           // TOMBOL HITUNG - fixed di bawah
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+            padding: EdgeInsets.fromLTRB(
+              20,
+              8,
+              20,
+              24 + MediaQuery.of(context).padding.bottom,
+            ),
             child: GestureDetector(
               onTap: _calculate,
               child: Container(

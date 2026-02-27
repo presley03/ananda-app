@@ -2,7 +2,7 @@ name: ananda_app
 description: "Ananda — Aplikasi monitoring tumbuh kembang anak usia 0-5 tahun. Dilengkapi dengan tools skrining perkembangan (KPSP, TDD, M-CHAT-R), kalkulator status gizi berbasis standar WHO, dan materi edukasi lengkap untuk orang tua. Dirancang untuk digunakan secara offline, cocok untuk orang tua, tenaga kesehatan, dan kader Posyandu di seluruh Indonesia."
 publish_to: 'none'
 
-version: 1.0.0+5
+version: 1.0.0+6
 
 environment:
   sdk: ^3.7.0

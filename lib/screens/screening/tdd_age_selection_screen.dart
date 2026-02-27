@@ -183,7 +183,12 @@ class _TddAgeSelectionScreenState extends State<TddAgeSelectionScreen> {
 
           // TOMBOL MULAI - fixed bottom
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+            padding: EdgeInsets.fromLTRB(
+              20,
+              8,
+              20,
+              24 + MediaQuery.of(context).padding.bottom,
+            ),
             child: GestureDetector(
               onTap: (_selectedRange == null || _isLoading) ? null : _start,
               child: AnimatedContainer(
